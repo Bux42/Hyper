@@ -1,1 +1,69 @@
-/* You can add global styles to this file, and also import other style files */
+/* Top Bar */
+* {
+    font-family: "Roboto", Arial, sans-serif;
+    color: #bbbbbb;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+app-top-bar {
+    height: 68px;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  app-top-bar h1 {
+    color: white;
+    margin: 0;
+  }
+  body {
+    margin: 0;
+    background-image: url("/assets/background.png");
+    background-size: cover;
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+  }
+  a {
+    cursor: pointer;
+    color: #1976d2;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    opacity: 0.8;
+  }
+  
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.custom-dialog-container .mat-dialog-container {
+    background-color:rgba(0, 0, 0, 0.8);
+}
+/* width */
+::-webkit-scrollbar {
+    width: 15px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background:rgba(0, 0, 0, 0.2);;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);;
+  }
+  
