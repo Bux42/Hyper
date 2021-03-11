@@ -1,8 +1,11 @@
 <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Movies">
+        <app-media-list [mediaCategory]="'movies'"></app-media-list>
     </mat-tab>
     <mat-tab label="Series">
+        <app-media-list [mediaCategory]="'shows'"></app-media-list>
     </mat-tab>
     <mat-tab label="Animes">
+        <app-media-list [mediaCategory]="'animes'"></app-media-list>
     </mat-tab>
 </mat-tab-group>

@@ -1,9 +1,12 @@
 const express = require('express')
 const session = require('express-session');
 const cors = require('cors');
+const MediaApi = require('./MediaApi');
 
 const app = express();
-const port = 3000
+const port = 3000;
+
+const mediaApi = new MediaApi();
 
 app.use(session({
     resave: true,
@@ -24,3 +27,10 @@ app.use(cors({
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
+
+app.get('/media-list', (req, res, next) => {
+    console.log(req.query);
+    mediaApi.getMedia(req.query).then(data => {
+        res.send(data);
+    })
+});
