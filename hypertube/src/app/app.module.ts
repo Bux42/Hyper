@@ -12,6 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
+import { MediaDetailsComponent } from './media-details/media-details.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,12 @@ import { MediaListItemComponent } from './media-list-item/media-list-item.compon
     TopBarComponent,
     MediaCategoriesComponent,
     MediaListComponent,
-    MediaListItemComponent
+    MediaListItemComponent,
+    MediaDetailsComponent
   ],
   imports: [
     MatTabsModule,
+    MatDialogModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
