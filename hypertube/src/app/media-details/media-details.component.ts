@@ -13,7 +13,7 @@ export class MediaDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.media = this.data.media;
-      console.log(this.media);
+        console.log(this.media);
     }
 
 }

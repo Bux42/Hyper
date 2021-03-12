@@ -21,8 +21,8 @@ export class MediaListComponent implements OnInit {
             console.log(data);
             this.loaded = true;
         },
-        error => {
-            console.log(error);
-        });
+            error => {
+                console.log(error);
+            });
     }
 }

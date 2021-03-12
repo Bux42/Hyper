@@ -19,26 +19,26 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
 import { BodyComponent } from './body/body.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TopBarComponent,
-    MediaCategoriesComponent,
-    MediaListComponent,
-    MediaListItemComponent,
-    MediaDetailsComponent,
-    UserPanelComponent,
-    BodyComponent
-  ],
-  imports: [
-    MatTabsModule,
-    MatDialogModule,
-    MatSidenavModule,
-    HttpClientModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        TopBarComponent,
+        MediaCategoriesComponent,
+        MediaListComponent,
+        MediaListItemComponent,
+        MediaDetailsComponent,
+        UserPanelComponent,
+        BodyComponent
+    ],
+    imports: [
+        MatTabsModule,
+        MatDialogModule,
+        MatSidenavModule,
+        HttpClientModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
