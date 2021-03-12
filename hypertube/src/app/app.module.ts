@@ -14,6 +14,9 @@ import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
 import { MediaDetailsComponent } from './media-details/media-details.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { UserPanelComponent } from './user-panel/user-panel.component';
+import { BodyComponent } from './body/body.component';
 
 @NgModule({
   declarations: [
@@ -22,11 +25,14 @@ import { MatDialogModule } from '@angular/material/dialog';
     MediaCategoriesComponent,
     MediaListComponent,
     MediaListItemComponent,
-    MediaDetailsComponent
+    MediaDetailsComponent,
+    UserPanelComponent,
+    BodyComponent
   ],
   imports: [
     MatTabsModule,
     MatDialogModule,
+    MatSidenavModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { BodyComponent } from '../body/body.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./top-bar.component.css']
 })
 export class TopBarComponent implements OnInit {
-
+    @Input() body: BodyComponent | undefined;
   constructor() { }
 
   ngOnInit(): void {
+  }
+  emitDrawerToggle() {
+    this.body?.toggleDrawer();
   }
 
 }
