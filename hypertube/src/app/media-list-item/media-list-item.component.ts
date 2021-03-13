@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MediaDetailsEpisodesComponent } from '../media-details-episodes/media-details-episodes.component';
 import { MediaDetailsComponent } from '../media-details/media-details.component';
 
 @Component({
@@ -16,14 +17,25 @@ export class MediaListItemComponent implements OnInit {
     }
 
     mediaMouseClick() {
-        const dialogRef = this.dialog.open(MediaDetailsComponent, {
-            width: '70vh',
-            height: '70vh',
-            data: {
-                media: this.media
-            },
-            panelClass: 'custom-dialog-container'
-        });
+        if (this.mediaCategory == "movies") {
+            const dialogRef = this.dialog.open(MediaDetailsComponent, {
+                width: '70vh',
+                height: '70vh',
+                data: {
+                    media: this.media
+                },
+                panelClass: 'custom-dialog-container'
+            });
+        } else {
+            const dialogRef = this.dialog.open(MediaDetailsEpisodesComponent, {
+                width: '70vh',
+                height: '70vh',
+                data: {
+                    media: this.media,
+                    mediaCategory: this.mediaCategory
+                },
+                panelClass: 'custom-dialog-container'
+            });
+        }
     }
-
 }

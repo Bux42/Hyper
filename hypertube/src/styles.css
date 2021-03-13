@@ -67,7 +67,14 @@ body {
   background-size: cover;
   opacity: 0.9;
   width: 30vw;
+}
 
+.mat-button-toggle-appearance-standard  {
+    background: rgba(50, 50, 50, 0.8);
+}
+
+.mat-button-toggle-checked {
+    background: rgba(70, 70, 70, 0.8);
 }
 
 /* width */

@@ -13,4 +13,10 @@ export class MediaService {
             .set('mediaCategory', filters.MediaCategory);
         return (this.http.get<any>('http://localhost:3000/media-list', { params, withCredentials: true }));
     }
+    fetchMediaEpisodes(filters: any) {
+        const params = new HttpParams()
+            .set('mediaCategory', filters.MediaCategory)
+            .set('mediaId', filters.MediaId);
+        return (this.http.get<any>('http://localhost:3000/media-episodes', { params, withCredentials: true }));
+    }
 }

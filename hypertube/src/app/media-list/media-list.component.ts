@@ -16,7 +16,7 @@ export class MediaListComponent implements OnInit {
         var filters = {
             "MediaCategory": this.mediaCategory
         };
-        this.mediaItems = this.mediaService.fetchMedia(filters).subscribe(data => {
+        this.mediaService.fetchMedia(filters).subscribe(data => {
             this.mediaItems = data;
             console.log(data);
             this.loaded = true;

@@ -9,14 +9,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HttpClientModule } from '@angular/common/http';
 
-import { MatTabsModule } from '@angular/material/tabs';
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
+import { MediaDetailsEpisodesComponent } from './media-details-episodes/media-details-episodes.component';
 import { MediaDetailsComponent } from './media-details/media-details.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { BodyComponent } from './body/body.component';
+
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+
+
 
 @NgModule({
     declarations: [
@@ -27,12 +34,15 @@ import { BodyComponent } from './body/body.component';
         MediaListItemComponent,
         MediaDetailsComponent,
         UserPanelComponent,
-        BodyComponent
+        BodyComponent,
+        MediaDetailsEpisodesComponent
     ],
     imports: [
         MatTabsModule,
         MatDialogModule,
         MatSidenavModule,
+        MatButtonToggleModule,
+        MatExpansionModule,
         HttpClientModule,
         BrowserModule,
         AppRoutingModule,

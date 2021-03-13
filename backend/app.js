@@ -32,5 +32,12 @@ app.get('/media-list', (req, res, next) => {
     console.log(req.query);
     mediaApi.getMedia(req.query).then(data => {
         res.send(data);
-    })
+    });
 });
+
+app.get('/media-episodes', (req, res, next) => {
+    console.log(req.query);
+    mediaApi.getMediaEpisodes(req.query).then(data => {
+        res.send(data);
+    })
+})

@@ -1,6 +1,12 @@
 <div>
   <img src="{{media.images.fanart}}">
-  <h1>{{media.title}} ({{media.year}})</h1>
+
+  <h1 class="media-title">{{media.title}} ({{media.year}})</h1>
 
   <p>{{media.synopsis}}</p>
+  <mat-button-toggle-group>
+    <mat-button-toggle *ngFor="let resolution of mediaResolutions" value="{{resolution}}">
+      {{resolution}}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
 </div>
