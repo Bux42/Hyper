@@ -1,12 +1,29 @@
 <div>
   <img src="{{media.images.fanart}}">
 
-  <h1 class="media-title">{{media.title}} ({{media.year}})</h1>
-
+  <h1 class="media-title">{{media.title}}</h1>
+  <mat-chip-list aria-label="Fish selection">
+    <mat-chip class="mat-chip-custom" *ngFor="let genre of media.genres">
+      {{genre}}
+    </mat-chip>
+  </mat-chip-list>
+  <div class="media-infos-min">
+    {{media.year}} • {{media.runtime}} min
+  </div>
   <p>{{media.synopsis}}</p>
-  <mat-button-toggle-group>
-    <mat-button-toggle *ngFor="let resolution of mediaResolutions" value="{{resolution}}">
+  <mat-button-toggle-group value="{{selectedResolution}}">
+    <mat-button-toggle *ngFor="let resolution of mediaResolutions" value="{{resolution}}"
+      (click)="changeResolution(resolution)">
       {{resolution}}
     </mat-button-toggle>
   </mat-button-toggle-group>
+  <div>
+    {{media.torrents.en[selectedResolution].filesize}}
+    {{media.torrents.en[selectedResolution].seed}}
+    {{media.torrents.en[selectedResolution].peer}}
+  </div>
+  <div>
+    <button (click)="watch()" mat-flat-button color="primary">Watch Now</button>
+  </div>
+
 </div>

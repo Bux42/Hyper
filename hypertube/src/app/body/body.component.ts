@@ -15,5 +15,4 @@ export class BodyComponent implements OnInit {
     toggleDrawer() {
         this.drawerOpened = !this.drawerOpened;
     }
-
 }

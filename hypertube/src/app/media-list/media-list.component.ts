@@ -8,6 +8,7 @@ import { MediaService } from '../media.service';
 })
 export class MediaListComponent implements OnInit {
     @Input() mediaCategory: any;
+    @Input() media: any;
     loaded = false;
     mediaItems: any = null;
     constructor(private mediaService: MediaService) { }

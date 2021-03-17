@@ -7,9 +7,12 @@ import { MediaService } from '../media.service';
     templateUrl: './media-details-episodes.component.html',
     styleUrls: ['./media-details-episodes.component.css']
 })
+
 export class MediaDetailsEpisodesComponent implements OnInit {
     @Input() media: any;
     @Input() mediaCategory: any;
+    selectedSeason: any;
+    selectedEpisode: any;
     mediaEpisodes: any;
     seasons: any = [];
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<MediaDetailsEpisodesComponent>, private mediaService: MediaService) { }
@@ -17,6 +20,7 @@ export class MediaDetailsEpisodesComponent implements OnInit {
     ngOnInit(): void {
         this.media = this.data.media;
         this.mediaCategory = this.data.mediaCategory;
+
         var filters = {
             "MediaCategory": this.mediaCategory,
             "MediaId": this.media._id
@@ -35,6 +39,8 @@ export class MediaDetailsEpisodesComponent implements OnInit {
                 }
             }
             this.seasons.sort(function (a: { season: number; }, b: { season: number; }) { return (a.season > b.season) ? 1 : ((b.season > a.season) ? -1 : 0); });
+            this.selectedSeason = this.seasons[0];
+            this.selectedEpisode = this.selectedSeason.episodes[0];
 
             for (var i = 0; i < this.seasons.length; i++) {
                 this.seasons[i].episodes.sort(function (a: { episode: number; }, b: { episode: number; }) { return (a.episode > b.episode) ? 1 : ((b.episode > a.episode) ? -1 : 0); });
@@ -45,5 +51,13 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             error => {
                 console.log(error);
             });
+    }
+    switchSeason(season: any) {
+        console.log(season);
+        this.selectedSeason = this.seasons.find((x: any) => x.season == season);
+        this.selectedEpisode = this.selectedSeason.episodes[0];
+    }
+    selectEpisode(episode: any) {
+        console.log(episode);
     }
 }

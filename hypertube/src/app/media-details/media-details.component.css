@@ -7,3 +7,12 @@ img {
 .media-title {
     margin: 5px;
 }
+
+h1 {
+    color:white;
+}
+
+.media-infos-min {
+    font-style: italic;
+    margin: 5px;
+}

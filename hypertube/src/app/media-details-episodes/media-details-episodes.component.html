@@ -1,11 +1,32 @@
-<mat-expansion-panel hideToggle *ngFor="let season of seasons">
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      Season {{season.season}}
-    </mat-panel-title>
-    <mat-panel-description>
-        {{season.episodes.length}} episodes
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-  <p>This is the primary content of the panel.</p>
-</mat-expansion-panel>
+<div class="container" *ngIf="mediaEpisodes">
+  <div class="media-poster left">
+    <img src="{{media.images.banner}}">
+  </div>
+  <div class="media-details">
+    <div class="media-title">
+      <h1>{{media.title}}</h1>
+    </div>
+    <div class="media-metadata">
+      {{media.year}} • {{mediaEpisodes.runtime}} min
+    </div>
+    <div class="media-synopsis">
+      {{mediaEpisodes.synopsis}}
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="selectedSeason">
+  <section class="left">
+    <mat-button-toggle-group vertical="true" aria-label="Font Style" value="{{selectedSeason.season}}">
+      <mat-button-toggle *ngFor="let season of seasons" value="{{season.season}}" (click)="switchSeason(season.season)">
+        Season {{season.season}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+  <section>
+    <mat-button-toggle-group vertical="true" aria-label="Font Style" value="{{selectedEpisode.title}}">
+        <mat-button-toggle *ngFor="let episode of selectedSeason.episodes" value="{{episode.title}}" (click)="selectEpisode(episode.title)">
+           {{episode.title}}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+  </section>
+</div>

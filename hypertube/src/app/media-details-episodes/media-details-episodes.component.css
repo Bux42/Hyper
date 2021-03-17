@@ -1,0 +1,24 @@
+.media-poster {
+  
+}
+
+.container {
+  margin: auto;
+  padding: 10px;
+}
+
+.left {
+  float: left;
+  margin: 10px;
+}
+
+.two {
+    
+}
+img {
+    width: 100px;
+}
+
+.media-metadata {
+    font-style: italic;
+}

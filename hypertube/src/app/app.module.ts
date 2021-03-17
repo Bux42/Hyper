@@ -9,19 +9,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HttpClientModule } from '@angular/common/http';
 
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
+
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
 import { MediaDetailsEpisodesComponent } from './media-details-episodes/media-details-episodes.component';
 import { MediaDetailsComponent } from './media-details/media-details.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { BodyComponent } from './body/body.component';
-
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatExpansionModule } from '@angular/material/expansion';
-
+import { MediaPlayerComponent } from './media-player/media-player.component';
 
 
 
@@ -35,7 +38,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
         MediaDetailsComponent,
         UserPanelComponent,
         BodyComponent,
-        MediaDetailsEpisodesComponent
+        MediaDetailsEpisodesComponent,
+        MediaPlayerComponent
     ],
     imports: [
         MatTabsModule,
@@ -43,6 +47,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
         MatSidenavModule,
         MatButtonToggleModule,
         MatExpansionModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatGridListModule,
         HttpClientModule,
         BrowserModule,
         AppRoutingModule,
