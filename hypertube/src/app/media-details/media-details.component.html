@@ -2,17 +2,12 @@
   <img src="{{media.images.fanart}}">
 
   <h1 class="media-title">{{media.title}}</h1>
-  <mat-chip-list aria-label="Fish selection">
-    <mat-chip class="mat-chip-custom" *ngFor="let genre of media.genres">
-      {{genre}}
-    </mat-chip>
-  </mat-chip-list>
   <div class="media-infos-min">
-    {{media.year}} • {{media.runtime}} min
+    <pre>{{media.year}}  •  {{media.runtime}} min  •  {{mediaGenres}}</pre>
   </div>
   <p>{{media.synopsis}}</p>
   <mat-button-toggle-group value="{{selectedResolution}}">
-    <mat-button-toggle *ngFor="let resolution of mediaResolutions" value="{{resolution}}"
+    <mat-button-toggle *ngFor="let resolution of mediaResolutions" value="{{resolution}}" matTooltip="AAAAAAAAAAAAAAAAAAAAAAAAAA"
       (click)="changeResolution(resolution)">
       {{resolution}}
     </mat-button-toggle>
@@ -24,6 +19,9 @@
   </div>
   <div>
     <button (click)="watch()" mat-flat-button color="primary">Watch Now</button>
+  </div>
+  <div>
+      {{watchStatus}}
   </div>
 
 </div>

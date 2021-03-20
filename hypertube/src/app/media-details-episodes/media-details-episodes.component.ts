@@ -45,7 +45,7 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             for (var i = 0; i < this.seasons.length; i++) {
                 this.seasons[i].episodes.sort(function (a: { episode: number; }, b: { episode: number; }) { return (a.episode > b.episode) ? 1 : ((b.episode > a.episode) ? -1 : 0); });
             }
-
+            this.selectedEpisode = this.selectedSeason.episodes[0];
             console.log(this.seasons);
         },
             error => {

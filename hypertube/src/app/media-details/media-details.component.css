@@ -14,5 +14,6 @@ h1 {
 
 .media-infos-min {
     font-style: italic;
+    font-weight: bold;
     margin: 5px;
 }

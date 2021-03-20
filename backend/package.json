@@ -1,8 +1,11 @@
 {
   "dependencies": {
+    "connect-mongodb-session": "^2.4.1",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "mongodb": "^3.6.5",
     "request-promise": "^4.2.6",
     "torrent-stream": "^1.2.1"
   }

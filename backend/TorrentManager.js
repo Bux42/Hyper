@@ -10,6 +10,8 @@ class Torrent {
         this.Downloaded = false;
         this.MediaPath = null;
         this.Idle = false;
+        this.TotalChunks = 0;
+        this.DownloadedChunks = 0;
 
         if (this.MagnetSplit.length > 1) {
             this.MagnetLink = this.MagnetSplit[0];
@@ -28,26 +30,45 @@ class Torrent {
         var engine = this.Engine;
         var that = this;
         this.Engine.on('ready', function () {
-            console.log("engine ready");
+            //console.log(engine);
+            that.TotalChunks = engine.torrent.pieces.length;
             engine.files.forEach(function (file) {
                 var stream = file.createReadStream();
-                if (file.path.endsWith(".mp4")) {
+                if (file.path.endsWith(".mp4") ||
+                    file.path.endsWith(".mkv")) {
                     var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
-                    console.log(lowerPath);
                     that.MediaPath = engine.path + "\\" + file.path;
-                    console.log(file.path);
                 }
             });
-            callback(that.MediaPath);
+            if (callback)
+            {
+                callback(that.MediaPath);
+                callback = null;
+            }
         });
         this.Engine.on('download', (index) => {
-            console.log(`Engine downloading chunk: [${index}]`);
+            that.DownloadedChunks++;
+            console.log(`Engine downloading chunk: [${index}] ${that.DownloadedChunks} / ${that.TotalChunks}`);
             //console.log('Engine swarm downloaded : ', engine.swarm.downloaded)
         });
         this.Engine.on('idle', () => {
-            console.log("engine idle");
+            engine.files.forEach(function (file) {
+                //var stream = file.createReadStream();
+                if (file.path.endsWith(".mp4") ||
+                    file.path.endsWith(".mkv")) {
+                    var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
+                    that.MediaPath = engine.path + "\\" + file.path;
+                }
+            });
+            console.log("engine idle", this.MediaPath, callback);
+            that.DownloadedChunks = that.TotalChunks;
             that.Idle = true;
             engine.destroy();
+            if (callback)
+            {
+                callback(that.MediaPath);
+                callback = null;
+            }
         });
     }
 }

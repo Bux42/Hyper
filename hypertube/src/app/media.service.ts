@@ -24,6 +24,11 @@ export class MediaService {
             .set('magnetUrl', magnet);
         return (this.http.get<any>('http://localhost:3000/select-media', { params, withCredentials: true }));
     }
+    getMediaState(magnet: any) {
+        const params = new HttpParams()
+            .set('magnetUrl', magnet);
+        return (this.http.get<any>('http://localhost:3000/media-state', { params, withCredentials: true }));
+    }
     playerClosed(magnet: any) {
         const params = new HttpParams()
             .set('magnetUrl', magnet);
@@ -32,4 +37,5 @@ export class MediaService {
     watchMedia() {
         return (this.http.get<any>('http://localhost:3000/watch-media', { withCredentials: true }));
     }
+    
 }
