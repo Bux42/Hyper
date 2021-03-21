@@ -70,31 +70,37 @@ body {
 }
 
 .custom-mat-expansion-panel {
-    background-color: #333333;
+  background-color: #333333;
 }
 
 .custom-mat-expansion-panel-header-description {
-    color: #bbbbbb;
+  color: #bbbbbb;
 }
 
 .custom-mat-expansion-panel-header-title {
-    color: white;
+  color: white;
 }
 
 .mat-chip-custom {
-    background-color: #333333!important;
-    color: white!important;
+  background-color: #333333 !important;
+  color: white !important;
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: white;
 }
 
 .mat-button-toggle-label-content {
-    line-height: 32px !important;
+  line-height: 32px !important;
 }
-.mat-button-toggle-appearance-standard  {
-    background: rgba(50, 50, 50, 0.8);
+
+.mat-button-toggle-appearance-standard {
+  background: rgba(50, 50, 50, 0.8);
 }
 
 .mat-button-toggle-checked {
-    background: rgba(70, 70, 70, 0.8);
+  background: rgba(70, 70, 70, 0.8);
 }
 
 /* width */

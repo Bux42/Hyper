@@ -9,8 +9,10 @@ export class MediaService {
     constructor(private http: HttpClient) { }
 
     fetchMedia(filters: any) {
+        console.log(filters);
         const params = new HttpParams()
-            .set('mediaCategory', filters.MediaCategory);
+            .set('mediaCategory', filters.MediaCategory)
+            .set('page', filters.Page);
         return (this.http.get<any>('http://localhost:3000/media-list', { params, withCredentials: true }));
     }
     fetchMediaEpisodes(filters: any) {

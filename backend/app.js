@@ -8,6 +8,7 @@ const fs = require('fs');
 const {
     serialize
 } = require('v8');
+const { allowedNodeEnvironmentFlags } = require('process');
 
 const app = express();
 const port = 3000;
@@ -102,6 +103,10 @@ if (clearDownloads) {
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
+});
+
+app.get("/ping", (req, res, next) => {
+    res.send({"Ping": true});
 });
 
 var missingImgs = [];

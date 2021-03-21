@@ -8,6 +8,8 @@ import { MediaCategoriesComponent } from './media-categories/media-categories.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HttpClientModule } from '@angular/common/http';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -17,6 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -25,6 +28,7 @@ import { MediaDetailsComponent } from './media-details/media-details.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { BodyComponent } from './body/body.component';
 import { MediaPlayerComponent } from './media-player/media-player.component';
+import { StickyHeaderDirective } from './sticky-header.directive';
 
 
 
@@ -39,7 +43,8 @@ import { MediaPlayerComponent } from './media-player/media-player.component';
         UserPanelComponent,
         BodyComponent,
         MediaDetailsEpisodesComponent,
-        MediaPlayerComponent
+        MediaPlayerComponent,
+        StickyHeaderDirective
     ],
     imports: [
         MatTabsModule,
@@ -50,10 +55,13 @@ import { MediaPlayerComponent } from './media-player/media-player.component';
         MatButtonModule,
         MatChipsModule,
         MatGridListModule,
+        MatProgressSpinnerModule,
         HttpClientModule,
+        ScrollingModule,
         BrowserModule,
         AppRoutingModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        InfiniteScrollModule
     ],
     providers: [],
     bootstrap: [AppComponent]

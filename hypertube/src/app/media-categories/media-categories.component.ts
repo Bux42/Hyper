@@ -11,5 +11,4 @@ export class MediaCategoriesComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
 }

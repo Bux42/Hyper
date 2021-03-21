@@ -1,2 +1,10 @@
-<app-top-bar [body]="body"></app-top-bar>
-<app-body #body></app-body>
+<div *ngIf="backendAvailable">
+    <app-top-bar [body]="body"></app-top-bar>
+    <app-body #body></app-body>
+</div>
+<div *ngIf="!backendAvailable" class="check-backend">
+    <mat-spinner *ngIf="errorMessage == null" class="custom-mat-spinner"></mat-spinner>
+    <div class="backend-error" *ngIf="errorMessage != null">
+        {{errorMessage}}
+    </div>
+</div>
