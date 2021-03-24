@@ -59,5 +59,6 @@ export class MediaDetailsEpisodesComponent implements OnInit {
     }
     selectEpisode(episode: any) {
         console.log(episode);
+        this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.title == episode);
     }
 }

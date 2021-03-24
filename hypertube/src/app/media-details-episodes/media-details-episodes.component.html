@@ -25,8 +25,16 @@
   <section>
     <mat-button-toggle-group vertical="true" aria-label="Font Style" value="{{selectedEpisode.title}}">
         <mat-button-toggle *ngFor="let episode of selectedSeason.episodes" value="{{episode.title}}" (click)="selectEpisode(episode.title)">
-           {{episode.title}}
+            <div class="left episode-number">{{episode.episode}}</div>
+            <div class="episode-title">{{episode.title}}</div>
         </mat-button-toggle>
       </mat-button-toggle-group>
   </section>
+  <section class="episode-details">
+      <h1>{{selectedEpisode.title}}</h1>
+      <p>{{selectedEpisode.overview}}</p>
+  </section>
+</div>
+<div class="load-spinner" *ngIf="!mediaEpisodes">
+    <mat-spinner class="custom-mat-spinner"></mat-spinner>
 </div>

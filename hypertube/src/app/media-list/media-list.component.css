@@ -1,3 +1,7 @@
 .media-list-container {
   height: 81vh;
 }
+
+.loading {
+    opacity: 0.6;
+}

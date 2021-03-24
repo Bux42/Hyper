@@ -1,0 +1,21 @@
+.oauth-button {
+    background-color: #4285F4;
+    height: 32px;
+    cursor: pointer;
+    
+}
+
+img {
+    height: 32px;
+    background-color: white;
+    border-radius: 5%;
+}
+
+.oauth-icon {
+    float: left;
+    margin-right: 5px;
+}
+
+.oauth-text {
+    color: white;
+}

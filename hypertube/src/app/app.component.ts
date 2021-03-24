@@ -14,7 +14,10 @@ export class AppComponent {
 
     ngOnInit() {
         this.userService.pingBackend().subscribe(result => {
-            this.backendAvailable = true;
+            this.userService.getUser().then((user) => {
+                console.log(user);
+                this.backendAvailable = true;
+            })
         },
         error => {
             this.errorMessage = error.message;

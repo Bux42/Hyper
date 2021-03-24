@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -29,6 +30,8 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
 import { BodyComponent } from './body/body.component';
 import { MediaPlayerComponent } from './media-player/media-player.component';
 import { StickyHeaderDirective } from './sticky-header.directive';
+import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
+import { GoogleAccountComponent } from './google-account/google-account.component';
 
 
 
@@ -44,7 +47,9 @@ import { StickyHeaderDirective } from './sticky-header.directive';
         BodyComponent,
         MediaDetailsEpisodesComponent,
         MediaPlayerComponent,
-        StickyHeaderDirective
+        StickyHeaderDirective,
+        GoogleOauthComponent,
+        GoogleAccountComponent
     ],
     imports: [
         MatTabsModule,
@@ -56,6 +61,7 @@ import { StickyHeaderDirective } from './sticky-header.directive';
         MatChipsModule,
         MatGridListModule,
         MatProgressSpinnerModule,
+        MatDividerModule,
         HttpClientModule,
         ScrollingModule,
         BrowserModule,

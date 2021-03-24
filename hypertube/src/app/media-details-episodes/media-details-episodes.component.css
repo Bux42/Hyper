@@ -1,6 +1,4 @@
-.media-poster {
-  
-}
+.media-poster {}
 
 .container {
   margin: auto;
@@ -9,16 +7,35 @@
 
 .left {
   float: left;
-  margin: 10px;
 }
 
-.two {
-    
-}
 img {
-    width: 100px;
+  width: 100px;
+  border-radius: 5%;
+  margin-right: 10px;
 }
 
 .media-metadata {
-    font-style: italic;
+  font-style: italic;
+}
+
+.load-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.episode-number {
+    background-color: rgba(33, 33, 33, 0.5);
+    width: 30px;
+    margin-left: -12px;
+    border-right: 1px solid #444444;
+}
+
+.episode-title {
+    margin-left: 10px;
+}
+
+.episode-details {
+    margin-left: 10px;
 }

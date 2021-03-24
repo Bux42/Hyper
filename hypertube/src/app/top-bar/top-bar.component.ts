@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BodyComponent } from '../body/body.component';
+import { UserService } from '../user.service';
 
 @Component({
     selector: 'app-top-bar',
@@ -8,12 +9,17 @@ import { BodyComponent } from '../body/body.component';
 })
 export class TopBarComponent implements OnInit {
     @Input() body: BodyComponent | undefined;
-    constructor() { }
+    profilePic: any = "/assets/profile-user.svg";
+    constructor(private userService: UserService) { }
 
     ngOnInit(): void {
+        if (this.userService.user) {
+            if (this.userService.user.AccountType == "Google") {
+                this.profilePic = this.userService.user.UserData.Qs.VI;
+            }
+        }
     }
     emitDrawerToggle() {
         this.body?.toggleDrawer();
     }
-
 }

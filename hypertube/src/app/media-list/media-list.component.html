@@ -1,4 +1,4 @@
-<div *ngIf="loaded" class="media-list-container" stickyHeaderDirective  style="overflow: auto; max-height: 100%;" (appScrollToEnd)="scrollToEnd()" [attr.media-category]="mediaCategory">
+<div *ngIf="loaded" [ngClass]="{'loading': loading}" class="media-list-container" stickyHeaderDirective  style="overflow: auto; max-height: 100%;" (appScrollToEnd)="scrollToEnd()" [attr.media-category]="mediaCategory">
   <app-media-list-item *ngFor="let media of mediaItems" [media]="media" [mediaCategory]="mediaCategory">
   </app-media-list-item>
 </div>

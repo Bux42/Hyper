@@ -1,7 +1,16 @@
 <mat-drawer-container class="custom-mat-drawer-container" autosize>
   <mat-drawer #drawer class="custom-mat-drawwer" mode="over" position="end" opened="{{drawerOpened}}">
-    <p>Auto-resizing sidenav</p>
-    <img src="/assets/google.svg">
+      <div *ngIf="!user">
+        <p>Please log in</p>
+        <app-google-oauth></app-google-oauth>
+      </div>
+      <div *ngIf="user">
+        <p>You are logged in using {{user.AccountType}}</p>
+        <div *ngIf="user.AccountType == 'Google'">
+            <app-google-account></app-google-account>
+            Google User
+        </div>
+      </div>
   </mat-drawer>
   <app-media-categories></app-media-categories>
 </mat-drawer-container>

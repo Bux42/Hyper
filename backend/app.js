@@ -8,7 +8,9 @@ const fs = require('fs');
 const {
     serialize
 } = require('v8');
-const { allowedNodeEnvironmentFlags } = require('process');
+const {
+    allowedNodeEnvironmentFlags
+} = require('process');
 
 const app = express();
 const port = 3000;
@@ -30,7 +32,9 @@ const torrentManager = new TorrentManager("F:");
 
 const mongodbUrl = 'mongodb://localhost:27017';
 const dbName = 'hypertube';
-const mongoClient = new MongoClient(mongodbUrl);
+const mongoClient = new MongoClient(mongodbUrl, {
+    useUnifiedTopology: true
+});
 
 async function mal_search(mal_id) {
     try {
@@ -43,9 +47,7 @@ async function mal_search(mal_id) {
         };
         const movie = await mal_imgs.findOne(query);
         return (movie);
-    } finally {
-        await mongoClient.close();
-    }
+    } finally {}
 }
 
 async function mal_insert(mal_id, img_src) {
@@ -60,9 +62,7 @@ async function mal_insert(mal_id, img_src) {
         };
         const result = await mal_imgs.insertOne(doc);
         return (result);
-    } finally {
-        await mongoClient.close();
-    }
+    } finally {}
 }
 
 async function get_mal_imgs() {
@@ -72,18 +72,16 @@ async function get_mal_imgs() {
         const mal_imgs = database.collection("mal_imgs");
         const result = await mal_imgs.find({}).toArray();
         return (result);
-    } finally {
-        await mongoClient.close();
-    }
+    } finally {}
 }
 
 get_mal_imgs().then(d => {
     d.forEach(mal => {
         mediaApi.MalImgs[mal.mal_id] = mal.img_src;
     });
-})
+});
 
-var clearDownloads = false;
+var clearDownloads = true;
 
 if (clearDownloads) {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
@@ -106,7 +104,9 @@ app.listen(port, () => {
 });
 
 app.get("/ping", (req, res, next) => {
-    res.send({"Ping": true});
+    res.send({
+        "Ping": true
+    });
 });
 
 var missingImgs = [];
@@ -116,7 +116,7 @@ app.get('/media-list', (req, res, next) => {
     console.log(req.query);
     mediaApi.getMedia(req.query).then(data => {
         res.send(data);
-        
+
         if (req.query.mediaCategory == "animes") {
             data.forEach(anime => {
                 mal_search(anime.mal_id).catch(console.dir).then(d => {
@@ -125,23 +125,25 @@ app.get('/media-list', (req, res, next) => {
                     }
                 });
             });
-            /* GET ANIME IMGS
+            /*
             var int = setInterval(function () {
                 if (missingImgs.length == 0) {
                     clearInterval(int);
+                } else {
+                    console.log(missingImgs[0]);
+                    mediaApi.getMalImg(missingImgs[0]).then(json => {
+                        if (json) {
+                            mal_insert(missingImgs[0], json.pictures[0].large).then(data => {
+                                console.log("Got img ", missingImgs[0]);
+                            });
+                        } else {
+                            console.log(missingImgs[0], "<=== pic not found?");
+                        }
+                        missingImgs.shift();
+                    })
                 }
-                console.log(missingImgs[0]);
-                mediaApi.getMalImg(missingImgs[0]).then(json => {
-                    if (json) {
-                        mal_insert(missingImgs[0], json.pictures[0].large).then(data => {
-                            console.log("Got img ", missingImgs[0]);
-                        });
-                    } else {
-                        console.log(missingImgs[0], "<=== pic not found?");
-                    }
-                    missingImgs.shift();
-                })
-            }, 500);
+
+            }, 1500);
             */
         }
     });
@@ -228,6 +230,7 @@ app.get('/watch-media', (req, res, next) => {
         const fileSize = stat.size
         const range = req.headers.range
         if (range) {
+            
             console.log("range == true");
             const parts = range.replace(/bytes=/, "").split("-")
             const start = parseInt(parts[0], 10)
