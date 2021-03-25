@@ -86,6 +86,9 @@ body {
   color: white !important;
 }
 
+.custom-mat-form-field {
+}
+
 .mat-progress-spinner circle,
 .mat-spinner circle {
   stroke: white;

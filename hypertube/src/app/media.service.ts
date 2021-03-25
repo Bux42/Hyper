@@ -12,7 +12,8 @@ export class MediaService {
         console.log(filters);
         const params = new HttpParams()
             .set('mediaCategory', filters.MediaCategory)
-            .set('page', filters.Page);
+            .set('page', filters.Page)
+            .set('genre', filters.Genre);
         return (this.http.get<any>('http://localhost:3000/media-list', { params, withCredentials: true }));
     }
     fetchMediaEpisodes(filters: any) {

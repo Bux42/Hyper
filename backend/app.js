@@ -36,51 +36,6 @@ const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
 });
 
-async function mal_search(mal_id) {
-    try {
-        await mongoClient.connect();
-        const database = mongoClient.db(dbName);
-        const mal_imgs = database.collection("mal_imgs");
-        // create a document to be inserted
-        const query = {
-            mal_id: mal_id
-        };
-        const movie = await mal_imgs.findOne(query);
-        return (movie);
-    } finally {}
-}
-
-async function mal_insert(mal_id, img_src) {
-    try {
-        await mongoClient.connect();
-        const database = mongoClient.db(dbName);
-        const mal_imgs = database.collection("mal_imgs");
-        // create a document to be inserted
-        const doc = {
-            mal_id: mal_id,
-            img_src: img_src
-        };
-        const result = await mal_imgs.insertOne(doc);
-        return (result);
-    } finally {}
-}
-
-async function get_mal_imgs() {
-    try {
-        await mongoClient.connect();
-        const database = mongoClient.db(dbName);
-        const mal_imgs = database.collection("mal_imgs");
-        const result = await mal_imgs.find({}).toArray();
-        return (result);
-    } finally {}
-}
-
-get_mal_imgs().then(d => {
-    d.forEach(mal => {
-        mediaApi.MalImgs[mal.mal_id] = mal.img_src;
-    });
-});
-
 var clearDownloads = true;
 
 if (clearDownloads) {
@@ -116,36 +71,6 @@ app.get('/media-list', (req, res, next) => {
     console.log(req.query);
     mediaApi.getMedia(req.query).then(data => {
         res.send(data);
-
-        if (req.query.mediaCategory == "animes") {
-            data.forEach(anime => {
-                mal_search(anime.mal_id).catch(console.dir).then(d => {
-                    if (d == null) {
-                        missingImgs.push(anime.mal_id);
-                    }
-                });
-            });
-            /*
-            var int = setInterval(function () {
-                if (missingImgs.length == 0) {
-                    clearInterval(int);
-                } else {
-                    console.log(missingImgs[0]);
-                    mediaApi.getMalImg(missingImgs[0]).then(json => {
-                        if (json) {
-                            mal_insert(missingImgs[0], json.pictures[0].large).then(data => {
-                                console.log("Got img ", missingImgs[0]);
-                            });
-                        } else {
-                            console.log(missingImgs[0], "<=== pic not found?");
-                        }
-                        missingImgs.shift();
-                    })
-                }
-
-            }, 1500);
-            */
-        }
     });
 });
 
@@ -264,26 +189,3 @@ app.get('/watch-media', (req, res, next) => {
         console.log(req.session.magnetUrl, " torrent not found?");
     }
 });
-
-/*
-var express = require('express');
-var session = require('express-session');
-const cors = require('cors');
-
-var app = express();
-app.use(cors({origin: [
-    "http://localhost:4200"
-  ], credentials: true}));
-app.use(session({secret: "Shh, its a secret!", resave: true, saveUninitialized: true}));
-
-app.get('/', function(req, res){
-   if(req.session.page_views){
-      req.session.page_views++;
-      res.send("You visited this page " + req.session.page_views + " times");
-   } else {
-      req.session.page_views = 1;
-      res.send("Welcome to this page for the first time!");
-   }
-});
-app.listen(3000);
-*/
