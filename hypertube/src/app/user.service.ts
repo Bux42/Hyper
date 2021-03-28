@@ -24,4 +24,14 @@ export class UserService {
             })
         });
     }
+    setUser(user: any) {
+        console.log("post: ", user);
+        return (this.http.post<any>('http://localhost:3000/authenticate', user, { withCredentials: true }));
+    }
+    setWatchTime(media_id: any, watchTime: any) {
+        const params = new HttpParams()
+            .set('mediaId', media_id)
+            .set('watchTime', watchTime);
+        return (this.http.get<any>('http://localhost:3000/set-watch-time', { params, withCredentials: true }));
+    }
 }

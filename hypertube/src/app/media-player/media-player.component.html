@@ -2,7 +2,16 @@
     <div class="subtitles-overlay">
         Subtitles
     </div>
-    <video controls>
+    <div *ngIf="showStats" class="stats-overlay">
+        Stats
+        <div>
+            timeStamp: {{timeStamp}}
+        </div>
+        <div>
+            currentTime: {{currentTime}}
+        </div>
+    </div>
+    <video controls autoplay #videoTag (loaded)="loaded($event)" (loadeddata)="loadeddata($event)"  (progress)="progress($event)" (timeupdate)="timeupdate($event)">
         <source src="http://localhost:3000/watch-media" type="video/mp4">
     </video>
 </div>

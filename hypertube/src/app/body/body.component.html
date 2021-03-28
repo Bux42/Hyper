@@ -3,6 +3,7 @@
       <div *ngIf="!user">
         <p>Please log in</p>
         <app-google-oauth></app-google-oauth>
+        <app-school-oauth></app-school-oauth>
       </div>
       <div *ngIf="user">
         <p>You are logged in using {{user.AccountType}}</p>

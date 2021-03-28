@@ -17,6 +17,12 @@ export class AppComponent {
             this.userService.getUser().then((user) => {
                 console.log(user);
                 this.backendAvailable = true;
+                this.userService.setUser(user).subscribe((userInfos) => {
+                    console.log(userInfos);
+                    if (this.userService.user) {
+                        this.userService.user.watchHistory = userInfos.watchHistory;
+                    }
+                });
             })
         },
         error => {

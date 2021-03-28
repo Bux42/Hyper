@@ -39,7 +39,7 @@ export class GoogleOauthService {
     }
     async checkGoogle() {
         if (await this.checkIfUserAuthenticated()) {
-            this.googleUser = this.authInstance.currentUser.get();
+            this.googleUser = this.authInstance.currentUser.get().getBasicProfile();
         }
     }
     async checkIfUserAuthenticated(): Promise<boolean> {

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MediaDetailsEpisodesComponent } from '../media-details-episodes/media-details-episodes.component';
 import { MediaDetailsComponent } from '../media-details/media-details.component';
+import { UserService } from '../user.service';
 
 @Component({
     selector: 'app-media-list-item',
@@ -11,9 +12,12 @@ import { MediaDetailsComponent } from '../media-details/media-details.component'
 export class MediaListItemComponent implements OnInit {
     @Input() media: any;
     @Input() mediaCategory: any;
-    constructor(public dialog: MatDialog) { }
+    constructor(public dialog: MatDialog, private userService: UserService) { }
 
     ngOnInit(): void {
+        if (this.userService.user && this.userService.user.watchHistory) {
+            this.media.seen = this.userService.user.watchHistory.includes(this.media._id);
+        }
     }
 
     mediaMouseClick() {

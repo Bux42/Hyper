@@ -32,7 +32,7 @@ export class MediaDetailsComponent implements OnInit {
     }
     watch() {
         this.watchStatus = "Check magnet";
-        this.mediaService.selectMedia(this.media.torrents.en[this.selectedResolution].url).subscribe(data => {
+        this.mediaService.selectMedia(this.media.torrents.en[this.selectedResolution].url, this.media._id).subscribe(data => {
             console.log(data);
             var int = setInterval(() => {
                 this.mediaService.getMediaState(this.media.torrents.en[this.selectedResolution].url).subscribe(data => {

@@ -1,7 +1,10 @@
 const express = require('express')
 const session = require('express-session');
+const cookieSession = require('cookie-session')
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 const MediaApi = require('./MediaApi');
 const TorrentManager = require('./TorrentManager');
 const fs = require('fs');
@@ -15,6 +18,7 @@ const {
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.json())
 app.use(cors({
     origin: [
         "http://localhost:4200"
@@ -32,11 +36,20 @@ const torrentManager = new TorrentManager("F:");
 
 const mongodbUrl = 'mongodb://localhost:27017';
 const dbName = 'hypertube';
+var db = null;
+
 const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
 });
 
-var clearDownloads = true;
+
+mongoClient.connect(function (err) {
+    assert.equal(null, err);
+    console.log('Connected successfully to server');
+    db = mongoClient.db(dbName);
+});
+
+var clearDownloads = false;
 
 if (clearDownloads) {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
@@ -69,6 +82,7 @@ var missingImgs = [];
 app.get('/media-list', (req, res, next) => {
     console.log("/media-list", req.sessionID);
     console.log(req.query);
+    console.log(req.session.userId);
     mediaApi.getMedia(req.query).then(data => {
         res.send(data);
     });
@@ -86,8 +100,8 @@ app.get('/media-state', (req, res, next) => {
     console.log("/media-state", req.sessionID);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
     //req.session.magnetUrl = req.query.magnetUrl;
-    console.log("req.query.magnetUrl:", req.query.magnetUrl);
-    console.log("req.session.magnetUrl:", req.session.magnetUrl)
+    //console.log("req.query.magnetUrl:", req.query.magnetUrl);
+    //console.log("req.session.magnetUrl:", req.session.magnetUrl)
     if (!torrent) {
         res.send({
             "ok": false
@@ -107,6 +121,7 @@ app.get('/select-media', (req, res, next) => {
     console.log("req.query.magnetUrl:", req.query.magnetUrl);
     req.session.magnetUrl = req.query.magnetUrl;
     console.log("req.session.magnetUrl:", req.session.magnetUrl);
+
     if (!torrent) {
         console.log("add magnet: " + req.query.magnetUrl);
         var torrent = torrentManager.addTorrent(req.query.magnetUrl);
@@ -155,7 +170,6 @@ app.get('/watch-media', (req, res, next) => {
         const fileSize = stat.size
         const range = req.headers.range
         if (range) {
-            
             console.log("range == true");
             const parts = range.replace(/bytes=/, "").split("-")
             const start = parseInt(parts[0], 10)
@@ -187,5 +201,88 @@ app.get('/watch-media', (req, res, next) => {
         }
     } else {
         console.log(req.session.magnetUrl, " torrent not found?");
+    }
+});
+
+app.get('/set-watch-time', (req, res, next) => {
+    console.log("/set-watch-time", req.sessionID);
+    if (req.session.userId) {
+        console.log(req.query);
+        const collection = db.collection('watch_history');
+
+        collection.find({
+            user_id: req.session.userId,
+            media_id: req.query.mediaId
+        }).toArray(function (err, docs) {
+            assert.equal(err, null);
+            console.log('Found the following records');
+            console.log(docs);
+            if (!docs.length) {
+                console.log("1st watch", req.query.mediaId);
+                collection.insertOne({
+                    user_id: req.session.userId,
+                    media_id: req.query.mediaId,
+                    watch_time: req.query.watchTime
+                });
+            } else {
+                var watchTime = docs[0];
+                watchTime.watch_time = req.query.watchTime;
+                collection.update({user_id: req.session.userId, media_id: req.query.mediaId}, watchTime, { upsert: true });
+            }
+        });
+    }
+});
+
+app.post('/authenticate', (req, res, next) => {
+    console.log("/authenticate", req.sessionID);
+    delete req.session.userId;
+    console.log(req.body);
+    if (req.body.AccountType) {
+        if (req.body.AccountType == "Google") {
+            req.session.userId = req.body.UserData.QR;
+            const collection = db.collection('users');
+            collection.find({
+                id: req.body.UserData.QR
+            }).toArray(function (err, docs) {
+                assert.equal(err, null);
+                console.log('Found the following records');
+                console.log(docs);
+                if (!docs.length) {
+                    console.log("New account");
+                    collection.insertOne({
+                        id: req.body.UserData.QR,
+                        first_name: req.body.UserData.AT,
+                        last_name: req.body.UserData.wR,
+                        email: req.body.UserData.zt,
+                        img: req.body.UserData.VI
+                    });
+                }
+            });
+        }
+    }
+    var watchHistory = [];
+    if (req.session.userId) {
+        const collection = db.collection('watch_history');
+
+        collection.find({
+            user_id: req.session.userId
+        }).toArray(function (err, docs) {
+            assert.equal(err, null);
+            console.log('Found the following records');
+            console.log(docs);
+            docs.forEach(el => {
+                console.log("el:", el);
+                watchHistory.push(el.media_id);
+            });
+            res.send({
+                "okay": true,
+                watchHistory: watchHistory
+            });
+        });
+    } else {
+        res.send({
+            "okay": true,
+            watchHistory: watchHistory
+        });
     }
 });

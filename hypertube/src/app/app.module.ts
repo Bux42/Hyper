@@ -33,6 +33,7 @@ import { MediaPlayerComponent } from './media-player/media-player.component';
 import { StickyHeaderDirective } from './sticky-header.directive';
 import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
 import { GoogleAccountComponent } from './google-account/google-account.component';
+import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
 
 
 
@@ -50,7 +51,8 @@ import { GoogleAccountComponent } from './google-account/google-account.componen
         MediaPlayerComponent,
         StickyHeaderDirective,
         GoogleOauthComponent,
-        GoogleAccountComponent
+        GoogleAccountComponent,
+        SchoolOauthComponent
     ],
     imports: [
         MatTabsModule,

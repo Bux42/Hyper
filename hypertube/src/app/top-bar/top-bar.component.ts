@@ -15,7 +15,8 @@ export class TopBarComponent implements OnInit {
     ngOnInit(): void {
         if (this.userService.user) {
             if (this.userService.user.AccountType == "Google") {
-                this.profilePic = this.userService.user.UserData.Qs.VI;
+                console.log(this.userService.user);
+                this.profilePic = this.userService.user.UserData.VI;
             }
         }
     }
