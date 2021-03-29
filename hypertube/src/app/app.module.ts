@@ -35,8 +35,6 @@ import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
 import { GoogleAccountComponent } from './google-account/google-account.component';
 import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
 
-
-
 @NgModule({
     declarations: [
         AppComponent,

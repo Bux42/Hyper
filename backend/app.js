@@ -231,6 +231,7 @@ app.get('/set-watch-time', (req, res, next) => {
             }
         });
     }
+    res.send({"okay": true});
 });
 
 app.post('/authenticate', (req, res, next) => {
@@ -272,7 +273,10 @@ app.post('/authenticate', (req, res, next) => {
             console.log(docs);
             docs.forEach(el => {
                 console.log("el:", el);
-                watchHistory.push(el.media_id);
+                watchHistory.push({
+                    media_id: el.media_id,
+                    watch_time: el.watch_time
+                });
             });
             res.send({
                 "okay": true,

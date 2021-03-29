@@ -29,6 +29,12 @@ export class UserService {
         return (this.http.post<any>('http://localhost:3000/authenticate', user, { withCredentials: true }));
     }
     setWatchTime(media_id: any, watchTime: any) {
+        if (this.user && this.user.watchHistory) {
+            var mediaResume = this.user.watchHistory.find((x: any) => x.media_id == media_id);
+            if (mediaResume) {
+                mediaResume.watch_time = watchTime;
+            }
+        }
         const params = new HttpParams()
             .set('mediaId', media_id)
             .set('watchTime', watchTime);

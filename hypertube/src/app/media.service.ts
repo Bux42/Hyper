@@ -41,5 +41,32 @@ export class MediaService {
     watchMedia() {
         return (this.http.get<any>('http://localhost:3000/watch-media', { withCredentials: true }));
     }
-    
+
+    /* UTILS */
+    watchTimeToString(watch_time: any) {
+        var ret = "";
+        var watchTimeNum = parseInt(watch_time);
+        var hours = 0;
+        var mins = 0;
+        while (watchTimeNum >= 3600) {
+            hours++;
+            watchTimeNum -= 3600;
+        }
+        while (watchTimeNum >= 60) {
+            mins++;
+            watchTimeNum -= 60;
+        }
+        if (hours) {
+            ret += hours + "h";
+        }
+        if (mins) {
+            ret += mins + "m";
+        }
+        if (watchTimeNum) {
+            ret += watchTimeNum + "s";
+        } else {
+            ret += "0s";
+        }
+        return (ret);
+    }
 }

@@ -1,6 +1,11 @@
 import { Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MediaService } from '../media.service';
 import { UserService } from '../user.service';
+
+export interface DialogData {
+    resumeData: any;
+}
 
 @Component({
     selector: 'app-media-player',
@@ -30,13 +35,35 @@ export class MediaPlayerComponent implements OnInit {
             }
         }
     }
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private userService: UserService) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private userService: UserService, public dialog: MatDialog, private mediaService: MediaService) {
         this.media = data.media;
-
     }
 
     ngOnInit(): void {
+        console.log(this.media);
+        if (this.media.resume) {
+            var resumeTime = this.mediaService.watchTimeToString(this.media.resume.watch_time);
+            const dialogRef = this.dialog.open(ResumeDialog, {
+                width: '250px',
+                data: { resumeData: resumeTime }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                var video = this.videoTag?.nativeElement;
+                if (result) {
+                    if (video) {
+                        video.currentTime = this.media.resume.watch_time;
+                    }
+                }
+                if (video) {
+                    video.play();
+                }
+                
+                console.log('The dialog was closed', result);
+            });
+        }
     }
+    
     ngAfterViewInit() {
         //console.log(this.videoTag);
     }
@@ -66,5 +93,22 @@ export class MediaPlayerComponent implements OnInit {
             this.lastEvent = Date.now()
             this.userService.setWatchTime(this.media._id, resumingTime).subscribe();
         }
+    }
+}
+
+@Component({
+    selector: 'resume-dialog',
+    templateUrl: 'resume-dialog.html',
+})
+export class ResumeDialog {
+    constructor(
+        public dialogRef: MatDialogRef<ResumeDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+    resume(resume: any) {
+        this.dialogRef.close(resume);
     }
 }

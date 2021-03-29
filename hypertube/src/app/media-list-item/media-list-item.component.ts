@@ -16,7 +16,7 @@ export class MediaListItemComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.userService.user && this.userService.user.watchHistory) {
-            this.media.seen = this.userService.user.watchHistory.includes(this.media._id);
+            this.media.resume = this.userService.user.watchHistory.find((x: any) => x.media_id == this.media._id);
         }
     }
 
