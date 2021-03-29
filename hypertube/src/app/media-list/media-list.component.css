@@ -5,3 +5,7 @@
 .loading {
     opacity: 0.6;
 }
+
+.search-input {
+    margin-left: 10px;
+}

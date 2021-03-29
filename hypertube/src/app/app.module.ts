@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { FormsModule } from '@angular/forms';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -22,6 +23,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -64,12 +67,15 @@ import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
         MatProgressSpinnerModule,
         MatDividerModule,
         MatSelectModule,
+        MatInputModule,
+        MatIconModule,
         HttpClientModule,
         ScrollingModule,
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        FormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

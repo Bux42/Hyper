@@ -7,6 +7,16 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-form-field class="custom-mat-form-field search-input">
+    <mat-label>Search</mat-label>
+    <input matInput (input)="searchInputChanged()" type="text" [(ngModel)]="searchInput">
+    <button mat-button *ngIf="searchInput" matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
+      <mat-icon (click)="clearSearchInput()">close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+<div>
+    
 </div>
 <div *ngIf="loaded" [ngClass]="{'loading': loading}" class="media-list-container" stickyHeaderDirective
   style="overflow: auto; max-height: 100%;" (appScrollToEnd)="scrollToEnd()" [attr.media-category]="mediaCategory">

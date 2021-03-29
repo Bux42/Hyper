@@ -9,6 +9,8 @@ import { MediaService } from '../media.service';
 export class MediaListComponent implements OnInit {
     @Input() mediaCategory: any;
     @Input() media: any;
+    searchInput: any = "";
+    searchTimeout: any;
     page = 1;
     loaded = false;
     loading = false;
@@ -25,12 +27,53 @@ export class MediaListComponent implements OnInit {
         var filters = {
             "MediaCategory": this.mediaCategory,
             "Page": this.page,
-            "Genre": this.selectedCategory.toLowerCase()
+            "Genre": this.selectedCategory.toLowerCase(),
+            "Keywords": this.searchInput
         };
         this.mediaService.fetchMedia(filters).subscribe(data => {
             this.mediaItems = data;
             console.log(data);
             this.loaded = true;
+        },
+            error => {
+                console.log(error);
+            });
+    }
+    searchInputChanged() {
+        clearInterval(this.searchTimeout);
+        var that = this;
+        this.searchTimeout = setTimeout(function(){
+            that.loading = true;
+            var filters = {
+                "MediaCategory": that.mediaCategory,
+                "Page": that.page,
+                "Genre": that.selectedCategory.toLowerCase(),
+                "Keywords": that.searchInput
+            };
+            that.mediaService.fetchMedia(filters).subscribe(data => {
+                that.mediaItems = data;
+                that.loading = false;
+            },
+                error => {
+                    console.log(error);
+                });
+        }, 300);
+    }
+    clearSearchInput() {
+        console.log("clearSearchInput");
+        this.page = 1;
+        this.searchInput = "";
+        this.loading = true;
+        var filters = {
+            "MediaCategory": this.mediaCategory,
+            "Page": this.page,
+            "Genre": this.selectedCategory.toLowerCase(),
+            "Keywords": this.searchInput
+        };
+        this.mediaService.fetchMedia(filters).subscribe(data => {
+            this.mediaItems = data;
+            console.log(data);
+            this.loading = false;
         },
             error => {
                 console.log(error);
@@ -43,7 +86,8 @@ export class MediaListComponent implements OnInit {
             var filters = {
                 "MediaCategory": this.mediaCategory,
                 "Page": this.page,
-                "Genre": this.selectedCategory.toLowerCase()
+                "Genre": this.selectedCategory.toLowerCase(),
+                "Keywords": this.searchInput
             };
             this.mediaService.fetchMedia(filters).subscribe(data => {
                 data.forEach((element: any) => {
@@ -58,12 +102,14 @@ export class MediaListComponent implements OnInit {
     }
     genreChanged(e: any) {
         this.page = 1;
+        this.searchInput = "";
         this.loading = true;
         this.selectedCategory = e;
         var filters = {
             "MediaCategory": this.mediaCategory,
             "Page": this.page,
-            "Genre": this.selectedCategory.toLowerCase()
+            "Genre": this.selectedCategory.toLowerCase(),
+            "Keywords": this.searchInput
         };
         this.mediaService.fetchMedia(filters).subscribe(data => {
             this.mediaItems = data;
