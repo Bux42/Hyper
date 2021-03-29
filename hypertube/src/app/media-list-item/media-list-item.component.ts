@@ -12,11 +12,22 @@ import { UserService } from '../user.service';
 export class MediaListItemComponent implements OnInit {
     @Input() media: any;
     @Input() mediaCategory: any;
+    svgRatingPaths: any[] = [];
     constructor(public dialog: MatDialog, private userService: UserService) { }
 
     ngOnInit(): void {
         if (this.userService.user && this.userService.user.watchHistory) {
             this.media.resume = this.userService.user.watchHistory.find((x: any) => x.media_id == this.media._id);
+        }
+        for (var i = 0; i < 5; i++) {
+            var percent = (this.media.rating.percentage / 10) / 2;
+            if (percent > i + 0.5) {
+                this.svgRatingPaths.push("/assets/star.svg");
+            } else if (percent > i) {
+                this.svgRatingPaths.push("/assets/star-half.svg");
+            } else {
+                this.svgRatingPaths.push("/assets/star-empty.svg");
+            }
         }
     }
 

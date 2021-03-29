@@ -17,6 +17,20 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
 }
 
+
+.media-list-item:hover > .rating{
+    opacity: 0.8;
+}
 .seen {
     opacity: 0.5;
+}
+
+.star-rating {
+    height: 20px;
+    margin-left: 2px;
+}
+
+.rating {
+    opacity: 0;
+    margin-top: 240px;
 }

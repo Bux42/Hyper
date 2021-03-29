@@ -1,3 +1,5 @@
 <div (click)="mediaMouseClick()" class="media-list-item" [ngClass]="{'seen': media.resume}" style="background-image: url({{media.images.banner}});">
-
+    <div class="rating">
+        <img class="star-rating" *ngFor="let svg of svgRatingPaths" [src]="svg">
+    </div>
 </div>
