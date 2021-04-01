@@ -12,8 +12,26 @@ const {
     serialize
 } = require('v8');
 const {
-    allowedNodeEnvironmentFlags
+    allowedNodeEnvironmentFlags,
+    exit
 } = require('process');
+
+var settings = null;
+
+if (fs.existsSync(".env.json")) {
+    var data = fs.readFileSync(".env.json", 'utf8');
+    settings = JSON.parse(data);
+} else {
+    console.log(".env.json not found, exit");
+    exit();
+}
+
+if (!settings) {
+    console.log("settings is null, exit");
+    exit();
+} else {
+    console.log(settings);
+}
 
 const app = express();
 const port = 3000;
@@ -32,9 +50,9 @@ app.use(session({
 }));
 
 const mediaApi = new MediaApi();
-const torrentManager = new TorrentManager("F:");
+const torrentManager = new TorrentManager(settings.TorrentFolder);
 
-const mongodbUrl = 'mongodb://localhost:27017';
+const mongodbUrl = settings.MongoDbUrl;
 const dbName = 'hypertube';
 var db = null;
 
@@ -227,11 +245,18 @@ app.get('/set-watch-time', (req, res, next) => {
             } else {
                 var watchTime = docs[0];
                 watchTime.watch_time = req.query.watchTime;
-                collection.update({user_id: req.session.userId, media_id: req.query.mediaId}, watchTime, { upsert: true });
+                collection.update({
+                    user_id: req.session.userId,
+                    media_id: req.query.mediaId
+                }, watchTime, {
+                    upsert: true
+                });
             }
         });
     }
-    res.send({"okay": true});
+    res.send({
+        "okay": true
+    });
 });
 
 app.post('/authenticate', (req, res, next) => {

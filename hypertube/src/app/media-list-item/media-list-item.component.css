@@ -19,7 +19,7 @@
 
 
 .media-list-item:hover > .rating{
-    opacity: 0.8;
+    opacity: 1;
 }
 .seen {
     opacity: 0.5;
