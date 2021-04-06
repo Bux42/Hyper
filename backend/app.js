@@ -67,7 +67,7 @@ mongoClient.connect(function (err) {
     db = mongoClient.db(dbName);
 });
 
-var clearDownloads = false;
+var clearDownloads = true;
 
 if (clearDownloads) {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
@@ -128,7 +128,7 @@ app.get('/media-state', (req, res, next) => {
         res.send({
             "ok": true,
             "progress": torrent.DownloadedChunks + " / " + torrent.TotalChunks,
-            "progressPercent": (torrent.DownloadedChunks / torrent.TotalChunks) * 100
+            "progressPercent": ((torrent.DownloadedChunks / torrent.TotalChunks) * 100)
         });
     }
 });
