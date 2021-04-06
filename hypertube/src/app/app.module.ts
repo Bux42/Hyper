@@ -26,7 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-
+import { MatTableModule } from '@angular/material/table';
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -39,6 +39,7 @@ import { StickyHeaderDirective } from './sticky-header.directive';
 import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
 import { GoogleAccountComponent } from './google-account/google-account.component';
 import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
+import { ResolutionPickerComponent } from './resolution-picker/resolution-picker.component';
 
 @NgModule({
     declarations: [
@@ -55,7 +56,8 @@ import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
         StickyHeaderDirective,
         GoogleOauthComponent,
         GoogleAccountComponent,
-        SchoolOauthComponent
+        SchoolOauthComponent,
+        ResolutionPickerComponent
     ],
     imports: [
         MatTabsModule,
@@ -72,6 +74,7 @@ import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
         MatInputModule,
         MatIconModule,
         MatCardModule,
+        MatTableModule,
         HttpClientModule,
         ScrollingModule,
         BrowserModule,
