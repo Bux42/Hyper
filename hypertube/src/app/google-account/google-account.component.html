@@ -1,6 +1,76 @@
-<div>
-    <div>
-        {{account.Se}}
-    </div>
-    <button (click)="logout()" mat-flat-button color="primary">Logout</button>
+<div width="250px">
+    <mat-card class="custom-mat-card">
+        <div class="custom-title">
+            Your profile 
+        </div>
+        <hr style="width: 80%" >
+        <div style="display:inline">
+            <div >
+                <img width="13px" src="/assets/google.svg">
+            </div>
+            Hello <div style="display:inline; font-weight: bold;"> {{account.Se}}</div>
+        </div>
+        <br ><br >
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+            <mat-label>Email</mat-label>
+            <input class="custom-disabled-color" disabled matInput placeholder="email@mail.com" value="{{account.zt}}">
+            </mat-form-field>
+        
+            <mat-form-field class="example-full-width">
+            <mat-label>Psoeudo</mat-label>
+            <input matInput placeholder="mypsoeudo" value="{{account.Se}}">
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Last Name</mat-label>
+                <input class="custom-disabled-color" disabled matInput placeholder="Lastname" value="{{account.wR}}">
+            </mat-form-field>
+            
+            <mat-form-field class="example-full-width">
+                <mat-label>First Name</mat-label>
+                <input class="custom-disabled-color" disabled matInput placeholder="Firstname" value="{{account.AT}}">
+            </mat-form-field>
+
+<!--            <mat-form-field class="example-full-width">
+                <mat-label>Password</mat-label>
+                <input disabled matInput placeholder="password" value="">
+            </mat-form-field>
+        -->
+            <mat-form-field appearance="fill">
+                <mat-label>Prefered Language</mat-label>
+                <mat-select [(value)]="dselected">
+                  <mat-option class="custom-mat-option" value="one">English</mat-option>
+                  <mat-option class="custom-mat-option" value="two">Français</mat-option>
+                </mat-select>
+              </mat-form-field>
+        </form>
+        <button style="margin: auto; display: flex;" (click)="logout()" mat-flat-button color="primary">Logout</button>
+    </mat-card>
+    <mat-card>
+        <div class="custom-title">
+            You did see
+        </div>
+        <hr style="width:80%">
+        <mat-grid-list cols="3" rowHeight="2:1">
+            <mat-grid-tile>
+                <!--<div style="background-image: url({{media.images.banner}});vertical-align:top;margin: 25px;">
+                    <div style="height: 20px; margin-top: 5px;vertical-align: middle; font-weight: bold;">
+                        {{media.title}}
+                    </div>
+                </div>-->
+            </mat-grid-tile>
+            <mat-grid-tile>2</mat-grid-tile>
+            <mat-grid-tile>3</mat-grid-tile>
+            <mat-grid-tile>4</mat-grid-tile>
+            <mat-grid-tile>5</mat-grid-tile>
+            <mat-grid-tile>6</mat-grid-tile>
+            <mat-grid-tile>7</mat-grid-tile>
+            <mat-grid-tile>8</mat-grid-tile>
+            <mat-grid-tile>9</mat-grid-tile>
+            <mat-grid-tile>10</mat-grid-tile>
+            <mat-grid-tile>11</mat-grid-tile>
+            <mat-grid-tile>12</mat-grid-tile>
+        </mat-grid-list>
+    </mat-card>
 </div>

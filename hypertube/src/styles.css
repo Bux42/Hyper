@@ -46,6 +46,7 @@ a:hover {
 
 html,
 body {
+  overflow-y: hidden;
   height: 100%;
 }
 
@@ -54,6 +55,28 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.custom-title {
+  display: flex; 
+  margin: auto; 
+  justify-content: center;
+  font-size: 18px; 
+  padding: 5px;
+}
+
+.custom-disabled-color {
+  color: rgb(255 255 255 / 38%) !important;
+}
+.custom-mat-card {
+  background: #2e2e2e;
+}
+
+.custom-mat-option {
+  background: #2e2e2e !important;
+}
+
+.custom-mat-option:hover {
+  background: #525252 !important;
+}
 .custom-dialog-container .mat-dialog-container {
   background-color: rgba(0, 0, 0, 0.9);
 }
@@ -66,7 +89,7 @@ body {
   background-image: url("/assets/background.png");
   background-size: cover;
   opacity: 0.9;
-  width: 30vw;
+  width: 400px;
 }
 
 .custom-mat-expansion-panel {
