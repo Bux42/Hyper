@@ -25,6 +25,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -69,6 +71,7 @@ import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
         MatSelectModule,
         MatInputModule,
         MatIconModule,
+        MatCardModule,
         HttpClientModule,
         ScrollingModule,
         BrowserModule,

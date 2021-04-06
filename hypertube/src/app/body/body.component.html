@@ -6,10 +6,8 @@
         <app-school-oauth></app-school-oauth>
       </div>
       <div *ngIf="user">
-        <p>You are logged in using {{user.AccountType}}</p>
         <div *ngIf="user.AccountType == 'Google'">
             <app-google-account></app-google-account>
-            Google User
         </div>
       </div>
   </mat-drawer>

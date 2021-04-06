@@ -1,5 +1,8 @@
-<div (click)="mediaMouseClick()" class="media-list-item" [ngClass]="{'seen': media.resume}" style="background-image: url({{media.images.banner}});">
+<div (click)="mediaMouseClick()" class="media-list-item" [ngClass]="{'seen': media.resume}" style="background-image: url({{media.images.banner}});vertical-align:top;margin: 25px;">
     <div class="rating">
         <img class="star-rating" *ngFor="let svg of svgRatingPaths" [src]="svg">
+    </div>
+    <div style="height: 20px; margin-top: 5px;vertical-align: middle; font-weight: bold;">
+        {{media.title}} - {{media.year}}
     </div>
 </div>
