@@ -14,7 +14,8 @@ export class MediaService {
             .set('mediaCategory', filters.MediaCategory)
             .set('page', filters.Page)
             .set('genre', filters.Genre)
-            .set('keywords', filters.Keywords);
+            .set('keywords', filters.Keywords)
+            .set('filter', filters.Filter);
         return (this.http.get<any>('http://localhost:3000/media-list', { params, withCredentials: true }));
     }
     fetchMediaEpisodes(filters: any) {

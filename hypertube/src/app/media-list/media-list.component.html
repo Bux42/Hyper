@@ -1,9 +1,17 @@
 <div *ngIf="loaded">
-  <mat-form-field appearance="fill" class="custom-mat-form-field">
+  <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
     <mat-label>Genre</mat-label>
     <mat-select (selectionChange)="genreChanged($event.value)" [(value)]="selectedCategory">
       <mat-option *ngFor="let category of categories[mediaCategory]" [value]="category">
         {{category}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
+    <mat-label>Sort by</mat-label>
+    <mat-select (selectionChange)="sortChanged($event.value)" [(value)]="selectedFilter">
+      <mat-option *ngFor="let sortBy of sortByList" [value]="sortBy">
+        {{sortBy}}
       </mat-option>
     </mat-select>
   </mat-form-field>

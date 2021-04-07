@@ -18,19 +18,28 @@
 }
 
 
-.media-list-item:hover > .rating{
-    opacity: 1;
+.media-list-item:hover>.rating {
+  opacity: 1;
 }
+
 .seen {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .star-rating {
-    height: 20px;
-    margin-left: 2px;
+  height: 20px;
+  margin-left: 2px;
 }
 
 .rating {
-    opacity: 0;
-    margin-top: 240px;
+  opacity: 0;
+  margin-top: 240px;
+}
+
+.media-title {
+  height: 20px;
+  margin-top: 5px;
+  vertical-align: middle;
+  font-weight: bold;
+  color:white;
 }

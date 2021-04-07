@@ -8,7 +8,7 @@ module.exports = class MediaApi {
     async getMedia(query) {
         // https://tv-v2.api-fetch.sh/movies/1?sort=trending&order=-1&genre=all&keywords=potter
         var that = this;
-        var url = "https://tv-v2.api-fetch.sh/" + query.mediaCategory + "/" + query.page + "?sort=trending&order=-1&genre=" + query.genre;
+        var url = "https://tv-v2.api-fetch.sh/" + query.mediaCategory + "/" + query.page + "?sort=" + query.filter + "&order=-1&genre=" + query.genre;
         if (query.keywords.length) {
             url += "&keywords=" + query.keywords;
         }
