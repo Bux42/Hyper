@@ -9,12 +9,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 })
 export class MediaDetailsComponent implements OnInit {
     @Input() media: any;
+    @Input() mediaCategory: any;
     mediaGenres: any[] = [];
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<MediaDetailsComponent>, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.media = this.data.media;
+        this.mediaCategory = this.data.mediaCategory;
         this.mediaGenres = this.media.genres.join(" / ");
-        console.log(this.media);
+        console.log(this.media, this.mediaCategory);
     }
 }

@@ -37,14 +37,15 @@ export class MediaListItemComponent implements OnInit {
                 width: '80vh',
                 height: '80vh',
                 data: {
-                    media: this.media
+                    media: this.media,
+                    mediaCategory: this.mediaCategory
                 },
                 panelClass: 'custom-dialog-container'
             });
         } else {
             const dialogRef = this.dialog.open(MediaDetailsEpisodesComponent, {
-                width: '80vh',
-                height: '80vh',
+                width: '90vh',
+                height: '90vh',
                 data: {
                     media: this.media,
                     mediaCategory: this.mediaCategory

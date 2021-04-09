@@ -17,15 +17,6 @@ video {
   /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
 }
 
-.subtitles-overlay {
-  position: absolute;
-  z-index: 300000;
-  color: white;
-  text-align: center;
-  left: 50vw;
-  bottom: 100px;
-}
-
 .stats-overlay {
   opacity: 0.8;
   position: absolute;

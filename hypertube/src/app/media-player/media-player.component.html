@@ -1,17 +1,17 @@
 <div>
-    <div class="subtitles-overlay">
-        Subtitles
+  <div *ngIf="showStats" class="stats-overlay">
+    Stats
+    <div>
+      timeStamp: {{timeStamp}}
     </div>
-    <div *ngIf="showStats" class="stats-overlay">
-        Stats
-        <div>
-            timeStamp: {{timeStamp}}
-        </div>
-        <div>
-            currentTime: {{currentTime}}
-        </div>
+    <div>
+      currentTime: {{currentTime}}
     </div>
-    <video controls [attr.autoplay]="media.resume ? null : true"  #videoTag (loaded)="loaded($event)" (loadeddata)="loadeddata($event)"  (progress)="progress($event)" (timeupdate)="timeupdate($event)">
-        <source src="http://localhost:3000/watch-media" type="video/mp4">
-    </video>
+  </div>
+  <video crossorigin="use-credentials" controls [attr.autoplay]="media.resume ? null : true" #videoTag
+    (loaded)="loaded($event)" (loadeddata)="loadeddata($event)" (progress)="progress($event)"
+    (timeupdate)="timeupdate($event)">
+    <source src="http://localhost:3000/watch-media" type="video/mp4">
+    <track *ngIf="subtitlesSrc != null" [src]="'http://localhost:3000/get-vtt?path=' + subtitlesSrc" default>
+  </video>
 </div>

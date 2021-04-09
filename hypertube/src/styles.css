@@ -112,6 +112,18 @@ body {
 .custom-mat-form-field {
 }
 
+.mat-header-cell {
+    color:white;
+}
+
+.mat-header-row {
+    background: #282828;
+}
+
+.mat-cell {
+    color: white;
+}
+
 .mat-progress-spinner circle,
 .mat-spinner circle {
   stroke: white;

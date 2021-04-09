@@ -14,6 +14,7 @@ export interface DialogData {
 })
 export class MediaPlayerComponent implements OnInit {
     @Input() media: any;
+    @Input() subtitlesSrc: any;
     i: any = 0;
     showStats: any = false;
     timeStamp: any = "undefined";
@@ -37,10 +38,11 @@ export class MediaPlayerComponent implements OnInit {
     }
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, private userService: UserService, public dialog: MatDialog, private mediaService: MediaService) {
         this.media = data.media;
+        this.subtitlesSrc = data.subtitles;
     }
 
     ngOnInit(): void {
-        console.log(this.media);
+        console.log(this.media, this.subtitlesSrc);
         if (this.media.resume) {
             var resumeTime = this.mediaService.watchTimeToString(this.media.resume.watch_time);
             const dialogRef = this.dialog.open(ResumeDialog, {

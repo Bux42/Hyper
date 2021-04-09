@@ -33,6 +33,9 @@
   <section class="episode-details">
       <h1>{{selectedEpisode.title}}</h1>
       <p>{{selectedEpisode.overview}}</p>
+      <app-resolution-picker [media]="selectedEpisode">
+
+    </app-resolution-picker>
   </section>
 </div>
 <div class="load-spinner" *ngIf="!mediaEpisodes">

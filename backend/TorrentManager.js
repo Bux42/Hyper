@@ -7,6 +7,7 @@ class Torrent {
         this.MagnetLink = magnet;
         this.Trackers = [];
         this.MagnetSplit = this.FullMagnet.split("&tr=");
+        console.log(this.MagnetLink);
         this.Downloaded = false;
         this.MediaPath = null;
         this.Idle = false;

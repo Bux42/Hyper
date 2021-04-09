@@ -27,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -75,6 +76,7 @@ import { ResolutionPickerComponent } from './resolution-picker/resolution-picker
         MatIconModule,
         MatCardModule,
         MatTableModule,
+        MatMenuModule,
         HttpClientModule,
         ScrollingModule,
         BrowserModule,

@@ -43,6 +43,19 @@ export class MediaService {
     watchMedia() {
         return (this.http.get<any>('http://localhost:3000/watch-media', { withCredentials: true }));
     }
+    fetchMediaSubtitlesImdb(mediaInfo: any) {
+        const params = new HttpParams()
+            .set('imdb_id', mediaInfo.imdb_id)
+            .set('media_category', mediaInfo.media_category);
+        return (this.http.get<any>('http://localhost:3000/get-subtitles-imdb', { params, withCredentials: true }));
+    }
+    fetchMediaSubtitlesSrc(mediaInfo: any) {
+        const params = new HttpParams()
+            .set('imdb_id', mediaInfo.imdb_id)
+            .set('media_category', mediaInfo.media_category)
+            .set('lang', mediaInfo.lang);
+        return (this.http.get<any>('http://localhost:3000/get-subtitles-src', { params, withCredentials: true }));
+    }
 
     /* UTILS */
     watchTimeToString(watch_time: any) {

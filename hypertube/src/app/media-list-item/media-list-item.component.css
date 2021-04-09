@@ -37,9 +37,9 @@
 }
 
 .media-title {
+    text-shadow: 1px 1px 5px black;
   height: 20px;
   margin-top: 5px;
   vertical-align: middle;
-  font-weight: bold;
-  color:white;
+  color:rgb(230, 230, 230);
 }

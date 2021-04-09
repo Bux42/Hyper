@@ -49,7 +49,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-const mediaApi = new MediaApi();
+const mediaApi = new MediaApi(settings.TorrentFolder);
 const torrentManager = new TorrentManager(settings.TorrentFolder);
 
 const mongodbUrl = settings.MongoDbUrl;
@@ -67,7 +67,7 @@ mongoClient.connect(function (err) {
     db = mongoClient.db(dbName);
 });
 
-var clearDownloads = true;
+var clearDownloads = false;
 
 if (clearDownloads) {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
@@ -111,7 +111,7 @@ app.get('/media-episodes', (req, res, next) => {
     console.log(req.query);
     mediaApi.getMediaEpisodes(req.query).then(data => {
         res.send(data);
-    })
+    });
 });
 
 app.get('/media-state', (req, res, next) => {
@@ -220,6 +220,26 @@ app.get('/watch-media', (req, res, next) => {
     } else {
         console.log(req.session.magnetUrl, " torrent not found?");
     }
+});
+
+app.get('/get-subtitles-imdb', (req, res, next) => {
+    mediaApi.getSubtitlesByImdbId(req.query, db).then(subs => {
+        res.send(subs);
+    });
+});
+
+
+app.get('/get-subtitles-src', (req, res, next) => {
+    mediaApi.getSubtitlesSrc(req.query).then(src => {
+        res.send({
+            "subPath": src
+        });
+    });
+});
+
+app.get('/get-vtt', (req, res, next) => {
+    console.log("/get-vtt", mediaApi.SubtitlesFolder + req.query.path);
+    res.sendFile(mediaApi.SubtitlesFolder + req.query.path);
 });
 
 app.get('/set-watch-time', (req, res, next) => {
