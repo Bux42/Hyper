@@ -25,15 +25,29 @@ export class UserService {
         });
     }
     setUser(user: any) {
-        console.log("post: ", user);
         return (this.http.post<any>('http://localhost:3000/authenticate', user, { withCredentials: true }));
+    }
+    setUsername(username: any, userId: any) {
+        return (this.http.post<any>('http://localhost:3000/set-username', {username: username, userId: userId}, { withCredentials: true }));
+    }
+    checkUsername(username: any) {
+        const params = new HttpParams()
+            .set('username', username);
+        return (this.http.get<any>('http://localhost:3000/check-username', { params, withCredentials: true }));
     }
     setWatchTime(media_id: any, watchTime: any) {
         if (this.user && this.user.watchHistory) {
+            console.log("prevWH:", this.user.watchHistory);
             var mediaResume = this.user.watchHistory.find((x: any) => x.media_id == media_id);
             if (mediaResume) {
                 mediaResume.watch_time = watchTime;
+            } else {
+                this.user.watchHistory.push({
+                    media_id: media_id,
+                    watch_time: watchTime
+                });
             }
+            console.log("newWH:", this.user.watchHistory);
         }
         const params = new HttpParams()
             .set('mediaId', media_id)

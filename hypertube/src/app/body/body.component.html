@@ -4,6 +4,7 @@
         <p>Please log in</p>
         <app-google-oauth></app-google-oauth>
         <app-school-oauth></app-school-oauth>
+        <app-register-form></app-register-form>
       </div>
       <div *ngIf="user">
         <div *ngIf="user.AccountType == 'Google'">
@@ -11,5 +12,6 @@
         </div>
       </div>
   </mat-drawer>
-  <app-media-categories></app-media-categories>
+  <app-media-categories *ngIf="(user && user.UserData.username != null || !user)"></app-media-categories>
+  <app-username-form *ngIf="user && user.UserData.username == null" [user]="user"></app-username-form>
 </mat-drawer-container>

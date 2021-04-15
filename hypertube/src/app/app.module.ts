@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -41,6 +41,8 @@ import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
 import { GoogleAccountComponent } from './google-account/google-account.component';
 import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
 import { ResolutionPickerComponent } from './resolution-picker/resolution-picker.component';
+import { RegisterFormComponent } from './register-form/register-form.component';
+import { UsernameFormComponent } from './username-form/username-form.component';
 
 @NgModule({
     declarations: [
@@ -58,7 +60,9 @@ import { ResolutionPickerComponent } from './resolution-picker/resolution-picker
         GoogleOauthComponent,
         GoogleAccountComponent,
         SchoolOauthComponent,
-        ResolutionPickerComponent
+        ResolutionPickerComponent,
+        RegisterFormComponent,
+        UsernameFormComponent
     ],
     imports: [
         MatTabsModule,
@@ -83,7 +87,8 @@ import { ResolutionPickerComponent } from './resolution-picker/resolution-picker
         AppRoutingModule,
         BrowserAnimationsModule,
         InfiniteScrollModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

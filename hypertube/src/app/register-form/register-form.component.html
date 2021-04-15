@@ -1,0 +1,38 @@
+<div class="example-container">
+  <mat-form-field appearance="legacy">
+    <mat-label>First name</mat-label>
+    <input matInput placeholder="Placeholder">
+    <mat-hint>Hint</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="legacy">
+    <mat-label>Last name</mat-label>
+    <input matInput placeholder="Placeholder">
+    <mat-hint>Hint</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="legacy">
+    <mat-label>Nickname</mat-label>
+    <input matInput placeholder="Placeholder">
+    <mat-hint>Hint</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter your email</mat-label>
+    <input matInput placeholder="pat@example.com" [formControl]="email" required>
+    <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter your password</mat-label>
+    <input matInput [type]="hide ? 'password' : 'text'">
+    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Confirm your password</mat-label>
+    <input matInput [type]="hide2 ? 'password' : 'text'">
+    <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide2">
+      <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+</div>

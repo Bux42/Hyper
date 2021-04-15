@@ -20,8 +20,8 @@ module.exports = class MediaApi {
         });
         this.OpenSubtitles.login()
             .then(res => {
-                console.log(res.token);
-                console.log(res.userinfo);
+                //console.log(res.token);
+                //console.log(res.userinfo);
                 //tt0317219
             })
             .catch(err => {

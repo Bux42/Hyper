@@ -19,6 +19,8 @@ export class AppComponent {
                 this.backendAvailable = true;
                 this.userService.setUser(user).subscribe((userInfos) => {
                     console.log(userInfos);
+                    this.userService.user.UserData.username = userInfos.account.username
+                    this.userService.user.UserData.userId = userInfos.account.userId;
                     if (this.userService.user) {
                         this.userService.user.watchHistory = userInfos.watchHistory;
                     }

@@ -1,0 +1,13 @@
+<div class="username-container">
+    <div>
+        <h1>You need a username to continue</h1>
+    </div>
+  <div class="example-container">
+    <mat-form-field appearance="legacy">
+      <mat-label>Username</mat-label>
+      <input [attr.disabled]="busy ? '' : null" matInput placeholder="Placeholder" (input)="usernameInputChanged()" [(ngModel)]="usernameInput">
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+    <button [attr.disabled]="busy ? '' : null" (click)="checkUsername()" mat-flat-button color="primary">Set username</button>
+  </div>
+</div>

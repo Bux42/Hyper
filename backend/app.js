@@ -7,6 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const MediaApi = require('./MediaApi');
 const TorrentManager = require('./TorrentManager');
+const UserManager = require('./UserManager');
 const fs = require('fs');
 const {
     serialize
@@ -56,6 +57,8 @@ const mongodbUrl = settings.MongoDbUrl;
 const dbName = 'hypertube';
 var db = null;
 
+var um = null;
+
 const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
 });
@@ -65,6 +68,7 @@ mongoClient.connect(function (err) {
     assert.equal(null, err);
     console.log('Connected successfully to server');
     db = mongoClient.db(dbName);
+    um = new UserManager(db);
 });
 
 var clearDownloads = false;
@@ -279,34 +283,43 @@ app.get('/set-watch-time', (req, res, next) => {
     });
 });
 
+app.get('/check-username', (req, res, next) => {
+    um.isUsernameAvailable(req.query.username).then(isAvailable => {
+        res.send({isAvailable});
+    });
+});
+
+app.post('/set-username', (req, res, next) => {
+    console.log(req.body);
+    um.setUsername(req.body.username, req.body.userId).then(result => {
+        console.log(result);
+        res.send({"Success": result});
+    })
+});
+
 app.post('/authenticate', (req, res, next) => {
     console.log("/authenticate", req.sessionID);
     delete req.session.userId;
     console.log(req.body);
     if (req.body.AccountType) {
         if (req.body.AccountType == "Google") {
-            req.session.userId = req.body.UserData.QR;
-            const collection = db.collection('users');
-            collection.find({
-                id: req.body.UserData.QR
-            }).toArray(function (err, docs) {
-                assert.equal(err, null);
-                console.log('Found the following records');
-                console.log(docs);
-                if (!docs.length) {
-                    console.log("New account");
-                    collection.insertOne({
-                        id: req.body.UserData.QR,
-                        first_name: req.body.UserData.AT,
-                        last_name: req.body.UserData.wR,
-                        email: req.body.UserData.zt,
-                        img: req.body.UserData.VI
+            um.getGoogleAccount(req).then(googleAccount => {
+                console.log("googleAccount", googleAccount);
+                req.session.userId = googleAccount.id;
+                um.getWatchHistory(googleAccount.id).then(wHistory => {
+                    console.log("watchHistory:", wHistory);
+                    res.send({
+                        "okay": true,
+                        "account": googleAccount,
+                        watchHistory: wHistory
                     });
-                }
-            });
+                });
+            })
         }
     }
+    /*
     var watchHistory = [];
+    console.log("account", account);
     if (req.session.userId) {
         const collection = db.collection('watch_history');
 
@@ -325,13 +338,16 @@ app.post('/authenticate', (req, res, next) => {
             });
             res.send({
                 "okay": true,
+                "account": account,
                 watchHistory: watchHistory
             });
         });
     } else {
         res.send({
             "okay": true,
+            "account": account,
             watchHistory: watchHistory
         });
     }
+    */
 });
