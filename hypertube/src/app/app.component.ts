@@ -23,6 +23,7 @@ export class AppComponent {
                     this.userService.user.UserData.userId = userInfos.account.userId;
                     if (this.userService.user) {
                         this.userService.user.watchHistory = userInfos.watchHistory;
+                        this.userService.user.watchHistoryShows = userInfos.watchHistoryShows;
                     }
                 });
             })

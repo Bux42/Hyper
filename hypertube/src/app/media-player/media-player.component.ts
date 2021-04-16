@@ -93,7 +93,13 @@ export class MediaPlayerComponent implements OnInit {
             var resumingTime = parseInt(this.videoTag?.nativeElement.currentTime) - 5;
             console.log("resumingTime:", resumingTime);
             this.lastEvent = Date.now()
-            this.userService.setWatchTime(this.media._id, resumingTime).subscribe();
+            if (this.media._id) {
+                this.userService.setWatchTime(this.media._id, resumingTime).subscribe();
+            } else {
+                console.log("not a movie!", this.media.tvdb_id, this.media.show_imdb_id, resumingTime);
+                this.userService.setShowWatchTime(this.media.tvdb_id, this.media.show_imdb_id, resumingTime).subscribe();
+            }
+            
         }
     }
 }

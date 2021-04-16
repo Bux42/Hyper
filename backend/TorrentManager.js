@@ -36,7 +36,8 @@ class Torrent {
             engine.files.forEach(function (file) {
                 var stream = file.createReadStream();
                 if (file.path.endsWith(".mp4") ||
-                    file.path.endsWith(".mkv")) {
+                    file.path.endsWith(".mkv") ||
+                    file.path.endsWith(".avi")) {
                     var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                     that.MediaPath = engine.path + "\\" + file.path;
                 }
@@ -56,7 +57,8 @@ class Torrent {
             engine.files.forEach(function (file) {
                 //var stream = file.createReadStream();
                 if (file.path.endsWith(".mp4") ||
-                    file.path.endsWith(".mkv")) {
+                    file.path.endsWith(".mkv") ||
+                    file.path.endsWith(".avi")) {
                     var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                     that.MediaPath = engine.path + "\\" + file.path;
                 }

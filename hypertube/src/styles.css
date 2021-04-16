@@ -162,3 +162,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
   ;
 }
+
+.cdk-global-scrollblock {
+    overflow-y: auto;
+}

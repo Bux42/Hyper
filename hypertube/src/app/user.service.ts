@@ -35,6 +35,27 @@ export class UserService {
             .set('username', username);
         return (this.http.get<any>('http://localhost:3000/check-username', { params, withCredentials: true }));
     }
+    setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any) {
+        if (this.user && this.user.watchHistoryShows) {
+            console.log("prevWH:", this.user.watchHistoryShows);
+            var mediaResume = this.user.watchHistoryShows.find((x: any) => x.tvdb_id == tvdb_id);
+            if (mediaResume) {
+                mediaResume.watch_time = watchTime;
+            } else {
+                this.user.watchHistoryShows.push({
+                    show_imdb_id: show_imdb_id,
+                    media_id: tvdb_id,
+                    watch_time: watchTime
+                });
+            }
+            console.log("newWH:", this.user.watchHistory);
+        }
+        const params = new HttpParams()
+            .set('tvdb_id', tvdb_id)
+            .set('show_imdb_id', show_imdb_id)
+            .set('watchTime', watchTime);
+        return (this.http.get<any>('http://localhost:3000/set-show-watch-time', { params, withCredentials: true }));
+    }
     setWatchTime(media_id: any, watchTime: any) {
         if (this.user && this.user.watchHistory) {
             console.log("prevWH:", this.user.watchHistory);

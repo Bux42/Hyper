@@ -246,6 +246,56 @@ app.get('/get-vtt', (req, res, next) => {
     res.sendFile(mediaApi.SubtitlesFolder + req.query.path);
 });
 
+app.get('/set-show-watch-time', (req, res, next) => {
+    console.log("/set-show-watch-time", req.sessionID, req.query);
+    if (req.session.userId) {
+        const col = db.collection('watch_history');
+        col.find({    
+            user_id: req.session.userId,
+            media_id: req.query.show_imdb_id
+        }).toArray(function (err, docs) {
+            assert.equal(err, null);
+            if (!docs.length) {
+                col.insertOne({
+                    user_id: req.session.userId,
+                    media_id: req.query.show_imdb_id,
+                    watch_time: 0
+                });
+            }
+        });
+
+        const collection = db.collection('watch_history_shows');
+        collection.find({
+            user_id: req.session.userId,
+            tvdb_id: req.query.tvdb_id
+        }).toArray(function (err, docs) {
+            assert.equal(err, null);
+            console.log('Found the following records');
+            console.log(docs);
+            if (!docs.length) {
+                console.log("1st watch", req.query.tvdb_id);
+                collection.insertOne({
+                    user_id: req.session.userId,
+                    tvdb_id: req.query.tvdb_id,
+                    watch_time: req.query.watchTime
+                });
+            } else {
+                var watchTime = docs[0];
+                watchTime.watch_time = req.query.watchTime;
+                collection.update({
+                    user_id: req.session.userId,
+                    tvdb_id: req.query.tvdb_id
+                }, watchTime, {
+                    upsert: true
+                });
+            }
+        });
+    }
+    res.send({
+        "okay": true
+    });
+});
+
 app.get('/set-watch-time', (req, res, next) => {
     console.log("/set-watch-time", req.sessionID);
     if (req.session.userId) {
@@ -319,47 +369,17 @@ app.post('/authenticate', (req, res, next) => {
                 console.log("googleAccount", googleAccount);
                 req.session.userId = googleAccount.id;
                 um.getWatchHistory(googleAccount.id).then(wHistory => {
-                    console.log("watchHistory:", wHistory);
-                    res.send({
-                        "okay": true,
-                        "account": googleAccount,
-                        watchHistory: wHistory
+                    um.getWatchHistoryShows(googleAccount.id).then(wHistoryShows => {
+                        console.log("wHistoryShows:", wHistoryShows);
+                        res.send({
+                            "okay": true,
+                            "account": googleAccount,
+                            watchHistory: wHistory,
+                            watchHistoryShows: wHistoryShows
+                        });
                     });
                 });
             })
         }
     }
-    /*
-    var watchHistory = [];
-    console.log("account", account);
-    if (req.session.userId) {
-        const collection = db.collection('watch_history');
-
-        collection.find({
-            user_id: req.session.userId
-        }).toArray(function (err, docs) {
-            assert.equal(err, null);
-            console.log('Found the following records');
-            console.log(docs);
-            docs.forEach(el => {
-                console.log("el:", el);
-                watchHistory.push({
-                    media_id: el.media_id,
-                    watch_time: el.watch_time
-                });
-            });
-            res.send({
-                "okay": true,
-                "account": account,
-                watchHistory: watchHistory
-            });
-        });
-    } else {
-        res.send({
-            "okay": true,
-            "account": account,
-            watchHistory: watchHistory
-        });
-    }
-    */
 });

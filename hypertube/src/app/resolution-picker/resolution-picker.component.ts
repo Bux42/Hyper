@@ -10,6 +10,7 @@ import { MediaService } from '../media.service';
 })
 export class ResolutionPickerComponent implements OnInit {
     @Input() media: any;
+    @Input() show_imdb_id: any;
     @Input() mediaCategory: any;
     busy: any = false;
     resolutions: any[] = ["480p", "720p", "1080p", "2160p"];
@@ -32,6 +33,9 @@ export class ResolutionPickerComponent implements OnInit {
                     this.subtitlesList.push(el);
                 });
             })
+        } else if (this.media.tvdb_id) {
+            console.log("that a show", this.show_imdb_id);
+            this.media.show_imdb_id = this.show_imdb_id;
         }
         this.resolutions.forEach(res => {
             if (this.media.torrents.en && this.media.torrents.en[res]) {

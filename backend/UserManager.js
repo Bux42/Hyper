@@ -34,6 +34,25 @@ module.exports = class UserManager {
             });
         });
     }
+    getWatchHistoryShows(userId) {
+        return new Promise(resolve => {
+            var watchHistory = [];
+            const collection = this.Db.collection('watch_history_shows');
+            collection.find({
+                user_id: userId
+            }).toArray(function (err, docs) {
+                assert.equal(err, null);
+                console.log(docs);
+                docs.forEach(el => {
+                    watchHistory.push({
+                        tvdb_id: el.tvdb_id,
+                        watch_time: el.watch_time
+                    });
+                });
+                resolve(watchHistory);
+            });
+        });
+    }
     getWatchHistory(userId) {
         return new Promise(resolve => {
             var watchHistory = [];
