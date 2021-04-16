@@ -8,10 +8,9 @@ import { UserService } from '../user.service';
 })
 export class UsernameFormComponent implements OnInit {
     usernameInput: any = "";
+    usernameError: any = "";
     @Input() user: any;
-    loading: any = false;
     busy: any = false;
-    searchTimeout: any;
     constructor(private userService: UserService) { }
 
     ngOnInit(): void {
@@ -19,23 +18,38 @@ export class UsernameFormComponent implements OnInit {
     }
     usernameInputChanged() {
         console.log(this.usernameInput);
-        clearInterval(this.searchTimeout);
-        var that = this;
-        this.searchTimeout = setTimeout(function () {
-            that.loading = true;
-
-        }, 300);
+        if (this.validUsername(this.usernameInput)) {
+            this.usernameError = "";
+        }
+    }
+    validUsername(username: any) {
+        if (username.length < 3) {
+            this.usernameError = "Username too short";
+            return (false);
+        } else if (username.length > 15) {
+            this.usernameError = "Username too long";
+            return (false);
+        } else if (/^[A-Za-z0-9]+$/.test(username) == false) {
+            this.usernameError = "Illegal characters";
+            return (false);
+        }
+        return (true);
     }
     checkUsername() {
-        this.userService.checkUsername(this.usernameInput).subscribe(usernameAvailable => {
-            console.log(usernameAvailable);
-            if (usernameAvailable) {
+        this.busy = true;
+        this.userService.checkUsername(this.usernameInput).subscribe(checkUsernameResult => {
+            this.busy = false;
+            console.log(checkUsernameResult);
+            if (checkUsernameResult.Available) {
+                this.usernameError = "";
                 this.userService.setUsername(this.usernameInput, this.user.UserData.userId).subscribe(usernameSet => {
                     console.log(usernameSet);
                     if (usernameSet) {
                         window.location.reload();
                     }
                 })
+            } else {
+                this.usernameError = checkUsernameResult.Error;
             }
         })
     }

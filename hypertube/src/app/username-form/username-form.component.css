@@ -4,3 +4,11 @@
   align-items: center;
 }
 
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.username-error {
+    color: #d12b2b;
+}

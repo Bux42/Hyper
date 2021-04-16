@@ -284,9 +284,21 @@ app.get('/set-watch-time', (req, res, next) => {
 });
 
 app.get('/check-username', (req, res, next) => {
-    um.isUsernameAvailable(req.query.username).then(isAvailable => {
-        res.send({isAvailable});
-    });
+    if (req.query.username.length < 3) {
+        res.send({Available: false, Error: "Username too short"});
+    } else if (req.query.username.length > 15) {
+        res.send({Available: false, Error: "Username too long"});
+    } else if (/^[A-Za-z0-9]+$/.test(req.query.username) == false) {
+        res.send({Available: false, Error: "Illegal characters"});
+    } else {
+        um.isUsernameAvailable(req.query.username).then(isAvailable => {
+            if (isAvailable) {
+                res.send({Available: isAvailable, Error: null});
+            } else {
+                res.send({Available: isAvailable, Error: "Username taken"});
+            }
+        });
+    }
 });
 
 app.post('/set-username', (req, res, next) => {
