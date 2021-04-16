@@ -55,6 +55,32 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.custom-oauth-button {
+  display: flex;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 60%;
+  background-color: white;
+  cursor: pointer;
+
+}
+.custom-oauth-icon {
+  width: 20%; 
+  display: inline;
+  margin: auto;
+  border-right: 1px solid #171717;
+}
+.custom-oauth-text {
+  width: 80%;
+  display: inline;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+  font-weight: 500;
+  color: grey;
+}
+
 .custom-title {
   display: flex; 
   margin: auto; 
@@ -68,6 +94,7 @@ body {
 }
 .custom-mat-card {
   background: #2e2e2e;
+  height: 100%;
 }
 
 .custom-mat-option {

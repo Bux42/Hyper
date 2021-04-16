@@ -1,7 +1,11 @@
 <mat-drawer-container class="custom-mat-drawer-container" autosize>
   <mat-drawer #drawer class="custom-mat-drawwer" mode="over" position="end" opened="{{drawerOpened}}">
+    <mat-card class="custom-mat-card">
       <div *ngIf="!user">
-        <p>Please log in</p>
+        <div class="custom-title">
+          Please log in 
+        </div>
+        <hr style="width: 80%" >
         <app-google-oauth></app-google-oauth>
         <app-school-oauth></app-school-oauth>
         <app-register-form></app-register-form>
@@ -11,6 +15,7 @@
             <app-google-account></app-google-account>
         </div>
       </div>
+    </mat-card>
   </mat-drawer>
   <app-media-categories *ngIf="(user && user.UserData.username != null || !user)"></app-media-categories>
   <app-username-form *ngIf="user && user.UserData.username == null" [user]="user"></app-username-form>
