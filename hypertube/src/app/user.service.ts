@@ -35,8 +35,9 @@ export class UserService {
             .set('username', username);
         return (this.http.get<any>('http://localhost:3000/check-username', { params, withCredentials: true }));
     }
-    setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any) {
+    setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any, userVolume: any) {
         if (this.user && this.user.watchHistoryShows) {
+            this.user.UserData.volume = userVolume;
             console.log("prevWH:", this.user.watchHistoryShows);
             var mediaResume = this.user.watchHistoryShows.find((x: any) => x.tvdb_id == tvdb_id);
             if (mediaResume) {
@@ -53,11 +54,13 @@ export class UserService {
         const params = new HttpParams()
             .set('tvdb_id', tvdb_id)
             .set('show_imdb_id', show_imdb_id)
+            .set('user_volume', userVolume)
             .set('watchTime', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-show-watch-time', { params, withCredentials: true }));
     }
-    setWatchTime(media_id: any, watchTime: any) {
+    setWatchTime(media_id: any, watchTime: any, userVolume: any) {
         if (this.user && this.user.watchHistory) {
+            this.user.UserData.volume = userVolume;
             console.log("prevWH:", this.user.watchHistory);
             var mediaResume = this.user.watchHistory.find((x: any) => x.media_id == media_id);
             if (mediaResume) {
@@ -72,6 +75,7 @@ export class UserService {
         }
         const params = new HttpParams()
             .set('mediaId', media_id)
+            .set('user_volume', userVolume)
             .set('watchTime', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-watch-time', { params, withCredentials: true }));
     }

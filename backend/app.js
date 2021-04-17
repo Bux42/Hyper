@@ -250,7 +250,7 @@ app.get('/set-show-watch-time', (req, res, next) => {
     console.log("/set-show-watch-time", req.sessionID, req.query);
     if (req.session.userId) {
         const col = db.collection('watch_history');
-        col.find({    
+        col.find({
             user_id: req.session.userId,
             media_id: req.query.show_imdb_id
         }).toArray(function (err, docs) {
@@ -300,6 +300,21 @@ app.get('/set-watch-time', (req, res, next) => {
     console.log("/set-watch-time", req.sessionID);
     if (req.session.userId) {
         console.log(req.query);
+
+        const userCol = db.collection('users');
+        userCol.updateOne({id: req.session.userId}, {
+            $set: {
+                volume: req.query.user_volume
+            }
+        });
+        /*
+        const userCol = db.collection('users');
+        userCol.updateOne({
+            user_id: req.session.userId,
+        }, {    
+            volume: req.query.user_volume,
+        });*/
+
         const collection = db.collection('watch_history');
 
         collection.find({
@@ -314,17 +329,16 @@ app.get('/set-watch-time', (req, res, next) => {
                 collection.insertOne({
                     user_id: req.session.userId,
                     media_id: req.query.mediaId,
-                    watch_time: req.query.watchTime
+                    watch_time: req.query.watchTime,
+                    date: Date.now()
                 });
             } else {
-                var watchTime = docs[0];
-                watchTime.watch_time = req.query.watchTime;
-                collection.update({
-                    user_id: req.session.userId,
-                    media_id: req.query.mediaId
-                }, watchTime, {
-                    upsert: true
-                });
+                var newvalues = {
+                    $set: {
+                        watch_time: req.query.watchTime
+                    }
+                };
+                collection.updateOne({_id: docs[0]._id}, newvalues);
             }
         });
     }
@@ -335,17 +349,32 @@ app.get('/set-watch-time', (req, res, next) => {
 
 app.get('/check-username', (req, res, next) => {
     if (req.query.username.length < 3) {
-        res.send({Available: false, Error: "Username too short"});
+        res.send({
+            Available: false,
+            Error: "Username too short"
+        });
     } else if (req.query.username.length > 15) {
-        res.send({Available: false, Error: "Username too long"});
+        res.send({
+            Available: false,
+            Error: "Username too long"
+        });
     } else if (/^[A-Za-z0-9]+$/.test(req.query.username) == false) {
-        res.send({Available: false, Error: "Illegal characters"});
+        res.send({
+            Available: false,
+            Error: "Illegal characters"
+        });
     } else {
         um.isUsernameAvailable(req.query.username).then(isAvailable => {
             if (isAvailable) {
-                res.send({Available: isAvailable, Error: null});
+                res.send({
+                    Available: isAvailable,
+                    Error: null
+                });
             } else {
-                res.send({Available: isAvailable, Error: "Username taken"});
+                res.send({
+                    Available: isAvailable,
+                    Error: "Username taken"
+                });
             }
         });
     }
@@ -355,7 +384,9 @@ app.post('/set-username', (req, res, next) => {
     console.log(req.body);
     um.setUsername(req.body.username, req.body.userId).then(result => {
         console.log(result);
-        res.send({"Success": result});
+        res.send({
+            "Success": result
+        });
     })
 });
 

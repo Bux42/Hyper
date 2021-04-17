@@ -20,6 +20,7 @@ export class MediaPlayerComponent implements OnInit {
     timeStamp: any = "undefined";
     currentTime: any = "undefined";
     lastEvent: any = Date.now();
+    currentVolume: any;
 
     @ViewChild('videoTag') videoTag: ElementRef | undefined;
     @HostListener('window:keyup', ['$event'])
@@ -39,6 +40,10 @@ export class MediaPlayerComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, private userService: UserService, public dialog: MatDialog, private mediaService: MediaService) {
         this.media = data.media;
         this.subtitlesSrc = data.subtitles;
+        this.currentVolume = 0.5;
+        if (this.userService.user) {
+            this.currentVolume = this.userService.user.UserData.volume;
+        }
     }
 
     ngOnInit(): void {
@@ -94,12 +99,16 @@ export class MediaPlayerComponent implements OnInit {
             console.log("resumingTime:", resumingTime);
             this.lastEvent = Date.now()
             if (this.media._id) {
-                this.userService.setWatchTime(this.media._id, resumingTime).subscribe();
+                this.userService.setWatchTime(this.media._id, resumingTime, this.currentVolume).subscribe();
             } else {
                 console.log("not a movie!", this.media.tvdb_id, this.media.show_imdb_id, resumingTime);
-                this.userService.setShowWatchTime(this.media.tvdb_id, this.media.show_imdb_id, resumingTime).subscribe();
+                this.userService.setShowWatchTime(this.media.tvdb_id, this.media.show_imdb_id, resumingTime, this.currentVolume).subscribe();
             }
-            
+        }
+    }
+    volumeChanged(e: any) {
+        if (this.videoTag) {
+            this.currentVolume = this.videoTag?.nativeElement.volume;
         }
     }
 }

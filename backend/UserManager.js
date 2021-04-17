@@ -21,7 +21,8 @@ module.exports = class UserManager {
                         email: req.body.UserData.zt,
                         img: req.body.UserData.VI,
                         username: null,
-                        language: "en"
+                        language: "en",
+                        volume: 0.5
                     };
                     collection.insertOne(account);
                     account["userId"] = account.id;

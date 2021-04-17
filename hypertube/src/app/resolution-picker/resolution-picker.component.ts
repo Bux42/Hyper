@@ -13,6 +13,9 @@ export class ResolutionPickerComponent implements OnInit {
     @Input() show_imdb_id: any;
     @Input() mediaCategory: any;
     busy: any = false;
+    busyElement: any;
+    mediaStateInterval: any;
+    torrentUrl: any;
     resolutions: any[] = ["480p", "720p", "1080p", "2160p"];
     displayedColumns: string[] = ['resolution', 'size', 'seeds', 'peers', 'watch', 'state'];
     subtitlesList: string[] = ["none"];
@@ -74,18 +77,31 @@ export class ResolutionPickerComponent implements OnInit {
             this.subtitlesSrc = null;
         }
     }
+    cancelWatch(el: any) {
+        clearInterval(this.mediaStateInterval);
+        this.busy = false;
+        this.busyElement = undefined;
+        this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {
+            console.log(data);
+        });
+    }
     watch(el: any) {
         this.busy = true;
+        this.busyElement = el;
         el.state = "Check magnet";
 
-        
-        var torrentUrl = this.media.torrents.en ? this.media.torrents.en[el.resolution].url : this.media.torrents[el.resolution].url;
-        console.log(torrentUrl);
-        this.mediaService.selectMedia(torrentUrl, this.media._id).subscribe(data => {
+        this.torrentUrl = this.media.torrents.en ? this.media.torrents.en[el.resolution].url : this.media.torrents[el.resolution].url;
+        console.log(this.torrentUrl);
+        this.mediaService.selectMedia(this.torrentUrl, this.media._id).subscribe(data => {
             console.log(data);
-            var int = setInterval(() => {
-                this.mediaService.getMediaState(torrentUrl).subscribe(data => {
+            this.mediaStateInterval = setInterval(() => {
+                this.mediaService.getMediaState(this.torrentUrl).subscribe(data => {
+                    if (!this.busyElement) {
+                        clearInterval(this.mediaStateInterval);
+                        return;
+                    }
                     console.log(data);
+
                     if (data.ok) {
                         var buffer = data.progressPercent * 20;
                         if (buffer > 100) {
@@ -95,7 +111,7 @@ export class ResolutionPickerComponent implements OnInit {
                         if (buffer == 100) {
                             el.state = "Ready";
                             this.busy = false;
-                            clearInterval(int);
+                            clearInterval(this.mediaStateInterval);
                             const dialogRef = this.dialog.open(MediaPlayerComponent, {
                                 width: '70vh',
                                 height: '70vh',
@@ -107,7 +123,7 @@ export class ResolutionPickerComponent implements OnInit {
                                 panelClass: 'custom-dialog-container'
                             });
                             dialogRef.afterClosed().subscribe(result => {
-                                this.mediaService.playerClosed(torrentUrl).subscribe(data => {
+                                this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {
                                     console.log(data);
                                 });
                             });
