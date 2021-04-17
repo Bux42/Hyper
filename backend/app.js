@@ -249,6 +249,13 @@ app.get('/get-vtt', (req, res, next) => {
 app.get('/set-show-watch-time', (req, res, next) => {
     console.log("/set-show-watch-time", req.sessionID, req.query);
     if (req.session.userId) {
+        const userCol = db.collection('users');
+        userCol.updateOne({id: req.session.userId}, {
+            $set: {
+                volume: req.query.user_volume
+            }
+        });
+
         const col = db.collection('watch_history');
         col.find({
             user_id: req.session.userId,
@@ -277,17 +284,20 @@ app.get('/set-show-watch-time', (req, res, next) => {
                 collection.insertOne({
                     user_id: req.session.userId,
                     tvdb_id: req.query.tvdb_id,
-                    watch_time: req.query.watchTime
+                    imdb_id: req.query.show_imdb_id,
+                    watch_time: req.query.watchTime,
+                    season_number: req.query.season_number,
+                    episode_number: req.query.episode_number,
+                    date: Date.now()
                 });
             } else {
-                var watchTime = docs[0];
-                watchTime.watch_time = req.query.watchTime;
-                collection.update({
-                    user_id: req.session.userId,
-                    tvdb_id: req.query.tvdb_id
-                }, watchTime, {
-                    upsert: true
-                });
+                var newvalues = {
+                    $set: {
+                        watch_time: req.query.watchTime,
+                        date: Date.now()
+                    }
+                };
+                collection.updateOne({_id: docs[0]._id}, newvalues);
             }
         });
     }
@@ -335,7 +345,8 @@ app.get('/set-watch-time', (req, res, next) => {
             } else {
                 var newvalues = {
                     $set: {
-                        watch_time: req.query.watchTime
+                        watch_time: req.query.watchTime,
+                        date: Date.now()
                     }
                 };
                 collection.updateOne({_id: docs[0]._id}, newvalues);

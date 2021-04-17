@@ -11,6 +11,8 @@ import { MediaService } from '../media.service';
 export class ResolutionPickerComponent implements OnInit {
     @Input() media: any;
     @Input() show_imdb_id: any;
+    @Input() episode_number: any;
+    @Input() season_number: any;
     @Input() mediaCategory: any;
     busy: any = false;
     busyElement: any;
@@ -25,7 +27,7 @@ export class ResolutionPickerComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService) { }
 
     ngOnInit(): void {
-        console.log(this.media, this.mediaCategory);
+        console.log(this.media, this.mediaCategory, this.season_number, this.episode_number);
         if (this.media.imdb_id) {
             this.mediaService.fetchMediaSubtitlesImdb({
                 imdb_id: this.media.imdb_id,
@@ -37,7 +39,7 @@ export class ResolutionPickerComponent implements OnInit {
                 });
             })
         } else if (this.media.tvdb_id) {
-            console.log("that a show", this.show_imdb_id);
+            console.log(this.media.tvdb_id, this.media.show_imdb_id);
             this.media.show_imdb_id = this.show_imdb_id;
         }
         this.resolutions.forEach(res => {
@@ -118,7 +120,9 @@ export class ResolutionPickerComponent implements OnInit {
                                 data: {
                                     media: this.media,
                                     selectedResolution: el.resolution,
-                                    subtitles: this.subtitlesSrc
+                                    subtitles: this.subtitlesSrc,
+                                    episode_number: this.episode_number,
+                                    season_number: this.season_number
                                 },
                                 panelClass: 'custom-dialog-container'
                             });

@@ -35,7 +35,7 @@ export class UserService {
             .set('username', username);
         return (this.http.get<any>('http://localhost:3000/check-username', { params, withCredentials: true }));
     }
-    setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any, userVolume: any) {
+    setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any, userVolume: any, episode_number: any, season_number: any) {
         if (this.user && this.user.watchHistoryShows) {
             this.user.UserData.volume = userVolume;
             console.log("prevWH:", this.user.watchHistoryShows);
@@ -55,6 +55,8 @@ export class UserService {
             .set('tvdb_id', tvdb_id)
             .set('show_imdb_id', show_imdb_id)
             .set('user_volume', userVolume)
+            .set('episode_number', episode_number)
+            .set('season_number', season_number)
             .set('watchTime', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-show-watch-time', { params, withCredentials: true }));
     }
