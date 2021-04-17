@@ -24,7 +24,7 @@
     <td mat-cell *matCellDef="let element"> {{element.peers}} </td>
   </ng-container>
   <ng-container matColumnDef="watch">
-    <th mat-header-cell *matHeaderCellDef> Watch </th>
+    <th mat-header-cell *matHeaderCellDef> Watch</th>
     <td mat-cell *matCellDef="let element">
         <button *ngIf="busy && busyElement == element" (click)="cancelWatch(element)"  color="warn" mat-flat-button color="primary">Cancel</button>
         <button *ngIf="!busy || busyElement != element" [disabled]="busy && element != busyElement ? '' : null" (click)="watch(element)" mat-flat-button color="primary">Watch</button>
