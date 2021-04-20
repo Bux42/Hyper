@@ -425,3 +425,9 @@ app.post('/authenticate', (req, res, next) => {
         }
     }
 });
+
+app.post('/register', (req, res, next) => {
+    um.createAccount(req.body).then(result => {
+        res.send(result);
+    });
+});

@@ -81,4 +81,14 @@ export class UserService {
             .set('watchTime', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-watch-time', { params, withCredentials: true }));
     }
+    register(form: any) {
+        return (this.http.post<any>('http://localhost:3000/register', {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            username: form.username,
+            emailInput: form.emailInput,
+            password1: form.password1,
+            password2: form.password2,
+        }, { withCredentials: true }));
+    }
 }

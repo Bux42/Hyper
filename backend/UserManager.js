@@ -1,5 +1,7 @@
 const assert = require('assert');
-const { use } = require('passport');
+const {
+    use
+} = require('passport');
 
 module.exports = class UserManager {
     constructor(db) {
@@ -73,6 +75,20 @@ module.exports = class UserManager {
             });
         });
     }
+    isEmailAvailable(email) {
+        return new Promise(resolve => {
+            const collection = this.Db.collection('users');
+            collection.find({
+                email: email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    }
     isUsernameAvailable(username) {
         return new Promise(resolve => {
             const collection = this.Db.collection('users');
@@ -101,6 +117,50 @@ module.exports = class UserManager {
                     resolve(true);
                 } else {
                     resolve(false);
+                }
+            });
+        });
+    }
+    createAccount(form) {
+        console.log(form);
+        return new Promise(resolve => {
+            this.isUsernameAvailable(form.username).then(usernameAvailable => {
+                if (usernameAvailable) {
+                    this.isEmailAvailable(form.emailInput).then(emailAvailable => {
+                        if (emailAvailable) {
+                            const collection = this.Db.collection('users');
+                            var newId = "";
+                            for (var i = 0; i < 21; ++i) {
+                                newId += Math.floor(Math.random() * 10);
+                            } 
+                            var account = {
+                                id: newId,
+                                first_name: form.firstName,
+                                last_name: form.lastName,
+                                email: form.emailInput,
+                                img: "",
+                                username: form.username,
+                                language: "en",
+                                volume: 0.5
+                            };
+                            collection.insertOne(account);
+                            resolve({
+                                "Error": null
+                            });
+                        } else {
+                            resolve({
+                                "Error": {
+                                    "emailInputError": "Email already in use"
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        "Error": {
+                            "usernameError": "Username already in use"
+                        }
+                    });
                 }
             });
         });
