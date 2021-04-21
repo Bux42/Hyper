@@ -10,7 +10,8 @@ export class StickyHeaderDirective {
     }
     @HostListener('scroll', ['$event']) private onScroll($event: Event): void {
         var el = $event.srcElement as HTMLDivElement;
-        if (el.scrollTop + el.offsetHeight >= el.scrollHeight) {
+        //console.log(el.scrollTop + el.offsetHeight, el.scrollHeight);
+        if (el.scrollTop + el.offsetHeight + 1 >= el.scrollHeight) {
             this.appScrollToEnd.emit("scrollToEnd");
         }
     }
