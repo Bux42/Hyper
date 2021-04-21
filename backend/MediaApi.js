@@ -37,7 +37,7 @@ module.exports = class MediaApi {
     async getMedia(query) {
         // https://tv-v2.api-fetch.sh/movies/1?sort=trending&order=-1&genre=all&keywords=potter
         var that = this;
-        var url = "https://tv-v2.api-fetch.sh/" + query.mediaCategory + "/" + query.page + "?sort=" + query.filter + "&order=-1&genre=" + query.genre;
+        var url = "https://popcorn-ru.tk/" + query.mediaCategory + "/" + query.page + "?sort=" + query.filter + "&order=-1&genre=" + query.genre;
         if (query.keywords.length) {
             url += "&keywords=" + query.keywords;
         }
@@ -64,7 +64,7 @@ module.exports = class MediaApi {
         }
         if (!this.CachedMediaEpisodes[query.mediaCategory][query.mediaId]) {
             var that = this;
-            var url = "https://tv-v2.api-fetch.sh/" + query.mediaCategory.substring(0, query.mediaCategory.length - 1) + "/" + query.mediaId;
+            var url = "https://popcorn-ru.tk/" + query.mediaCategory.substring(0, query.mediaCategory.length - 1) + "/" + query.mediaId;
             return await rp({
                     uri: url
                 })
