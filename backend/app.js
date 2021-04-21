@@ -431,3 +431,9 @@ app.post('/register', (req, res, next) => {
         res.send(result);
     });
 });
+
+app.post('/login', (req, res, next) => {
+    um.login(req.body).then(result => {
+        res.send(result);
+    });
+});

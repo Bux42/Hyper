@@ -91,4 +91,10 @@ export class UserService {
             password2: form.password2,
         }, { withCredentials: true }));
     }
+    login(form: any) {
+        return (this.http.post<any>('http://localhost:3000/login', {
+            email: form.email,
+            password: form.password
+        }, { withCredentials: true }));
+    }
 }

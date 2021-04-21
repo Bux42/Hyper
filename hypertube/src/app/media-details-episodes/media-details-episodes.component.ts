@@ -34,7 +34,10 @@ export class MediaDetailsEpisodesComponent implements OnInit {
 
             for (var i = 0; i < this.mediaEpisodes.episodes.length; i++) {
                 var season = this.seasons.find((x: { season: any; }) => x.season == this.mediaEpisodes.episodes[i].season);
-                var episode = this.userService.user.watchHistoryShows.find((x: any) => x.tvdb_id == this.mediaEpisodes.episodes[i].tvdb_id);
+                var episode = null;
+                if (this.userService.user && this.userService.user.watchHistoryShows) {
+                    episode = this.userService.user.watchHistoryShows.find((x: any) => x.tvdb_id == this.mediaEpisodes.episodes[i].tvdb_id);
+                }
                 if (!season) {
                     if (episode) {
                         this.mediaEpisodes.episodes[i].seen = true;

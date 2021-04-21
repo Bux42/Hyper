@@ -1,7 +1,21 @@
 const assert = require('assert');
+const bcrypt = require('bcrypt');
 const {
     use
 } = require('passport');
+
+const saltRounds = 10;
+const myPlaintextPassword = 's0/\/\P4$$w0rD';
+
+bcrypt.genSalt(saltRounds, function (err, salt) {
+    bcrypt.hash(myPlaintextPassword, salt, function (err, hash) {
+        console.log(hash);
+    });
+});
+var hash = "$2b$10$eZ5JhkZfLwTi5HKI5c3nV.JALTQ0ajs0ocEIBZObjBi2IG6sRoo6u";
+bcrypt.compare(myPlaintextPassword, hash, function (err, result) {
+    console.log(result);
+});
 
 module.exports = class UserManager {
     constructor(db) {
@@ -121,8 +135,33 @@ module.exports = class UserManager {
             });
         });
     }
+    login(form) {
+        return new Promise(resolve => {
+            const collection = this.Db.collection('users');
+            collection.find({
+                email: form.email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    bcrypt.compare(form.password, docs[0].password, function (err, result) {
+                        if (!result) {
+                            resolve({
+                                Error: "Invalid email or password"
+                            });
+                        } else {
+                            resolve({
+                                Error: null
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        Error: "Invalid email or password"
+                    });
+                }
+            });
+        });
+    }
     createAccount(form) {
-        console.log(form);
         return new Promise(resolve => {
             this.isUsernameAvailable(form.username).then(usernameAvailable => {
                 if (usernameAvailable) {
@@ -132,20 +171,25 @@ module.exports = class UserManager {
                             var newId = "";
                             for (var i = 0; i < 21; ++i) {
                                 newId += Math.floor(Math.random() * 10);
-                            } 
-                            var account = {
-                                id: newId,
-                                first_name: form.firstName,
-                                last_name: form.lastName,
-                                email: form.emailInput,
-                                img: "",
-                                username: form.username,
-                                language: "en",
-                                volume: 0.5
-                            };
-                            collection.insertOne(account);
-                            resolve({
-                                "Error": null
+                            }
+                            bcrypt.genSalt(saltRounds, function (err, salt) {
+                                bcrypt.hash(form.password1, salt, function (err, hash) {
+                                    var account = {
+                                        id: newId,
+                                        first_name: form.firstName,
+                                        last_name: form.lastName,
+                                        email: form.emailInput,
+                                        password: hash,
+                                        img: "",
+                                        username: form.username,
+                                        language: "en",
+                                        volume: 0.5
+                                    };
+                                    collection.insertOne(account);
+                                    resolve({
+                                        "Error": null
+                                    });
+                                });
                             });
                         } else {
                             resolve({
