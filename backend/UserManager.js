@@ -5,17 +5,6 @@ const {
 } = require('passport');
 
 const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-
-bcrypt.genSalt(saltRounds, function (err, salt) {
-    bcrypt.hash(myPlaintextPassword, salt, function (err, hash) {
-        console.log(hash);
-    });
-});
-var hash = "$2b$10$eZ5JhkZfLwTi5HKI5c3nV.JALTQ0ajs0ocEIBZObjBi2IG6sRoo6u";
-bcrypt.compare(myPlaintextPassword, hash, function (err, result) {
-    console.log(result);
-});
 
 module.exports = class UserManager {
     constructor(db) {

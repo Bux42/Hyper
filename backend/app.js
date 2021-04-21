@@ -94,6 +94,7 @@ app.listen(port, () => {
 });
 
 app.get("/ping", (req, res, next) => {
+    console.log("/ping req.session.user", req.session.user);
     res.send({
         "Ping": true
     });
@@ -408,11 +409,16 @@ app.post('/authenticate', (req, res, next) => {
     if (req.body.AccountType) {
         if (req.body.AccountType == "Google") {
             um.getGoogleAccount(req).then(googleAccount => {
-                console.log("googleAccount", googleAccount);
                 req.session.userId = googleAccount.id;
                 um.getWatchHistory(googleAccount.id).then(wHistory => {
                     um.getWatchHistoryShows(googleAccount.id).then(wHistoryShows => {
-                        console.log("wHistoryShows:", wHistoryShows);
+                        req.session.user = {
+                            id: googleAccount.id,
+                            account : googleAccount,
+                            watchHistory : wHistory,
+                            watchHistoryShows : wHistoryShows,
+                            accountType : "Google"
+                        }
                         res.send({
                             "okay": true,
                             "account": googleAccount,
@@ -434,6 +440,21 @@ app.post('/register', (req, res, next) => {
 
 app.post('/login', (req, res, next) => {
     um.login(req.body).then(result => {
-        res.send(result);
+        if (!result.Error) {
+            req.session.userId = result.Account.id;
+            um.getWatchHistory(result.Account.id).then(wHistory => {
+                um.getWatchHistoryShows(result.Account.id).then(wHistoryShows => {
+                    console.log("wHistoryShows:", wHistoryShows);
+                    res.send({
+                        Error: null,
+                        "account": result.Account,
+                        watchHistory: wHistory,
+                        watchHistoryShows: wHistoryShows
+                    });
+                });
+            });
+        } else {
+            res.send(result);
+        }
     });
 });
