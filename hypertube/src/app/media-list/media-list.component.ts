@@ -9,6 +9,7 @@ import { MediaService } from '../media.service';
 export class MediaListComponent implements OnInit {
     @Input() mediaCategory: any;
     @Input() media: any;
+    tv_sh_error: any = "";
     searchInput: any = "";
     searchTimeout: any;
     page = 1;
@@ -26,10 +27,14 @@ export class MediaListComponent implements OnInit {
 
     ngOnInit(): void {
         this.selectedCategory = this.classicCategories[0];
+        this.tv_sh_error = "";
         this.mediaService.fetchMedia(this.getFilters()).subscribe(data => {
             this.mediaItems = data;
             console.log(data);
             this.loaded = true;
+            if (data == null) {
+                this.tv_sh_error = "tv-v2.api-fetch.sh unreachable";
+            }
         },
             error => {
                 console.log(error);

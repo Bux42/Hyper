@@ -3,13 +3,24 @@
 }
 
 .loading {
-    opacity: 0.6;
+  opacity: 0.6;
 }
 
 .search-input {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .media-filter-select {
-    margin-left: 10px;
+  margin-left: 10px;
+}
+
+.tv-sh-error {
+  color: red;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(65vh - 20px);
 }

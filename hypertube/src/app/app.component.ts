@@ -21,9 +21,11 @@ export class AppComponent {
                     console.log(userInfos);
                     this.userService.user.UserData.username = userInfos.account.username
                     this.userService.user.UserData.userId = userInfos.account.userId;
+                    this.userService.user.UserData.volume = userInfos.account.volume;
                     if (this.userService.user) {
                         this.userService.user.watchHistory = userInfos.watchHistory;
                         this.userService.user.watchHistoryShows = userInfos.watchHistoryShows;
+                        
                     }
                 });
             })

@@ -26,9 +26,15 @@
 <div>
     
 </div>
+<div *ngIf="!loaded && mediaItems.length == 0" class="centered">
+    <mat-spinner class="custom-mat-spinner"></mat-spinner>
+</div>
 <div *ngIf="loaded" [ngClass]="{'loading': loading}" class="media-list-container" stickyHeaderDirective
   style="overflow: auto; max-height: 100%;" (appScrollToEnd)="scrollToEnd()" [attr.media-category]="mediaCategory">
 
   <app-media-list-item *ngFor="let media of mediaItems" [media]="media" [mediaCategory]="mediaCategory">
   </app-media-list-item>
+  <div *ngIf="tv_sh_error.length > 0" class="tv-sh-error">
+    {{tv_sh_error}}
+  </div>
 </div>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div (click)="setShowMail()" class="custom-oauth-button" style="height: 32px;">
   <div class="custom-oauth-icon">
       <img src="/assets/mail.svg" style="width: 60%; display: flex; margin: auto; color: red">
@@ -82,3 +83,53 @@
   </mat-tab-group>
 </mat-card>
 
+=======
+<mat-card>
+  <div class="example-container">
+    <mat-form-field appearance="legacy">
+      <mat-label>First name</mat-label>
+      <input matInput (input)="firstNameInputChanged()" type="text" [(ngModel)]="firstName" required>
+      <mat-hint class="hint-error" *ngIf="firstNameError.length > 0">{{firstNameError}}</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="legacy">
+      <mat-label>Last name</mat-label>
+      <input matInput (input)="lastNameInputChanged()" type="text" [(ngModel)]="lastName" required>
+      <mat-hint class="hint-error" *ngIf="lastNameError.length > 0">{{lastNameError}}</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="legacy">
+      <mat-label>Username</mat-label>
+      <input matInput (input)="usernameInputChanged()" type="text" [(ngModel)]="username" required>
+      <mat-hint class="hint-error" *ngIf="usernameError.length > 0">{{usernameError}}</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="pat@example.com" [formControl]="email" (input)="emailInputChanged()"
+        [(ngModel)]="emailInput" required>
+      <mat-hint class="hint-error" *ngIf="emailInputError.length > 0">{{emailInputError}}</mat-hint>
+      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your password</mat-label>
+      <input matInput (input)="password1InputChanged()" [(ngModel)]="password1" [type]="hide ? 'password' : 'text'" required>
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-hint class="hint-error" *ngIf="password1Error.length > 0">{{password1Error}}</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Confirm your password</mat-label>
+      <input matInput (input)="password2InputChanged()" [(ngModel)]="password2" [type]="hide2 ? 'password' : 'text'" required>
+      <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide2">
+        <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-hint class="hint-error" *ngIf="password2Error.length > 0">{{password2Error}}</mat-hint>
+    </mat-form-field>
+    <button [disabled]="!validForm" (click)="register()" mat-raised-button>Register</button>
+  </div>
+  <mat-label *ngIf="accountCreated">
+    Account created!
+  </mat-label>
+</mat-card>
+>>>>>>> eca86dfd07e3e8ad485afe288d5e8143e408fd1b

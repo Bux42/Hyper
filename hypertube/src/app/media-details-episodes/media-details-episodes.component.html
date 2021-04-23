@@ -27,14 +27,15 @@
       <mat-button-toggle *ngFor="let episode of selectedSeason.episodes" value="{{episode.title}}"
         (click)="selectEpisode(episode.title)">
         <div class="left episode-number">{{episode.episode}}</div>
-        <div class="episode-title">{{episode.title}}</div>
+        <mat-icon *ngIf="episode.seen" class="left seen-icon">remove_red_eye</mat-icon>
+        <div class="episode-title">{{episode.title}} </div>
       </mat-button-toggle>
     </mat-button-toggle-group>
   </section>
   <section class="episode-details">
     <h1>{{selectedEpisode.title}}</h1>
     <p>{{selectedEpisode.overview}}</p>
-    <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id">
+    <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id" [episode_number]="episodeNumber" [season_number]="selectedSeason.season">
     </app-resolution-picker>
   </section>
 </div>

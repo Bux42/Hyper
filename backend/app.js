@@ -94,6 +94,7 @@ app.listen(port, () => {
 });
 
 app.get("/ping", (req, res, next) => {
+    console.log("/ping req.session.user", req.session.user);
     res.send({
         "Ping": true
     });
@@ -249,8 +250,15 @@ app.get('/get-vtt', (req, res, next) => {
 app.get('/set-show-watch-time', (req, res, next) => {
     console.log("/set-show-watch-time", req.sessionID, req.query);
     if (req.session.userId) {
+        const userCol = db.collection('users');
+        userCol.updateOne({id: req.session.userId}, {
+            $set: {
+                volume: req.query.user_volume
+            }
+        });
+
         const col = db.collection('watch_history');
-        col.find({    
+        col.find({
             user_id: req.session.userId,
             media_id: req.query.show_imdb_id
         }).toArray(function (err, docs) {
@@ -277,17 +285,20 @@ app.get('/set-show-watch-time', (req, res, next) => {
                 collection.insertOne({
                     user_id: req.session.userId,
                     tvdb_id: req.query.tvdb_id,
-                    watch_time: req.query.watchTime
+                    imdb_id: req.query.show_imdb_id,
+                    watch_time: req.query.watchTime,
+                    season_number: req.query.season_number,
+                    episode_number: req.query.episode_number,
+                    date: Date.now()
                 });
             } else {
-                var watchTime = docs[0];
-                watchTime.watch_time = req.query.watchTime;
-                collection.update({
-                    user_id: req.session.userId,
-                    tvdb_id: req.query.tvdb_id
-                }, watchTime, {
-                    upsert: true
-                });
+                var newvalues = {
+                    $set: {
+                        watch_time: req.query.watchTime,
+                        date: Date.now()
+                    }
+                };
+                collection.updateOne({_id: docs[0]._id}, newvalues);
             }
         });
     }
@@ -300,6 +311,21 @@ app.get('/set-watch-time', (req, res, next) => {
     console.log("/set-watch-time", req.sessionID);
     if (req.session.userId) {
         console.log(req.query);
+
+        const userCol = db.collection('users');
+        userCol.updateOne({id: req.session.userId}, {
+            $set: {
+                volume: req.query.user_volume
+            }
+        });
+        /*
+        const userCol = db.collection('users');
+        userCol.updateOne({
+            user_id: req.session.userId,
+        }, {    
+            volume: req.query.user_volume,
+        });*/
+
         const collection = db.collection('watch_history');
 
         collection.find({
@@ -314,17 +340,17 @@ app.get('/set-watch-time', (req, res, next) => {
                 collection.insertOne({
                     user_id: req.session.userId,
                     media_id: req.query.mediaId,
-                    watch_time: req.query.watchTime
+                    watch_time: req.query.watchTime,
+                    date: Date.now()
                 });
             } else {
-                var watchTime = docs[0];
-                watchTime.watch_time = req.query.watchTime;
-                collection.update({
-                    user_id: req.session.userId,
-                    media_id: req.query.mediaId
-                }, watchTime, {
-                    upsert: true
-                });
+                var newvalues = {
+                    $set: {
+                        watch_time: req.query.watchTime,
+                        date: Date.now()
+                    }
+                };
+                collection.updateOne({_id: docs[0]._id}, newvalues);
             }
         });
     }
@@ -335,17 +361,32 @@ app.get('/set-watch-time', (req, res, next) => {
 
 app.get('/check-username', (req, res, next) => {
     if (req.query.username.length < 3) {
-        res.send({Available: false, Error: "Username too short"});
+        res.send({
+            Available: false,
+            Error: "Username too short"
+        });
     } else if (req.query.username.length > 15) {
-        res.send({Available: false, Error: "Username too long"});
+        res.send({
+            Available: false,
+            Error: "Username too long"
+        });
     } else if (/^[A-Za-z0-9]+$/.test(req.query.username) == false) {
-        res.send({Available: false, Error: "Illegal characters"});
+        res.send({
+            Available: false,
+            Error: "Illegal characters"
+        });
     } else {
         um.isUsernameAvailable(req.query.username).then(isAvailable => {
             if (isAvailable) {
-                res.send({Available: isAvailable, Error: null});
+                res.send({
+                    Available: isAvailable,
+                    Error: null
+                });
             } else {
-                res.send({Available: isAvailable, Error: "Username taken"});
+                res.send({
+                    Available: isAvailable,
+                    Error: "Username taken"
+                });
             }
         });
     }
@@ -355,7 +396,9 @@ app.post('/set-username', (req, res, next) => {
     console.log(req.body);
     um.setUsername(req.body.username, req.body.userId).then(result => {
         console.log(result);
-        res.send({"Success": result});
+        res.send({
+            "Success": result
+        });
     })
 });
 
@@ -366,11 +409,16 @@ app.post('/authenticate', (req, res, next) => {
     if (req.body.AccountType) {
         if (req.body.AccountType == "Google") {
             um.getGoogleAccount(req).then(googleAccount => {
-                console.log("googleAccount", googleAccount);
                 req.session.userId = googleAccount.id;
                 um.getWatchHistory(googleAccount.id).then(wHistory => {
                     um.getWatchHistoryShows(googleAccount.id).then(wHistoryShows => {
-                        console.log("wHistoryShows:", wHistoryShows);
+                        req.session.user = {
+                            id: googleAccount.id,
+                            account : googleAccount,
+                            watchHistory : wHistory,
+                            watchHistoryShows : wHistoryShows,
+                            accountType : "Google"
+                        }
                         res.send({
                             "okay": true,
                             "account": googleAccount,
@@ -382,4 +430,31 @@ app.post('/authenticate', (req, res, next) => {
             })
         }
     }
+});
+
+app.post('/register', (req, res, next) => {
+    um.createAccount(req.body).then(result => {
+        res.send(result);
+    });
+});
+
+app.post('/login', (req, res, next) => {
+    um.login(req.body).then(result => {
+        if (!result.Error) {
+            req.session.userId = result.Account.id;
+            um.getWatchHistory(result.Account.id).then(wHistory => {
+                um.getWatchHistoryShows(result.Account.id).then(wHistoryShows => {
+                    console.log("wHistoryShows:", wHistoryShows);
+                    res.send({
+                        Error: null,
+                        "account": result.Account,
+                        watchHistory: wHistory,
+                        watchHistoryShows: wHistoryShows
+                    });
+                });
+            });
+        } else {
+            res.send(result);
+        }
+    });
 });

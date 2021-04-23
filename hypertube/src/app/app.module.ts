@@ -43,6 +43,7 @@ import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
 import { ResolutionPickerComponent } from './resolution-picker/resolution-picker.component';
 import { RegisterFormComponent } from './register-form/register-form.component';
 import { UsernameFormComponent } from './username-form/username-form.component';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
     declarations: [
@@ -62,7 +63,8 @@ import { UsernameFormComponent } from './username-form/username-form.component';
         SchoolOauthComponent,
         ResolutionPickerComponent,
         RegisterFormComponent,
-        UsernameFormComponent
+        UsernameFormComponent,
+        LoginFormComponent
     ],
     imports: [
         MatTabsModule,

@@ -1,5 +1,10 @@
 const assert = require('assert');
-const { use } = require('passport');
+const bcrypt = require('bcrypt');
+const {
+    use
+} = require('passport');
+
+const saltRounds = 10;
 
 module.exports = class UserManager {
     constructor(db) {
@@ -21,7 +26,8 @@ module.exports = class UserManager {
                         email: req.body.UserData.zt,
                         img: req.body.UserData.VI,
                         username: null,
-                        language: "en"
+                        language: "en",
+                        volume: 0.5
                     };
                     collection.insertOne(account);
                     account["userId"] = account.id;
@@ -72,6 +78,20 @@ module.exports = class UserManager {
             });
         });
     }
+    isEmailAvailable(email) {
+        return new Promise(resolve => {
+            const collection = this.Db.collection('users');
+            collection.find({
+                email: email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    }
     isUsernameAvailable(username) {
         return new Promise(resolve => {
             const collection = this.Db.collection('users');
@@ -100,6 +120,84 @@ module.exports = class UserManager {
                     resolve(true);
                 } else {
                     resolve(false);
+                }
+            });
+        });
+    }
+    login(form) {
+        return new Promise(resolve => {
+            const collection = this.Db.collection('users');
+            collection.find({
+                email: form.email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    bcrypt.compare(form.password, docs[0].password, function (err, result) {
+                        if (!result) {
+                            resolve({
+                                Error: "Invalid email or password",
+                                Account: null
+                            });
+                        } else {
+                            delete docs[0].password;
+                            resolve({
+                                Error: null,
+                                Account: docs[0]
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        Error: "Invalid email or password",
+                        Account: null
+                    });
+                }
+            });
+        });
+    }
+    createAccount(form) {
+        return new Promise(resolve => {
+            this.isUsernameAvailable(form.username).then(usernameAvailable => {
+                if (usernameAvailable) {
+                    this.isEmailAvailable(form.emailInput).then(emailAvailable => {
+                        if (emailAvailable) {
+                            const collection = this.Db.collection('users');
+                            var newId = "";
+                            for (var i = 0; i < 21; ++i) {
+                                newId += Math.floor(Math.random() * 10);
+                            }
+                            bcrypt.genSalt(saltRounds, function (err, salt) {
+                                bcrypt.hash(form.password1, salt, function (err, hash) {
+                                    var account = {
+                                        id: newId,
+                                        first_name: form.firstName,
+                                        last_name: form.lastName,
+                                        email: form.emailInput,
+                                        password: hash,
+                                        img: "",
+                                        username: form.username,
+                                        language: "en",
+                                        volume: 0.5
+                                    };
+                                    collection.insertOne(account);
+                                    resolve({
+                                        "Error": null
+                                    });
+                                });
+                            });
+                        } else {
+                            resolve({
+                                "Error": {
+                                    "emailInputError": "Email already in use"
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        "Error": {
+                            "usernameError": "Username already in use"
+                        }
+                    });
                 }
             });
         });
