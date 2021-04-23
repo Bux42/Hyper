@@ -10,10 +10,16 @@ export class RegisterFormComponent implements OnInit {
     email = new FormControl('', [Validators.required, Validators.email]);
     hide = true;
     hide2 = true;
+    showMail = false;
   constructor() { }
 
   ngOnInit(): void {
   }
+  
+  setShowMail() {
+    this.showMail = (this.showMail == true) ? false : true ;
+  }
+
   getErrorMessage() {
     if (this.email.hasError('required')) {
       return 'You must enter a value';
