@@ -42,8 +42,7 @@ export class UsernameFormComponent implements OnInit {
             console.log(checkUsernameResult);
             if (checkUsernameResult.Available) {
                 this.usernameError = "";
-                this.userService.setUsername(this.usernameInput, this.user.UserData.userId).subscribe(usernameSet => {
-                    console.log(usernameSet);
+                this.userService.setUsername(this.usernameInput).subscribe(usernameSet => {
                     if (usernameSet) {
                         window.location.reload();
                     }

@@ -18,6 +18,6 @@
       </div>
     </mat-card>
   </mat-drawer>
-  <app-media-categories *ngIf="(user && user.UserData.username != null || !user)"></app-media-categories>
-  <app-username-form *ngIf="user && user.UserData.username == null" [user]="user"></app-username-form>
+  <app-media-categories *ngIf="(user && user.Account.username != null || !user)"></app-media-categories>
+  <app-username-form *ngIf="user && user.Account.username == null" [user]="user"></app-username-form>
 </mat-drawer-container>

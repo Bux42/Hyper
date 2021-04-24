@@ -3,8 +3,18 @@ const bcrypt = require('bcrypt');
 const {
     use
 } = require('passport');
+const { resolve } = require('path');
 
 const saltRounds = 10;
+
+class Account {
+    constructor(watchHistory, watchHistoryShows, accountType, account) {
+        this.WatchHistory = watchHistory;
+        this.WatchHistoryShows = watchHistoryShows;
+        this.AccountType = accountType;
+        this.Account = account;
+    }
+}
 
 module.exports = class UserManager {
     constructor(db) {
@@ -13,28 +23,26 @@ module.exports = class UserManager {
     getGoogleAccount(req) {
         return new Promise(resolve => {
             const collection = this.Db.collection('users');
+            console.log("req.body.UserData.QR", req.body.UserData);
             collection.find({
-                id: req.body.UserData.QR
+                id: req.body.UserData.FS
             }).toArray(function (err, docs) {
                 assert.equal(err, null);
                 if (!docs.length) {
-                    console.log("New account");
+                    console.log("create account", req.body.UserData);
                     var account = {
-                        id: req.body.UserData.QR,
-                        first_name: req.body.UserData.AT,
-                        last_name: req.body.UserData.wR,
-                        email: req.body.UserData.zt,
-                        img: req.body.UserData.VI,
+                        id: req.body.UserData.FS,
+                        first_name: req.body.UserData.qU,
+                        last_name: req.body.UserData.lS,
+                        email: req.body.UserData.Qt,
+                        img: req.body.UserData.yJ,
                         username: null,
                         language: "en",
                         volume: 0.5
                     };
                     collection.insertOne(account);
-                    account["userId"] = account.id;
                     resolve(account);
                 } else {
-                    console.log("Found account:", docs[0]);
-                    docs[0]["userId"] = docs[0].id;
                     resolve(docs[0]);
                 }
             });
@@ -48,7 +56,6 @@ module.exports = class UserManager {
                 user_id: userId
             }).toArray(function (err, docs) {
                 assert.equal(err, null);
-                console.log(docs);
                 docs.forEach(el => {
                     watchHistory.push({
                         tvdb_id: el.tvdb_id,
@@ -56,6 +63,92 @@ module.exports = class UserManager {
                     });
                 });
                 resolve(watchHistory);
+            });
+        });
+    }
+    setShowWatchTime(req) {
+        return new Promise(resolve => {
+            const userCol = this.Db.collection('users');
+            userCol.updateOne({id: req.session.user.Account.id}, {
+                $set: {
+                    volume: req.query.user_volume
+                }
+            });
+            const col = this.Db.collection('watch_history');
+            col.find({
+                user_id: req.session.user.Account.id,
+                media_id: req.query.show_imdb_id
+            }).toArray(function (err, docs) {
+                assert.equal(err, null);
+                if (!docs.length) {
+                    col.insertOne({
+                        user_id: req.session.user.Account.id,
+                        media_id: req.query.show_imdb_id,
+                        watch_time: 0
+                    });
+                }
+            });
+            const collection = this.Db.collection('watch_history_shows');
+            collection.find({
+                user_id: req.session.user.Account.id,
+                tvdb_id: req.query.tvdb_id
+            }).toArray(function (err, docs) {
+                assert.equal(err, null);
+                if (!docs.length) {
+                    collection.insertOne({
+                        user_id: req.session.user.Account.id,
+                        tvdb_id: req.query.tvdb_id,
+                        imdb_id: req.query.show_imdb_id,
+                        watch_time: req.query.watchTime,
+                        season_number: req.query.season_number,
+                        episode_number: req.query.episode_number,
+                        date: Date.now()
+                    });
+                } else {
+                    var newvalues = {
+                        $set: {
+                            watch_time: req.query.watchTime,
+                            date: Date.now()
+                        }
+                    };
+                    collection.updateOne({_id: docs[0]._id}, newvalues);
+                }
+            });
+            resolve(true);
+        });
+    }
+    setWatchTime(req) {
+        return new Promise(resolve => {
+            const userCol = this.Db.collection('users');
+            userCol.updateOne({id: req.session.user.Account.id}, {
+                $set: {
+                    volume: req.query.user_volume
+                }
+            });
+            const collection = this.Db.collection('watch_history');
+            collection.find({
+                user_id: req.session.user.Account.id,
+                media_id: req.query.mediaId
+            }).toArray(function (err, docs) {
+                assert.equal(err, null);
+                if (!docs.length) {
+                    collection.insertOne({
+                        user_id: req.session.user.Account.id,
+                        media_id: req.query.mediaId,
+                        watch_time: req.query.watchTime,
+                        date: Date.now()
+                    });
+                    resolve(true);
+                } else {
+                    var newvalues = {
+                        $set: {
+                            watch_time: req.query.watchTime,
+                            date: Date.now()
+                        }
+                    };
+                    collection.updateOne({_id: docs[0]._id}, newvalues);
+                    resolve(true);
+                }
             });
         });
     }
@@ -67,7 +160,6 @@ module.exports = class UserManager {
                 user_id: userId
             }).toArray(function (err, docs) {
                 assert.equal(err, null);
-                console.log(docs);
                 docs.forEach(el => {
                     watchHistory.push({
                         media_id: el.media_id,
@@ -200,6 +292,15 @@ module.exports = class UserManager {
                     });
                 }
             });
+        });
+    }
+    createUserInfos(accountType, account) {
+        return new Promise(resolve => {
+            this.getWatchHistory(account.id).then(wHistory => {
+                this.getWatchHistoryShows(account.id).then(wsHistory => {
+                    resolve (new Account(wHistory, wsHistory, accountType, account));
+                })
+            })
         });
     }
 }

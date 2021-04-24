@@ -14,21 +14,27 @@ export class AppComponent {
 
     ngOnInit() {
         this.userService.pingBackend().subscribe(result => {
-            this.userService.getUser().then((user) => {
-                console.log(user);
-                this.backendAvailable = true;
-                this.userService.setUser(user).subscribe((userInfos) => {
-                    console.log(userInfos);
-                    this.userService.user.UserData.username = userInfos.account.username
-                    this.userService.user.UserData.userId = userInfos.account.userId;
-                    this.userService.user.UserData.volume = userInfos.account.volume;
-                    if (this.userService.user) {
-                        this.userService.user.watchHistory = userInfos.watchHistory;
-                        this.userService.user.watchHistoryShows = userInfos.watchHistoryShows;
-                        
-                    }
+            if (result.userSession) {
+                console.log("userSession", result);
+                this.userService.user = result.userSession;
+                this.userService.getUser().then((user) => {
+                    this.backendAvailable = true;
                 });
-            })
+            } else {
+                this.userService.getUser().then((user) => {
+                    console.log(user);
+                    if (!user) {
+                        this.backendAvailable = true;
+                    } else {
+                        this.userService.setUser(user).subscribe((userInfos) => {
+                            console.log("setUser2", userInfos);
+                            this.userService.user = userInfos.Account;
+                            this.backendAvailable = true;
+                        });
+                    }
+                    
+                });
+            }
         },
         error => {
             this.errorMessage = error.message;

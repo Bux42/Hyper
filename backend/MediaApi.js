@@ -41,7 +41,7 @@ module.exports = class MediaApi {
         if (query.keywords.length) {
             url += "&keywords=" + query.keywords;
         }
-        console.log(url);
+        //console.log(url);
         return await rp({
                 uri: url
             })
@@ -55,7 +55,8 @@ module.exports = class MediaApi {
                 return (that.CachedMedia[query.mediaCategory]);
             })
             .catch(function (err) {
-                console.log(err);
+
+                console.error(url, "request failed");
             });
     }
     async getMediaEpisodes(query) {

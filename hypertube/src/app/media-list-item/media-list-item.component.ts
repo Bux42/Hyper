@@ -16,8 +16,8 @@ export class MediaListItemComponent implements OnInit {
     constructor(public dialog: MatDialog, private userService: UserService) { }
 
     ngOnInit(): void {
-        if (this.userService.user && this.userService.user.watchHistory) {
-            this.media.resume = this.userService.user.watchHistory.find((x: any) => x.media_id == this.media._id);
+        if (this.userService.user && this.userService.user.WatchHistory) {
+            this.media.resume = this.userService.user.WatchHistory.find((x: any) => x.media_id == this.media._id);
         }
         for (var i = 0; i < 5; i++) {
             var percent = (this.media.rating.percentage / 10) / 2;

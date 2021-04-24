@@ -16,8 +16,10 @@ export class UserService {
         return new Promise((resolve, reject) => {
             this.googleOauth.getUser().then(googleUser => {
                 if (googleUser) {
-                    this.user = { "AccountType": "Google", "UserData": googleUser };
-                    resolve(this.user);
+                    resolve({
+                        "AccountType": "Google",
+                        "UserData": googleUser
+                    });
                 } else {
                     resolve(null);
                 }
@@ -27,8 +29,8 @@ export class UserService {
     setUser(user: any) {
         return (this.http.post<any>('http://localhost:3000/authenticate', user, { withCredentials: true }));
     }
-    setUsername(username: any, userId: any) {
-        return (this.http.post<any>('http://localhost:3000/set-username', {username: username, userId: userId}, { withCredentials: true }));
+    setUsername(username: any) {
+        return (this.http.post<any>('http://localhost:3000/set-username', {username: username}, { withCredentials: true }));
     }
     checkUsername(username: any) {
         const params = new HttpParams()
@@ -96,5 +98,8 @@ export class UserService {
             email: form.email,
             password: form.password
         }, { withCredentials: true }));
+    }
+    logout() {
+        return (this.http.get<any>('http://localhost:3000/logout', {  withCredentials: true }));
     }
 }

@@ -90,37 +90,32 @@ if (clearDownloads) {
 }
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Hypertube listening at http://localhost:${port}`)
 });
 
 app.get("/ping", (req, res, next) => {
-    console.log("/ping req.session.user", req.session.user);
+    console.log("/ping req.session.user", req.session.user, req.sessionID);
+    
     res.send({
-        "Ping": true
+        "userSession": req.session.user
     });
 });
 
 var missingImgs = [];
 
 app.get('/media-list', (req, res, next) => {
-    console.log("/media-list", req.sessionID);
-    console.log(req.query);
-    console.log(req.session.userId);
     mediaApi.getMedia(req.query).then(data => {
         res.send(data);
     });
 });
 
 app.get('/media-episodes', (req, res, next) => {
-    console.log("/media-episodes", req.sessionID);
-    console.log(req.query);
     mediaApi.getMediaEpisodes(req.query).then(data => {
         res.send(data);
     });
 });
 
 app.get('/media-state', (req, res, next) => {
-    console.log("/media-state", req.sessionID);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
     //req.session.magnetUrl = req.query.magnetUrl;
     //console.log("req.query.magnetUrl:", req.query.magnetUrl);
@@ -133,7 +128,8 @@ app.get('/media-state', (req, res, next) => {
         res.send({
             "ok": true,
             "progress": torrent.DownloadedChunks + " / " + torrent.TotalChunks,
-            "progressPercent": ((torrent.DownloadedChunks / torrent.TotalChunks) * 100)
+            "progressPercent": ((torrent.DownloadedChunks / torrent.TotalChunks) * 100),
+            "format": torrent.Format
         });
     }
 });
@@ -248,59 +244,31 @@ app.get('/get-vtt', (req, res, next) => {
 });
 
 app.get('/set-show-watch-time', (req, res, next) => {
-    console.log("/set-show-watch-time", req.sessionID, req.query);
-    if (req.session.userId) {
-        const userCol = db.collection('users');
-        userCol.updateOne({id: req.session.userId}, {
-            $set: {
-                volume: req.query.user_volume
-            }
-        });
+    console.log("/set-show-watch-time", req.session.user.Account.id, req.query);
+    if (req.session.user) {
+        req.session.user.Account.volume = req.query.user_volume;
+        um.setShowWatchTime(req).then((result) => {
 
-        const col = db.collection('watch_history');
-        col.find({
-            user_id: req.session.userId,
-            media_id: req.query.show_imdb_id
-        }).toArray(function (err, docs) {
-            assert.equal(err, null);
-            if (!docs.length) {
-                col.insertOne({
-                    user_id: req.session.userId,
-                    media_id: req.query.show_imdb_id,
-                    watch_time: 0
-                });
-            }
         });
-
-        const collection = db.collection('watch_history_shows');
-        collection.find({
-            user_id: req.session.userId,
-            tvdb_id: req.query.tvdb_id
-        }).toArray(function (err, docs) {
-            assert.equal(err, null);
-            console.log('Found the following records');
-            console.log(docs);
-            if (!docs.length) {
-                console.log("1st watch", req.query.tvdb_id);
-                collection.insertOne({
-                    user_id: req.session.userId,
-                    tvdb_id: req.query.tvdb_id,
-                    imdb_id: req.query.show_imdb_id,
-                    watch_time: req.query.watchTime,
-                    season_number: req.query.season_number,
-                    episode_number: req.query.episode_number,
-                    date: Date.now()
-                });
-            } else {
-                var newvalues = {
-                    $set: {
-                        watch_time: req.query.watchTime,
-                        date: Date.now()
-                    }
-                };
-                collection.updateOne({_id: docs[0]._id}, newvalues);
-            }
-        });
+        var wh = req.session.user.WatchHistory.find(x => x.media_id == req.query.show_imdb_id);
+        if (!wh) {
+            var newWh = {
+                media_id: req.query.show_imdb_id,
+                watch_time: 0
+            };
+            console.log("add new wh", newWh);
+            req.session.user.WatchHistory.push(newWh);
+        }
+        var whs = req.session.user.WatchHistoryShows.find(x => x.tvdb_id == req.query.tvdb_id);
+        if (whs) {
+            whs.watchTime = req.query.watchTime;
+            whs.date = Date.now();
+        } else {
+            req.session.user.WatchHistoryShows.push({
+                tvdb_id: req.query.tvdb_id,
+                date: Date.now()
+            });
+        }
     }
     res.send({
         "okay": true
@@ -308,51 +276,23 @@ app.get('/set-show-watch-time', (req, res, next) => {
 });
 
 app.get('/set-watch-time', (req, res, next) => {
-    console.log("/set-watch-time", req.sessionID);
-    if (req.session.userId) {
-        console.log(req.query);
-
-        const userCol = db.collection('users');
-        userCol.updateOne({id: req.session.userId}, {
-            $set: {
-                volume: req.query.user_volume
-            }
+    console.log("/set-watch-time", req.query);
+    if (req.session.user) {
+        req.session.user.Account.volume = req.query.user_volume;
+        um.setWatchTime(req).then((result) => {
+            
         });
-        /*
-        const userCol = db.collection('users');
-        userCol.updateOne({
-            user_id: req.session.userId,
-        }, {    
-            volume: req.query.user_volume,
-        });*/
-
-        const collection = db.collection('watch_history');
-
-        collection.find({
-            user_id: req.session.userId,
-            media_id: req.query.mediaId
-        }).toArray(function (err, docs) {
-            assert.equal(err, null);
-            console.log('Found the following records');
-            console.log(docs);
-            if (!docs.length) {
-                console.log("1st watch", req.query.mediaId);
-                collection.insertOne({
-                    user_id: req.session.userId,
-                    media_id: req.query.mediaId,
-                    watch_time: req.query.watchTime,
-                    date: Date.now()
-                });
-            } else {
-                var newvalues = {
-                    $set: {
-                        watch_time: req.query.watchTime,
-                        date: Date.now()
-                    }
-                };
-                collection.updateOne({_id: docs[0]._id}, newvalues);
-            }
-        });
+        var wh = req.session.user.WatchHistory.find(x => x.media_id == req.query.mediaId);
+        if (wh) {
+            wh.watchTime = req.query.watchTime;
+        } else {
+            req.session.user.WatchHistory.push({
+                media_id: req.query.mediaId,
+                watch_time: req.query.watchTime
+            });
+        }
+    } else {
+        console.error("req.session.user not set", req.session.user);
     }
     res.send({
         "okay": true
@@ -394,8 +334,12 @@ app.get('/check-username', (req, res, next) => {
 
 app.post('/set-username', (req, res, next) => {
     console.log(req.body);
-    um.setUsername(req.body.username, req.body.userId).then(result => {
+
+    um.setUsername(req.body.username, req.session.user.Account.id).then(result => {
         console.log(result);
+        if (result) {
+            req.session.user.Account.username = req.body.username;
+        }
         res.send({
             "Success": result
         });
@@ -404,27 +348,20 @@ app.post('/set-username', (req, res, next) => {
 
 app.post('/authenticate', (req, res, next) => {
     console.log("/authenticate", req.sessionID);
-    delete req.session.userId;
+    delete req.session.user;
     console.log(req.body);
     if (req.body.AccountType) {
         if (req.body.AccountType == "Google") {
             um.getGoogleAccount(req).then(googleAccount => {
-                req.session.userId = googleAccount.id;
-                um.getWatchHistory(googleAccount.id).then(wHistory => {
-                    um.getWatchHistoryShows(googleAccount.id).then(wHistoryShows => {
-                        req.session.user = {
-                            id: googleAccount.id,
-                            account : googleAccount,
-                            watchHistory : wHistory,
-                            watchHistoryShows : wHistoryShows,
-                            accountType : "Google"
-                        }
-                        res.send({
-                            "okay": true,
-                            "account": googleAccount,
-                            watchHistory: wHistory,
-                            watchHistoryShows: wHistoryShows
-                        });
+                um.createUserInfos("Google", googleAccount).then(acc => {
+                    req.session.user = acc;
+                    console.log({
+                        "Error": null,
+                        "Account": acc
+                    });
+                    res.send({
+                        "Error": null,
+                        "Account": acc
                     });
                 });
             })
@@ -439,18 +376,14 @@ app.post('/register', (req, res, next) => {
 });
 
 app.post('/login', (req, res, next) => {
+    delete req.session.user;
     um.login(req.body).then(result => {
         if (!result.Error) {
-            req.session.userId = result.Account.id;
-            um.getWatchHistory(result.Account.id).then(wHistory => {
-                um.getWatchHistoryShows(result.Account.id).then(wHistoryShows => {
-                    console.log("wHistoryShows:", wHistoryShows);
-                    res.send({
-                        Error: null,
-                        "account": result.Account,
-                        watchHistory: wHistory,
-                        watchHistoryShows: wHistoryShows
-                    });
+            um.createUserInfos("Classic", result.Account).then(acc => {
+                req.session.user = acc;
+                res.send({
+                    "Error": null,
+                    "Account": acc
                 });
             });
         } else {
@@ -458,3 +391,10 @@ app.post('/login', (req, res, next) => {
         }
     });
 });
+
+app.get('/logout', (req, res, next) => {
+    delete req.session.user;
+    res.send({
+        "LoggedOut": true
+    });
+})

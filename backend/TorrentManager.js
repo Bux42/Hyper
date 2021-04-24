@@ -13,6 +13,7 @@ class Torrent {
         this.Idle = false;
         this.TotalChunks = 0;
         this.DownloadedChunks = 0;
+        this.Format = "Unknown";
 
         if (this.MagnetSplit.length > 1) {
             this.MagnetLink = this.MagnetSplit[0];
@@ -40,6 +41,7 @@ class Torrent {
                     file.path.endsWith(".avi")) {
                     var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                     that.MediaPath = engine.path + "\\" + file.path;
+                    that.Format = file.path.substr(file.path.length - 4);
                 }
             });
             if (callback)

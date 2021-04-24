@@ -39,8 +39,8 @@ export class ResolutionPickerComponent implements OnInit {
                 });
             })
         } else if (this.media.tvdb_id) {
-            console.log(this.media.tvdb_id, this.media.show_imdb_id);
             this.media.show_imdb_id = this.show_imdb_id;
+            console.log(this.media.tvdb_id, this.media.show_imdb_id);
         }
         this.resolutions.forEach(res => {
             if (this.media.torrents.en && this.media.torrents.en[res]) {
@@ -91,9 +91,14 @@ export class ResolutionPickerComponent implements OnInit {
         this.busy = true;
         this.busyElement = el;
         el.state = "Check magnet";
+        
+        if (this.media.tvdb_id) {
+            this.media.show_imdb_id = this.show_imdb_id;
+            console.log(this.media.tvdb_id, this.media.show_imdb_id);
+        }
+        console.log(this.media.show_imdb_id);
 
         this.torrentUrl = this.media.torrents.en ? this.media.torrents.en[el.resolution].url : this.media.torrents[el.resolution].url;
-        console.log(this.torrentUrl);
         this.mediaService.selectMedia(this.torrentUrl, this.media._id).subscribe(data => {
             console.log(data);
             this.mediaStateInterval = setInterval(() => {

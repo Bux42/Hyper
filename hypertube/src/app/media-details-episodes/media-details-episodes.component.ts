@@ -35,8 +35,8 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             for (var i = 0; i < this.mediaEpisodes.episodes.length; i++) {
                 var season = this.seasons.find((x: { season: any; }) => x.season == this.mediaEpisodes.episodes[i].season);
                 var episode = null;
-                if (this.userService.user && this.userService.user.watchHistoryShows) {
-                    episode = this.userService.user.watchHistoryShows.find((x: any) => x.tvdb_id == this.mediaEpisodes.episodes[i].tvdb_id);
+                if (this.userService.user && this.userService.user.WatchHistoryShows) {
+                    episode = this.userService.user.WatchHistoryShows.find((x: any) => x.tvdb_id == this.mediaEpisodes.episodes[i].tvdb_id);
                 }
                 if (!season) {
                     if (episode) {
@@ -44,7 +44,7 @@ export class MediaDetailsEpisodesComponent implements OnInit {
                     }
                     this.seasons.push({ "season": this.mediaEpisodes.episodes[i].season, "episodes": [this.mediaEpisodes.episodes[i]] });
                 } else {
-                    if (this.userService.user && this.userService.user.watchHistoryShows) {
+                    if (this.userService.user && this.userService.user.WatchHistoryShows) {
                         if (episode) {
                             this.mediaEpisodes.episodes[i].seen = true;
                         }

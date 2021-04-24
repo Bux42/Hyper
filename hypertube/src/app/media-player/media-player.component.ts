@@ -47,7 +47,7 @@ export class MediaPlayerComponent implements OnInit {
         this.episode_number = data.episode_number;
         this.currentVolume = 0.5;
         if (this.userService.user) {
-            this.currentVolume = this.userService.user.UserData.volume;
+            this.currentVolume = this.userService.user.Account.volume;
         }
     }
 
