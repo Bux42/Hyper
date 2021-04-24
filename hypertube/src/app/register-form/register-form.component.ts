@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
-
 @Component({
     selector: 'app-register-form',
     templateUrl: './register-form.component.html',
@@ -9,39 +8,33 @@ import { UserService } from '../user.service';
 })
 export class RegisterFormComponent implements OnInit {
     email = new FormControl('', [Validators.required, Validators.email]);
+    showMail = false;
     hide = true;
     hide2 = true;
-
     firstName: any = "";
     firstNameError: any = "";
     validForm: any = false;
-
     lastName: any = "";
     lastNameError: any = "";
-
     username: any = "";
     usernameError: any = "";
-
     emailInput: any = "";
     emailInputError: any = "";
-
     password1: any = "";
     password1Error: any = "";
-
     password2: any = "";
     password2Error: any = "";
-
     accountCreated: any = false;
-
     constructor(private userService: UserService) { }
-
     ngOnInit(): void {
     }
+    setShowMail() {
+        this.showMail = (this.showMail == true) ? false : true ;
+      }
     getErrorMessage() {
         if (this.email.hasError('required')) {
             return 'You must enter a value';
         }
-
         return this.email.hasError('email') ? 'Not a valid email' : '';
     }
     register() {
@@ -112,11 +105,9 @@ export class RegisterFormComponent implements OnInit {
         this.checkValidForm();
     }
     emailInputChanged() {
-        
     }
     password1InputChanged() {
         var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
-
         if (this.password1.length < 8) {
             this.password1Error = "Password too short";
         } else if (this.password1.length > 15) {
