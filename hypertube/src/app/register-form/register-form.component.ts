@@ -12,6 +12,7 @@ export class RegisterFormComponent implements OnInit {
     loginLoading: any = false;
     loginSuccess: any = false;
     loginError: any = "";
+    selectedIndex: any = 0;
     hide = true;
     hide2 = true;
     password: any = "";
@@ -28,7 +29,6 @@ export class RegisterFormComponent implements OnInit {
     password1Error: any = "";
     password2: any = "";
     password2Error: any = "";
-    accountCreated: any = false;
     constructor(private userService: UserService) { }
     ngOnInit(): void {
     }
@@ -65,7 +65,8 @@ export class RegisterFormComponent implements OnInit {
             } else {
                 this.usernameError = "";
                 this.emailInputError = "";
-                this.accountCreated = true;
+                this.password = this.password1;
+                this.selectedIndex = 0;
             }
         });
     }
@@ -130,10 +131,10 @@ export class RegisterFormComponent implements OnInit {
     emailInputChanged() {
     }
     password1InputChanged() {
-        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,20}$/;
         if (this.password1.length < 8) {
             this.password1Error = "Password too short";
-        } else if (this.password1.length > 15) {
+        } else if (this.password1.length > 20) {
             this.password1Error = "Password too big";
         } else if (!regex.test(this.password1)) {
             this.password1Error = "Missing one upper case, lower case, digit or special character";
