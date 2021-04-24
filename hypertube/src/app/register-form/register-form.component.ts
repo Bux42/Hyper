@@ -9,8 +9,12 @@ import { UserService } from '../user.service';
 export class RegisterFormComponent implements OnInit {
     email = new FormControl('', [Validators.required, Validators.email]);
     showMail = false;
+    loginLoading: any = false;
+    loginSuccess: any = false;
+    loginError: any = "";
     hide = true;
     hide2 = true;
+    password: any = "";
     firstName: any = "";
     firstNameError: any = "";
     validForm: any = false;
@@ -28,9 +32,9 @@ export class RegisterFormComponent implements OnInit {
     constructor(private userService: UserService) { }
     ngOnInit(): void {
     }
-    setShowMail() {
-        this.showMail = (this.showMail == true) ? false : true ;
-      }
+    setShowMail() {
+        this.showMail = (this.showMail == true) ? false : true;
+    }
     getErrorMessage() {
         if (this.email.hasError('required')) {
             return 'You must enter a value';
@@ -65,6 +69,25 @@ export class RegisterFormComponent implements OnInit {
             }
         });
     }
+    login() {
+        this.loginLoading = true;
+        this.userService.login({
+            email: this.emailInput,
+            password: this.password
+        }).subscribe(result => {
+            this.loginLoading = false;
+            if (result.Error) {
+                this.loginError = result.Error;
+            } else {
+                this.loginError = "";
+                this.loginSuccess = true;
+                setTimeout(function () {
+                    window.location.reload();
+                }, 500);
+            }
+            console.log(result);
+        })
+    }
     firstNameInputChanged() {
         var regex = /^[a-zA-Z\s]*$/;
         if (!regex.test(this.firstName)) {
@@ -92,7 +115,7 @@ export class RegisterFormComponent implements OnInit {
         this.checkValidForm();
     }
     usernameInputChanged() {
-        var regex =/^\w+$/;        ;
+        var regex = /^\w+$/;;
         if (!regex.test(this.username)) {
             this.usernameError = "Illegal characters";
         } else if (this.username.length < 3) {

@@ -13,17 +13,19 @@
         <mat-card class="custom-mat-card">
           <mat-form-field appearance="fill">
             <mat-label>Enter your email</mat-label>
-            <input matInput placeholder="pat@example.com" [formControl]="email" required>
+            <input matInput placeholder="pat@example.com" [formControl]="email" [(ngModel)]="emailInput" required>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Enter your password</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'">
+            <input matInput [(ngModel)]="password" [type]="hide ? 'password' : 'text'" required>
+            <mat-hint class="hint-error" *ngIf="loginError.length > 0">{{loginError}}</mat-hint>
+            <mat-hint class="hint-success" *ngIf="loginSuccess">You are logged in!</mat-hint>
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
               [attr.aria-pressed]="hide">
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
           </mat-form-field>
-          <button mat-stroked-button style="background-color: #673ab7;" >Confirm</button>
+          <button [disabled]="loginLoading" (click)="login()" mat-stroked-button style="background-color: #673ab7;">Login</button>
         </mat-card>
       </div>  
     </mat-tab>

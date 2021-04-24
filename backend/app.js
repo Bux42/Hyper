@@ -378,6 +378,7 @@ app.post('/register', (req, res, next) => {
 app.post('/login', (req, res, next) => {
     delete req.session.user;
     um.login(req.body).then(result => {
+        console.log("/login", result);
         if (!result.Error) {
             um.createUserInfos("Classic", result.Account).then(acc => {
                 req.session.user = acc;
