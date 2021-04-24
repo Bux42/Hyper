@@ -16,6 +16,9 @@
         <div *ngIf="user.AccountType == 'Google'">
             <app-google-account></app-google-account>
         </div>
+        <div *ngIf="user.AccountType == 'Classic'">
+            panel user classique
+        </div>
       </div>
     </mat-card>
   </mat-drawer>
