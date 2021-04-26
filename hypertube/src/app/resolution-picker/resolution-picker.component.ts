@@ -77,7 +77,7 @@ export class ResolutionPickerComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.inputChanged();
+        
     }
     subtitleChanged(e: any) {
         if (e != "none") {
