@@ -26,8 +26,11 @@ export class ResolutionPickerComponent implements OnInit {
     subtitlesSrc: any = null;
     torrents: any[] = [];
     constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) { }
+    
+    inputChanged() {
+        this.subtitlesList = [];
+        this.torrents = [];
 
-    ngOnInit(): void {
         console.log(this.media, this.mediaCategory, this.season_number, this.episode_number);
         if (this.media.imdb_id) {
             this.mediaService.fetchMediaSubtitlesImdb({
@@ -67,6 +70,14 @@ export class ResolutionPickerComponent implements OnInit {
             }
 
         });
+    }
+
+    ngOnChanges(changes: any) {
+        this.inputChanged();
+    }
+
+    ngOnInit(): void {
+        this.inputChanged();
     }
     subtitleChanged(e: any) {
         if (e != "none") {
