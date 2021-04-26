@@ -67,6 +67,7 @@ module.exports = class UserManager {
         });
     }
     setShowWatchTime(req) {
+        console.log("um.setShowWatchTime", req.query);
         return new Promise(resolve => {
             const userCol = this.Db.collection('users');
             userCol.updateOne({id: req.session.user.Account.id}, {
@@ -99,7 +100,7 @@ module.exports = class UserManager {
                         user_id: req.session.user.Account.id,
                         tvdb_id: req.query.tvdb_id,
                         imdb_id: req.query.show_imdb_id,
-                        watch_time: req.query.watchTime,
+                        watch_time: req.query.watch_time,
                         season_number: req.query.season_number,
                         episode_number: req.query.episode_number,
                         date: Date.now()
@@ -107,7 +108,7 @@ module.exports = class UserManager {
                 } else {
                     var newvalues = {
                         $set: {
-                            watch_time: req.query.watchTime,
+                            watch_time: req.query.watch_time,
                             date: Date.now()
                         }
                     };
@@ -135,14 +136,14 @@ module.exports = class UserManager {
                     collection.insertOne({
                         user_id: req.session.user.Account.id,
                         media_id: req.query.mediaId,
-                        watch_time: req.query.watchTime,
+                        watch_time: req.query.watch_time,
                         date: Date.now()
                     });
                     resolve(true);
                 } else {
                     var newvalues = {
                         $set: {
-                            watch_time: req.query.watchTime,
+                            watch_time: req.query.watch_time,
                             date: Date.now()
                         }
                     };

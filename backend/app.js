@@ -129,7 +129,8 @@ app.get('/media-state', (req, res, next) => {
             "ok": true,
             "progress": torrent.DownloadedChunks + " / " + torrent.TotalChunks,
             "progressPercent": ((torrent.DownloadedChunks / torrent.TotalChunks) * 100),
-            "format": torrent.Format
+            "format": torrent.Format,
+            "size": torrent.MediaSize
         });
     }
 });
@@ -261,7 +262,7 @@ app.get('/set-show-watch-time', (req, res, next) => {
         }
         var whs = req.session.user.WatchHistoryShows.find(x => x.tvdb_id == req.query.tvdb_id);
         if (whs) {
-            whs.watchTime = req.query.watchTime;
+            whs.watch_time = req.query.watch_time;
             whs.date = Date.now();
         } else {
             req.session.user.WatchHistoryShows.push({
@@ -284,11 +285,11 @@ app.get('/set-watch-time', (req, res, next) => {
         });
         var wh = req.session.user.WatchHistory.find(x => x.media_id == req.query.mediaId);
         if (wh) {
-            wh.watchTime = req.query.watchTime;
+            wh.watch_time = req.query.watch_time;
         } else {
             req.session.user.WatchHistory.push({
                 media_id: req.query.mediaId,
-                watch_time: req.query.watchTime
+                watch_time: req.query.watch_time
             });
         }
     } else {

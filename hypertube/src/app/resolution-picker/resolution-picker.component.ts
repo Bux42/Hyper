@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MediaPlayerComponent } from '../media-player/media-player.component';
 import { MediaService } from '../media.service';
+import { UserService } from '../user.service';
 
 @Component({
     selector: 'app-resolution-picker',
@@ -24,7 +25,7 @@ export class ResolutionPickerComponent implements OnInit {
     selectedSubtitles: string = "none";
     subtitlesSrc: any = null;
     torrents: any[] = [];
-    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService) { }
+    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) { }
 
     ngOnInit(): void {
         console.log(this.media, this.mediaCategory, this.season_number, this.episode_number);
@@ -40,6 +41,9 @@ export class ResolutionPickerComponent implements OnInit {
             })
         } else if (this.media.tvdb_id) {
             this.media.show_imdb_id = this.show_imdb_id;
+            if (this.userService.user && this.userService.user.WatchHistoryShows) {
+                this.media.resume = this.userService.user.WatchHistoryShows.find((x: any) => x.tvdb_id == this.media.tvdb_id);
+            console.log("ShowResume:", this.media.resume);            }
             console.log(this.media.tvdb_id, this.media.show_imdb_id);
         }
         this.resolutions.forEach(res => {

@@ -10,6 +10,7 @@ class Torrent {
         console.log(this.MagnetLink);
         this.Downloaded = false;
         this.MediaPath = null;
+        this.MediaSize = 0;
         this.Idle = false;
         this.TotalChunks = 0;
         this.DownloadedChunks = 0;
@@ -41,6 +42,8 @@ class Torrent {
                     file.path.endsWith(".avi")) {
                     var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                     that.MediaPath = engine.path + "\\" + file.path;
+                    that.MediaSize = file.length;
+                    console.log("mediaSize:", that.MediaSize);
                     that.Format = file.path.substr(file.path.length - 4);
                 }
             });

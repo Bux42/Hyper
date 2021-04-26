@@ -59,7 +59,7 @@ export class UserService {
             .set('user_volume', userVolume)
             .set('episode_number', episode_number)
             .set('season_number', season_number)
-            .set('watchTime', watchTime);
+            .set('watch_time', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-show-watch-time', { params, withCredentials: true }));
     }
     setWatchTime(media_id: any, watchTime: any, userVolume: any) {
@@ -80,7 +80,7 @@ export class UserService {
         const params = new HttpParams()
             .set('mediaId', media_id)
             .set('user_volume', userVolume)
-            .set('watchTime', watchTime);
+            .set('watch_time', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-watch-time', { params, withCredentials: true }));
     }
     register(form: any) {
