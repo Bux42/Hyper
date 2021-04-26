@@ -11,6 +11,7 @@ export class RegisterFormComponent implements OnInit {
     showMail = false;
     loginLoading: any = false;
     loginSuccess: any = false;
+    accountCreated: any = false;
     loginError: any = "";
     selectedIndex: any = 0;
     hide = true;
@@ -67,6 +68,7 @@ export class RegisterFormComponent implements OnInit {
                 this.emailInputError = "";
                 this.password = this.password1;
                 this.selectedIndex = 0;
+                this.accountCreated = true;
             }
         });
     }

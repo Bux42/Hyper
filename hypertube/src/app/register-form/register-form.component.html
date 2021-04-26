@@ -20,6 +20,7 @@
             <input matInput [(ngModel)]="password" [type]="hide ? 'password' : 'text'" required>
             <mat-hint class="hint-error" *ngIf="loginError.length > 0">{{loginError}}</mat-hint>
             <mat-hint class="hint-success" *ngIf="loginSuccess">You are logged in!</mat-hint>
+            <mat-hint class="hint-success" *ngIf="accountCreated">Account created!</mat-hint>
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
               [attr.aria-pressed]="hide">
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -52,6 +53,7 @@
             <mat-label>Enter your email</mat-label>
             <input matInput placeholder="pat@example.com" [formControl]="email" [(ngModel)]="emailInput" required>
             <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+            <mat-hint class="hint-error" *ngIf="emailInputError.length > 0">{{emailInputError}}</mat-hint>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Enter your password</mat-label>
