@@ -44,6 +44,7 @@ import { ResolutionPickerComponent } from './resolution-picker/resolution-picker
 import { RegisterFormComponent } from './register-form/register-form.component';
 import { UsernameFormComponent } from './username-form/username-form.component';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { ClassicAccountComponent } from './classic-account/classic-account.component';
 
 @NgModule({
     declarations: [
@@ -64,7 +65,8 @@ import { LoginFormComponent } from './login-form/login-form.component';
         ResolutionPickerComponent,
         RegisterFormComponent,
         UsernameFormComponent,
-        LoginFormComponent
+        LoginFormComponent,
+        ClassicAccountComponent
     ],
     imports: [
         MatTabsModule,

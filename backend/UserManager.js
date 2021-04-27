@@ -227,7 +227,7 @@ module.exports = class UserManager {
                     bcrypt.compare(form.password, docs[0].password, function (err, result) {
                         if (!result) {
                             resolve({
-                                Error: "Invalid email or password",
+                                Error: "Invalid Email or password",
                                 Account: null
                             });
                         } else {
@@ -240,7 +240,7 @@ module.exports = class UserManager {
                     });
                 } else {
                     resolve({
-                        Error: "Invalid email or password",
+                        Error: "Invalid email or Password",
                         Account: null
                     });
                 }

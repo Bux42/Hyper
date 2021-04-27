@@ -13,7 +13,7 @@
         <mat-card class="custom-mat-card">
           <mat-form-field appearance="fill">
             <mat-label>Enter your email</mat-label>
-            <input matInput placeholder="pat@example.com" [formControl]="email" [(ngModel)]="emailInput" required>
+            <input matInput placeholder="pat@example.com" [formControl]="emailLogin" [(ngModel)]="loginEmailInput" required>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Enter your password</mat-label>
@@ -51,8 +51,8 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Enter your email</mat-label>
-            <input matInput placeholder="pat@example.com" [formControl]="email" [(ngModel)]="emailInput" required>
-            <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+            <input matInput placeholder="pat@example.com" [formControl]="emailRegister" [(ngModel)]="emailInput" required>
+            <mat-error *ngIf="emailRegister.invalid">{{getErrorMessageRegister()}}</mat-error>
             <mat-hint class="hint-error" *ngIf="emailInputError.length > 0">{{emailInputError}}</mat-hint>
           </mat-form-field>
           <mat-form-field appearance="fill">
@@ -84,7 +84,7 @@
       <mat-card class="custom-mat-card">
         <mat-form-field appearance="fill">
           <mat-label>Enter your email</mat-label>
-          <input matInput placeholder="pat@example.com" [formControl]="email" required>
+          <input matInput placeholder="pat@example.com" [formControl]="emailTrouble" required>
         </mat-form-field>
         <button mat-stroked-button style="background-color: #673ab7; display: block;">Confirm</button>
       </mat-card>

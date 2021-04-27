@@ -7,7 +7,9 @@ import { UserService } from '../user.service';
     styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent implements OnInit {
-    email = new FormControl('', [Validators.required, Validators.email]);
+    emailLogin = new FormControl('', [Validators.required, Validators.email]);
+    emailRegister = new FormControl('', [Validators.required, Validators.email]);
+    emailTrouble = new FormControl('', [Validators.required, Validators.email]);
     showMail = false;
     loginLoading: any = false;
     loginSuccess: any = false;
@@ -26,6 +28,8 @@ export class RegisterFormComponent implements OnInit {
     usernameError: any = "";
     emailInput: any = "";
     emailInputError: any = "";
+    loginEmailInput: any = "";
+    loginEmailInputError: any = "";
     password1: any = "";
     password1Error: any = "";
     password2: any = "";
@@ -36,11 +40,11 @@ export class RegisterFormComponent implements OnInit {
     setShowMail() {
         this.showMail = (this.showMail == true) ? false : true;
     }
-    getErrorMessage() {
-        if (this.email.hasError('required')) {
+    getErrorMessageRegister() {
+        if (this.emailRegister.hasError('required')) {
             return 'You must enter a value';
         }
-        return this.email.hasError('email') ? 'Not a valid email' : '';
+        return this.emailRegister.hasError('email') ? 'Not a valid email' : '';
     }
     register() {
         this.userService.register({
@@ -66,7 +70,9 @@ export class RegisterFormComponent implements OnInit {
             } else {
                 this.usernameError = "";
                 this.emailInputError = "";
+                this.loginEmailInputError = "";
                 this.password = this.password1;
+                this.loginEmailInput = this.emailInput;
                 this.selectedIndex = 0;
                 this.accountCreated = true;
             }
@@ -75,7 +81,7 @@ export class RegisterFormComponent implements OnInit {
     login() {
         this.loginLoading = true;
         this.userService.login({
-            email: this.emailInput,
+            email: this.loginEmailInput,
             password: this.password
         }).subscribe(result => {
             this.loginLoading = false;
