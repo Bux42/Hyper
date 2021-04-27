@@ -147,6 +147,7 @@ export class ResolutionPickerComponent implements OnInit {
                                 panelClass: 'custom-dialog-container'
                             });
                             dialogRef.afterClosed().subscribe(result => {
+                                console.log(this.media);
                                 this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {
                                     console.log(data);
                                 });

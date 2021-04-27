@@ -29,15 +29,6 @@ export class MediaPlayerComponent implements OnInit {
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
         if (event) {
-            if (event.key == "s") {
-                this.showStats = !this.showStats;
-            }
-            if (event.key == "r") {
-                var video = this.videoTag?.nativeElement;
-                if (video) {
-                    video.currentTime = 100;
-                }
-            }
         }
     }
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, private userService: UserService, public dialog: MatDialog, private mediaService: MediaService) {
@@ -102,10 +93,28 @@ export class MediaPlayerComponent implements OnInit {
         if (Date.now() - this.lastEvent > 5000 && parseInt(this.videoTag?.nativeElement.currentTime) > 10) {
             var resumingTime = parseInt(this.videoTag?.nativeElement.currentTime) - 5;
             console.log("resumingTime:", resumingTime);
-            this.lastEvent = Date.now()
+            this.lastEvent = Date.now();
+            
             if (this.media._id) {
+                if (!this.media.resume) {
+                    this.media.resume = {
+                        media_id: this.media._id,
+                        watch_time: resumingTime
+                    }
+                } else {
+                    this.media.resume.watch_time = resumingTime;
+                }
                 this.userService.setWatchTime(this.media._id, resumingTime, this.currentVolume).subscribe();
             } else {
+                if (!this.media.resume) {
+                    this.media.resume = {
+                        date: Date.now(),
+                        tvdb_id: this.media.tvdb_id,
+                        watch_time: resumingTime,
+                    }
+                } else {
+                    this.media.resume.watch_time = resumingTime;
+                }
                 console.log("not a movie!", this.media.tvdb_id, this.media.show_imdb_id, resumingTime);
                 this.userService.setShowWatchTime(this.media.tvdb_id, this.media.show_imdb_id, resumingTime, this.currentVolume, this.episode_number, this.season_number).subscribe();
             }
