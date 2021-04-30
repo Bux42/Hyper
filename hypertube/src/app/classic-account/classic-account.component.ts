@@ -8,16 +8,12 @@ import { UserService } from '../user.service';
 })
 export class ClassicAccountComponent implements OnInit {
     account: any = null;
-    dselected: any = 'English';
+    dselected: any = null;
     constructor(private userService: UserService) { }
 
     ngOnInit(): void {
         this.account = this.userService.user.Account;
-        this.dselected = "English";
-        console.log("print account")
-        console.log(this.account)
-        console.log("print selected")
-        console.log(this.dselected)
+        this.dselected = this.account.language;
     }
     logout() {
         this.userService.logout().subscribe(() => {
