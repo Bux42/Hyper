@@ -68,6 +68,7 @@ export class RegisterFormComponent implements OnInit {
                     this.emailInputError = "";
                 }
             } else {
+                this.loginError = "";
                 this.usernameError = "";
                 this.emailInputError = "";
                 this.loginEmailInputError = "";

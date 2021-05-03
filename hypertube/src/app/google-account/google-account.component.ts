@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleOauthService } from '../google-oauth.service';
+import { LanguageService } from '../language.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from '../user.service';
 export class GoogleAccountComponent implements OnInit {
     account: any = null;
     dselected: any = 'English';
-    constructor(private userService: UserService, private googleOauth: GoogleOauthService) { }
+    constructor(private userService: UserService, private googleOauth: GoogleOauthService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
         this.account = this.userService.user.Account;

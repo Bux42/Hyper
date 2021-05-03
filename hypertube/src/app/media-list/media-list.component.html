@@ -1,6 +1,6 @@
 <div *ngIf="loaded">
   <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
-    <mat-label>Genre</mat-label>
+    <mat-label>{{languageService.getTranslation('Genre')}}</mat-label>
     <mat-select (selectionChange)="genreChanged($event.value)" [(value)]="selectedCategory">
       <mat-option *ngFor="let category of categories[mediaCategory]" [value]="category">
         {{category}}
@@ -8,7 +8,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
-    <mat-label>Sort by</mat-label>
+    <mat-label>{{languageService.getTranslation('Sort by')}}</mat-label>
     <mat-select (selectionChange)="sortChanged($event.value)" [(value)]="selectedFilter">
       <mat-option *ngFor="let sortBy of sortByList" [value]="sortBy">
         {{sortBy}}
@@ -16,7 +16,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="custom-mat-form-field search-input">
-    <mat-label>Search</mat-label>
+    <mat-label>{{languageService.getTranslation('Search')}}</mat-label>
     <input matInput (input)="searchInputChanged()" type="text" [(ngModel)]="searchInput">
     <button mat-button *ngIf="searchInput" matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
       <mat-icon (click)="clearSearchInput()">close</mat-icon>

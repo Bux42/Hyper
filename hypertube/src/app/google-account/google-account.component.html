@@ -1,34 +1,34 @@
 <div width="250px">
     <mat-card class="custom-mat-card">
         <div class="custom-title">
-            Your profile 
+            {{languageService.getTranslation('Your profile')}}
         </div>
         <hr style="width: 80%" >
         <div style="display:inline">
             <div >
                 <img width="13px" src="/assets/google.svg">
             </div>
-            Hello <div style="display:inline; font-weight: bold;"> {{account.first_name}}</div>
+            {{languageService.getTranslation('Hello')}} <div style="display:inline; font-weight: bold;"> {{account.first_name}}</div>
         </div>
         <br ><br >
         <form class="example-form">
             <mat-form-field class="example-full-width">
-            <mat-label>Email</mat-label>
+            <mat-label>{{languageService.getTranslation('Email')}}</mat-label>
             <input class="custom-disabled-color" disabled matInput placeholder="email@mail.com" value="{{account.email}}">
             </mat-form-field>
         
             <mat-form-field class="example-full-width">
-            <mat-label>Username</mat-label>
+            <mat-label>{{languageService.getTranslation('Username')}}</mat-label>
             <input class="custom-disabled-color" disabled matInput placeholder="mypsoeudo" value="{{account.username}}">
             </mat-form-field>
 
             <mat-form-field class="example-full-width">
-                <mat-label>Last Name</mat-label>
+                <mat-label>{{languageService.getTranslation('Last Name')}}</mat-label>
                 <input class="custom-disabled-color" disabled matInput placeholder="Lastname" value="{{account.last_name}}">
             </mat-form-field>
             
             <mat-form-field class="example-full-width">
-                <mat-label>First Name</mat-label>
+                <mat-label>{{languageService.getTranslation('First Name')}}</mat-label>
                 <input class="custom-disabled-color" disabled matInput placeholder="Firstname" value="{{account.first_name}}">
             </mat-form-field>
 
@@ -38,18 +38,18 @@
             </mat-form-field>
         -->
             <mat-form-field appearance="fill">
-                <mat-label>Prefered Language</mat-label>
+                <mat-label>{{languageService.getTranslation('Prefered Language')}}</mat-label>
                 <mat-select [(value)]="dselected">
                   <mat-option class="custom-mat-option" value="one">English</mat-option>
                   <mat-option class="custom-mat-option" value="two">Français</mat-option>
                 </mat-select>
               </mat-form-field>
         </form>
-        <button style="margin: auto; display: flex;" (click)="logout()" mat-flat-button color="primary">Logout</button>
+        <button style="margin: auto; display: flex;" (click)="logout()" mat-flat-button color="primary">{{languageService.getTranslation('Logout')}}</button>
     </mat-card>
     <mat-card style="background-color: #131212;">
         <div class="custom-title">
-            You did see
+            {{languageService.getTranslation('You did see')}}
         </div>
         <hr style="width:80%">
         <div style="overflow-y:auto; height: 275px;">

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleOauthService } from '../google-oauth.service';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-google-oauth',
@@ -8,7 +9,7 @@ import { GoogleOauthService } from '../google-oauth.service';
 })
 export class GoogleOauthComponent implements OnInit {
 
-  constructor(private googleOauth: GoogleOauthService) { }
+  constructor(private googleOauth: GoogleOauthService, public languageService: LanguageService) { }
 
   ngOnInit(): void {
   }

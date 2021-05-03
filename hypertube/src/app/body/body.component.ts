@@ -13,7 +13,6 @@ export class BodyComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = this.userService.user;
-        console.log(this.user);
     }
 
     toggleDrawer() {

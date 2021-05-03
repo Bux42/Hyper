@@ -1,11 +1,11 @@
 <mat-tab-group mat-align-tabs="center">
-  <mat-tab label="Movies">
+  <mat-tab [label]="languageService.getTranslation('Movies')">
     <app-media-list [mediaCategory]="'movies'"></app-media-list>
   </mat-tab>
-  <mat-tab label="Series">
+  <mat-tab [label]="languageService.getTranslation('Series')">
     <app-media-list [mediaCategory]="'shows'"></app-media-list>
   </mat-tab>
-  <mat-tab label="Animes">
+  <mat-tab [label]="languageService.getTranslation('Animes')">
     <app-media-list [mediaCategory]="'animes'"></app-media-list>
   </mat-tab>
 </mat-tab-group>

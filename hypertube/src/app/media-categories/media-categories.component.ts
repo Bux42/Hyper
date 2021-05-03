@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { LanguageService } from '../language.service';
+import { UserService } from '../user.service';
 
 @Component({
     selector: 'app-media-categories',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MediaCategoriesComponent implements OnInit {
 
-    constructor() { }
+    constructor(public languageService: LanguageService) { }
 
     ngOnInit(): void {
     }

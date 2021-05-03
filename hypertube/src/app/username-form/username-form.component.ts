@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LanguageService } from '../language.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class UsernameFormComponent implements OnInit {
     usernameError: any = "";
     @Input() user: any;
     busy: any = false;
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
         console.log(this.user);

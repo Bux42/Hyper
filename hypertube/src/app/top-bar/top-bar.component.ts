@@ -14,7 +14,6 @@ export class TopBarComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.userService.user) {
-            console.log(this.userService.user); 
             this.profilePic = this.userService.user.Account.img;
             if (this.profilePic.length == 0) {
                 this.profilePic = "/assets/alphabet/" + this.userService.user.Account.first_name.toUpperCase()[0] + ".png";
