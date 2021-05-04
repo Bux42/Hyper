@@ -5,8 +5,16 @@ import { Injectable } from '@angular/core';
 })
 export class LanguageService {
     language: any = "en";
+    langCodeToLanguage: any = {}
+    languageToLangCode: any = {};
     translated: any = {}
     constructor() {
+        this.langCodeToLanguage["fr"] = "Français";
+        this.langCodeToLanguage["en"] = "English";
+
+        this.languageToLangCode["Français"] = "fr";
+        this.languageToLangCode["English"] = "en";
+
         this.translated["Movies"] = {};
         this.translated["Movies"]["en"] = "Movies";
         this.translated["Movies"]["fr"] = "Films";
@@ -78,9 +86,27 @@ export class LanguageService {
         this.translated["You need a username to continue"] = {};
         this.translated["You need a username to continue"]["en"] = "You need a username to continue";
         this.translated["You need a username to continue"]["fr"] = "Veuillez spécifier un nom d'utilisateur";
+
+        this.translated["Confirm"] = {};
+        this.translated["Confirm"]["en"] = "Confirm";
+        this.translated["Confirm"]["fr"] = "Confirmer";
     }
     getTranslation(word: string) {
         return (this.translated[word][this.language]);
+    }
+    getLanguageToLangCode(language: string) {
+        if (!language) {
+            return ("en");
+        } else {
+            return (this.languageToLangCode[language]);
+        }
+    }
+    getLangCodeToLanguage(langCode: string) {
+        if (!langCode) {
+            return ("English");
+        } else {
+            return (this.langCodeToLanguage[langCode]);
+        }
     }
     setLanguage(language: string) {
         this.language = language;

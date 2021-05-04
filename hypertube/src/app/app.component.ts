@@ -17,6 +17,7 @@ export class AppComponent {
         this.userService.pingBackend().subscribe(result => {
             if (result.userSession) {
                 this.userService.user = result.userSession;
+                console.log(this.userService.user);
                 this.languageService.setLanguage(this.userService.user.Account.language);
                 this.userService.getUser().then((user) => {
                     this.backendAvailable = true;
@@ -28,6 +29,7 @@ export class AppComponent {
                     } else {
                         this.userService.setUser(user).subscribe((userInfos) => {
                             this.userService.user = userInfos.Account;
+                            console.log(this.userService.user);
                             this.languageService.setLanguage(this.userService.user.Account.language);
                             this.backendAvailable = true;
                         });

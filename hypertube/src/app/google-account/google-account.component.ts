@@ -11,19 +11,28 @@ import { UserService } from '../user.service';
 export class GoogleAccountComponent implements OnInit {
     account: any = null;
     dselected: any = 'English';
+    availableLanguages: string[] = ["English", "Français"];
     constructor(private userService: UserService, private googleOauth: GoogleOauthService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
         this.account = this.userService.user.Account;
-        this.dselected = "English";
-        console.log("print account")
-        console.log(this.account)
-        console.log("print selected")
-        console.log(this.dselected)
+        if (this.account) {
+            this.dselected = this.languageService.getLangCodeToLanguage(this.account.language);
+        }
     }
     logout() {
         this.userService.logout().subscribe(() => {
             this.googleOauth.disconnect();
         });
+    }
+    languageChanged(language: string) {
+        if (language) {
+            let langCode = this.languageService.getLanguageToLangCode(language);
+            this.userService.setLanguage(langCode).subscribe((result) => {
+                if (result.Okay) {
+                    this.languageService.setLanguage(langCode);
+                }
+            });
+        }
     }
 }

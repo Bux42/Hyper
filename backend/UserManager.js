@@ -247,6 +247,33 @@ module.exports = class UserManager {
             });
         });
     }
+    setLanguage(body, userId) {
+        let availableLanguages = ["en", "fr"];
+        return new Promise(resolve => {
+            if (body.langCode != undefined) {
+                if (availableLanguages.includes(body.langCode)) {
+                    const collection = this.Db.collection('users');
+                    collection.find({
+                        id: userId
+                    }).toArray(function (err, docs) {
+                        if (docs.length > 0) {
+                            docs[0]["language"] = body.langCode;
+                            collection.update({
+                                id: userId
+                            }, docs[0]);
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    });
+                } else {
+                    resolve(false);
+                }
+            } else {
+                resolve(false);
+            }
+        });
+    }
     createAccount(form) {
         return new Promise(resolve => {
             this.isUsernameAvailable(form.username).then(usernameAvailable => {

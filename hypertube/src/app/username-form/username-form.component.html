@@ -12,5 +12,5 @@
     
   </div>
 <div class="center">
-  <button [disabled]="busy || usernameError.length > 0" (click)="checkUsername()" mat-flat-button color="primary">Set username</button>
+  <button [disabled]="busy || usernameError.length > 0" (click)="checkUsername()" mat-flat-button color="primary">{{languageService.getTranslation('Confirm')}}</button>
 </div>

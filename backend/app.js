@@ -347,6 +347,17 @@ app.post('/set-username', (req, res, next) => {
     })
 });
 
+app.post('/set-language', (req, res, next) => {
+    um.setLanguage(req.body, req.session.user.Account.id).then(result => {
+        if (result) {
+            req.session.user.Account.language = req.body.langCode;
+            res.send({"Okay": true});
+        } else {
+            res.send({"Okay": false});
+        }
+    });
+});
+
 app.post('/authenticate', (req, res, next) => {
     console.log("/authenticate", req.sessionID);
     delete req.session.user;

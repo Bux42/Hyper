@@ -9,7 +9,6 @@ export class MediaService {
     constructor(private http: HttpClient) { }
 
     fetchMedia(filters: any) {
-        console.log(filters);
         const params = new HttpParams()
             .set('mediaCategory', filters.MediaCategory)
             .set('page', filters.Page)

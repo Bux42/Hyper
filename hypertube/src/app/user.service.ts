@@ -85,6 +85,11 @@ export class UserService {
             .set('watch_time', watchTime);
         return (this.http.get<any>('http://localhost:3000/set-watch-time', { params, withCredentials: true }));
     }
+    setLanguage(langCode: string) {
+        return (this.http.post<any>('http://localhost:3000/set-language', {
+            langCode: langCode
+        }, { withCredentials: true }));
+    }
     register(form: any) {
         return (this.http.post<any>('http://localhost:3000/register', {
             firstName: form.firstName,
