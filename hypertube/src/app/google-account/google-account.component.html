@@ -52,36 +52,15 @@
         </div>
         <hr style="width:80%">
         <div style="overflow-y:auto; height: 275px;">
-            <mat-grid-list cols="3" rowHeight="2:1">
-                <mat-grid-tile>
-                    <!--<div style="background-image: url({{media.images.banner}});vertical-align:top;margin: 25px;">
-                        <div style="height: 20px; margin-top: 5px;vertical-align: middle; font-weight: bold;">
-                            {{media.title}}
-                        </div>
-                    </div>-->
+            <div  class="centered">
+                <mat-spinner *ngIf="loadHistory"></mat-spinner>
+            </div>
+            <mat-grid-list *ngIf="!loadHistory" cols="1" rowHeight="2:1">
+                <mat-grid-tile *ngFor="let h of history" style="background-image: url({{h.Data.images.fanart}}); background-size: cover; background-position: center; cursor: pointer;" (click)="historyItemClicked(h)">
+                    <h3 style="color: white; text-shadow: 1px 1px 5px black;">
+                        {{h.Data.title}}
+                    </h3>
                 </mat-grid-tile>
-                <mat-grid-tile>2</mat-grid-tile>
-                <mat-grid-tile>3</mat-grid-tile>
-                <mat-grid-tile>4</mat-grid-tile>
-                <mat-grid-tile>5</mat-grid-tile>
-                <mat-grid-tile>6</mat-grid-tile>
-                <mat-grid-tile>7</mat-grid-tile>
-                <mat-grid-tile>8</mat-grid-tile>
-                <mat-grid-tile>9</mat-grid-tile>
-                <mat-grid-tile>10</mat-grid-tile>
-                <mat-grid-tile>11</mat-grid-tile>
-                <mat-grid-tile>12</mat-grid-tile>
-                <mat-grid-tile>2</mat-grid-tile>
-                <mat-grid-tile>3</mat-grid-tile>
-                <mat-grid-tile>4</mat-grid-tile>
-                <mat-grid-tile>5</mat-grid-tile>
-                <mat-grid-tile>6</mat-grid-tile>
-                <mat-grid-tile>7</mat-grid-tile>
-                <mat-grid-tile>8</mat-grid-tile>
-                <mat-grid-tile>9</mat-grid-tile>
-                <mat-grid-tile>10</mat-grid-tile>
-                <mat-grid-tile>11</mat-grid-tile>
-                <mat-grid-tile>12</mat-grid-tile>
             </mat-grid-list>
         </div>
     </mat-card>

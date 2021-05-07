@@ -55,6 +55,16 @@ export class MediaService {
             .set('lang', mediaInfo.lang);
         return (this.http.get<any>('http://localhost:3000/get-subtitles-src', { params, withCredentials: true }));
     }
+    fetchMovie(imdb_id: any) {
+        const params = new HttpParams()
+            .set('imdb_id', imdb_id);
+        return (this.http.get<any>('http://localhost:3000/fetch-movie', { params, withCredentials: true }));
+    }
+    fetchShow(imdb_id: any) {
+        const params = new HttpParams()
+            .set('imdb_id', imdb_id);
+        return (this.http.get<any>('http://localhost:3000/fetch-show', { params, withCredentials: true }));
+    }
 
     /* UTILS */
     watchTimeToString(watch_time: any) {

@@ -86,6 +86,34 @@ module.exports = class MediaApi {
             return (this.CachedMediaEpisodes[query.mediaCategory][query.mediaId]);
         }
     }
+    fetchMovie(imdb_id, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('movies');
+            collection.find({
+                imdb_id: imdb_id
+            }).toArray(function (err, docs) {
+                if (docs.length == 0) {
+                    resolve(null);
+                } else {
+                    resolve(docs[0]);
+                }
+            });
+        });
+    }
+    fetchShow(imdb_id, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('shows');
+            collection.find({
+                imdb_id: imdb_id
+            }).toArray(function (err, docs) {
+                if (docs.length == 0) {
+                    resolve(null);
+                } else {
+                    resolve(docs[0]);
+                }
+            });
+        });
+    }
     async getMalImg(mal_id) {
         var url = "https://api.jikan.moe/v3/anime/" + mal_id + "/pictures";
         return await rp({
@@ -159,8 +187,8 @@ module.exports = class MediaApi {
                 .then(function (response) {
                     fs.writeFile(that.SubtitlesFolder + "/movies/" + imdb_id + "/" + lang + ".srt", response, function (err) {
                         fs.createReadStream(that.SubtitlesFolder + "/movies/" + imdb_id + "/" + lang + ".srt")
-                        .pipe(srt2vtt())
-                        .pipe(fs.createWriteStream(that.SubtitlesFolder + "/movies/" + imdb_id + "/" + lang + ".vtt"))
+                            .pipe(srt2vtt())
+                            .pipe(fs.createWriteStream(that.SubtitlesFolder + "/movies/" + imdb_id + "/" + lang + ".vtt"))
                     });
                 })
                 .catch(function (err) {

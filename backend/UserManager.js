@@ -59,7 +59,11 @@ module.exports = class UserManager {
                 docs.forEach(el => {
                     watchHistory.push({
                         tvdb_id: el.tvdb_id,
-                        watch_time: el.watch_time
+                        imdb_id: el.imdb_id,
+                        watch_time: el.watch_time,
+                        date: el.date,
+                        season_number: el.season_number,
+                        episode_number: el.episode_number
                     });
                 });
                 resolve(watchHistory);
@@ -164,7 +168,8 @@ module.exports = class UserManager {
                 docs.forEach(el => {
                     watchHistory.push({
                         media_id: el.media_id,
-                        watch_time: el.watch_time
+                        watch_time: el.watch_time,
+                        date: el.date
                     });
                 });
                 resolve(watchHistory);

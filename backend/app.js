@@ -95,7 +95,7 @@ app.listen(port, () => {
 
 app.get("/ping", (req, res, next) => {
     console.log("/ping req.session.user", req.session.user, req.sessionID);
-    
+
     res.send({
         "userSession": req.session.user
     });
@@ -106,6 +106,30 @@ var missingImgs = [];
 app.get('/media-list', (req, res, next) => {
     mediaApi.getMedia(req.query).then(data => {
         res.send(data);
+        if (req.query.mediaCategory == "movies") {
+            data.forEach(item => {
+                const collection = db.collection('movies');
+                collection.find({
+                    imdb_id: item.imdb_id
+                }).toArray(function (err, docs) {
+                    if (docs.length == 0) {
+                        collection.insertOne(item);
+                    }
+                });
+            });
+        }
+        if (req.query.mediaCategory == "shows") {
+            data.forEach(item => {
+                const collection = db.collection('shows');
+                collection.find({
+                    imdb_id: item.imdb_id
+                }).toArray(function (err, docs) {
+                    if (docs.length == 0) {
+                        collection.insertOne(item);
+                    }
+                });
+            });
+        }
     });
 });
 
@@ -281,7 +305,7 @@ app.get('/set-watch-time', (req, res, next) => {
     if (req.session.user) {
         req.session.user.Account.volume = req.query.user_volume;
         um.setWatchTime(req).then((result) => {
-            
+
         });
         var wh = req.session.user.WatchHistory.find(x => x.media_id == req.query.mediaId);
         if (wh) {
@@ -351,9 +375,13 @@ app.post('/set-language', (req, res, next) => {
     um.setLanguage(req.body, req.session.user.Account.id).then(result => {
         if (result) {
             req.session.user.Account.language = req.body.langCode;
-            res.send({"Okay": true});
+            res.send({
+                "Okay": true
+            });
         } else {
-            res.send({"Okay": false});
+            res.send({
+                "Okay": false
+            });
         }
     });
 });
@@ -411,3 +439,15 @@ app.get('/logout', (req, res, next) => {
         "LoggedOut": true
     });
 })
+
+app.get('/fetch-movie', (req, res, next) => {
+    mediaApi.fetchMovie(req.query.imdb_id, db).then(result => {
+        res.send(result);
+    });
+});
+
+app.get('/fetch-show', (req, res, next) => {
+    mediaApi.fetchShow(req.query.imdb_id, db).then(result => {
+        res.send(result);
+    });
+});
