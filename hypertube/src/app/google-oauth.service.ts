@@ -87,6 +87,5 @@ export class GoogleOauthService {
     }
     disconnect() {
         this.authInstance.signOut();
-        window.location.reload();
     }
 }

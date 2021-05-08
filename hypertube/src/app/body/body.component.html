@@ -13,12 +13,7 @@
         <!-- <app-login-form></app-login-form> -->
       </div>
       <div *ngIf="user">
-        <div *ngIf="user.AccountType == 'Google'">
-            <app-google-account></app-google-account>
-        </div>
-        <div *ngIf="user.AccountType == 'Classic'">
-            <app-classic-account></app-classic-account>
-        </div>
+          <app-user-panel></app-user-panel>
       </div>
     </mat-card>
   </mat-drawer>

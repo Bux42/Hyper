@@ -38,13 +38,11 @@ import { BodyComponent } from './body/body.component';
 import { MediaPlayerComponent } from './media-player/media-player.component';
 import { StickyHeaderDirective } from './sticky-header.directive';
 import { GoogleOauthComponent } from './google-oauth/google-oauth.component';
-import { GoogleAccountComponent } from './google-account/google-account.component';
 import { SchoolOauthComponent } from './school-oauth/school-oauth.component';
 import { ResolutionPickerComponent } from './resolution-picker/resolution-picker.component';
 import { RegisterFormComponent } from './register-form/register-form.component';
 import { UsernameFormComponent } from './username-form/username-form.component';
 import { LoginFormComponent } from './login-form/login-form.component';
-import { ClassicAccountComponent } from './classic-account/classic-account.component';
 import { WatchHistoryComponent } from './watch-history/watch-history.component';
 
 @NgModule({
@@ -61,13 +59,11 @@ import { WatchHistoryComponent } from './watch-history/watch-history.component';
         MediaPlayerComponent,
         StickyHeaderDirective,
         GoogleOauthComponent,
-        GoogleAccountComponent,
         SchoolOauthComponent,
         ResolutionPickerComponent,
         RegisterFormComponent,
         UsernameFormComponent,
         LoginFormComponent,
-        ClassicAccountComponent,
         WatchHistoryComponent
     ],
     imports: [
