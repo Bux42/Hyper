@@ -1,5 +1,5 @@
 <div class="subtitles">
-  Subtitles
+  Subtitles : 
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
     <mat-button-toggle *ngFor="let sub of subtitlesList" value="{{sub}}" (click)="subtitleChanged(sub)">
         <img height="32" width="32" [src]="'/assets/flags/' + sub + '.svg'">

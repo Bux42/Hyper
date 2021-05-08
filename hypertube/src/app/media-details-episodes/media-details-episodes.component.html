@@ -1,29 +1,39 @@
-<div class="container" *ngIf="mediaEpisodes">
+<div class="container" *ngIf="mediaEpisodes" style="position: relative; overflow: hidden; border: 1px solid #151515;">
+  <img src="{{media.images.fanart}}" style="position: absolute; left: 0; top: 0; width: 100%; height: auto; opacity: 0.2; border-radius: initial">
   <div class="media-poster left">
     <img src="{{media.images.banner}}">
   </div>
   <div class="media-details">
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+      <mat-icon class="close-icon" color="warn">close</mat-icon>
+    </button>
     <div class="media-title">
       <h1>{{media.title}}</h1>
     </div>
     <div class="media-metadata">
-      {{media.year}} • {{mediaEpisodes.runtime}} min
+      {{media.year}} • {{mediaEpisodes.runtime}} min • {{mediaEpisodes}}
     </div>
     <div class="media-synopsis">
       {{mediaEpisodes.synopsis}}
     </div>
   </div>
 </div>
-<div class="container" *ngIf="selectedSeason">
-  <section class="left">
-    <mat-button-toggle-group vertical="true" aria-label="Font Style" value="{{selectedSeason.season}}">
+<div class="container" *ngIf="selectedSeason" style="background-color:#151515">
+  <section class="left" style="width: 10%">
+    <div class="custom-title" >
+      Saisons
+    </div>
+    <mat-button-toggle-group style="display: flex; width: 85%; margin: auto;" vertical="true" aria-label="Font Style" value="{{selectedSeason.season}}">
       <mat-button-toggle *ngFor="let season of seasons" value="{{season.season}}" (click)="switchSeason(season.season)">
         Season {{season.season}}
       </mat-button-toggle>
     </mat-button-toggle-group>
   </section>
-  <section>
-    <mat-button-toggle-group vertical="true" aria-label="Font Style" value="{{selectedEpisode.title}}">
+  <section style="width: 40%" >
+    <div class="custom-title">
+      Episodes
+    </div>
+    <mat-button-toggle-group style="width: 100%" vertical="true" aria-label="Font Style" value="{{selectedEpisode.title}}">
       <mat-button-toggle *ngFor="let episode of selectedSeason.episodes" value="{{episode.title}}"
         (click)="selectEpisode(episode.title)">
         <div class="left episode-number">{{episode.episode}}</div>
@@ -32,11 +42,16 @@
       </mat-button-toggle>
     </mat-button-toggle-group>
   </section>
-  <section class="episode-details">
-    <h1>{{selectedEpisode.title}}</h1>
-    <p>{{selectedEpisode.overview}}</p>
-    <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id" [episode_number]="episodeNumber" [season_number]="selectedSeason.season">
-    </app-resolution-picker>
+  <section class="episode-details" style="width: 50%">
+    <div class="custom-title">
+      Resume
+    </div>
+    <mat-card class="custom-mat-card" style="height: auto;">
+      <h1>{{selectedEpisode.title}}</h1>
+      <p>{{selectedEpisode.overview}}</p>
+      <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id" [episode_number]="episodeNumber" [season_number]="selectedSeason.season">
+      </app-resolution-picker>
+    </mat-card>
   </section>
 </div>
 <div class="load-spinner" *ngIf="!mediaEpisodes">

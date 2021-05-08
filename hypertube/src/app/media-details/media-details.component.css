@@ -17,3 +17,22 @@ h1 {
     color:white;
     margin: 5px;
 }
+
+.close-button{
+    float: right;
+    top: -15px;
+    right: -21px;
+    display: flex;
+}
+  
+.close-icon {
+transition: 1s ease-in-out;
+}
+
+.close-icon:hover {
+transform: rotate(180deg);
+}
+
+.media-details {
+    width: 100%;
+}

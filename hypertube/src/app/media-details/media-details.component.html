@@ -1,12 +1,25 @@
-<div>
-  <img src="{{media.images.fanart}}">
-
-  <h1 class="media-title">{{media.title}}</h1>
-  <div class="media-infos-min">
-    <pre>{{media.year}}  •  {{media.runtime}} min  •  {{mediaGenres}}</pre>
+<div class="container" style="position: relative; overflow: hidden; margin: auto; padding: 10px; border: 1px solid #151515;">
+  <img src="{{media.images.fanart}}" style=" position: absolute; left: 0; top: 0; width: 100%; height: auto; opacity: 0.2;">
+  <div class="media-poster left">
+    <img style="width: 100px; border-radius: 5%; margin-right: 10px;" src="{{media.images.banner}}">
   </div>
-  <p>{{media.synopsis}}</p>
-  <app-resolution-picker [media]="media" [mediaCategory]="mediaCategory">
-
-  </app-resolution-picker>
+  <div class="media-details">
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+      <mat-icon class="close-icon" color="warn">close</mat-icon>
+    </button>
+    <h1 class="media-title">{{media.title}}</h1>
+    <div class="media-infos-min">
+      <pre>{{media.year}}  •  {{media.runtime}} min  •  {{mediaGenres}}</pre>
+    </div>
+    <p>{{media.synopsis}}</p>
+  </div>
+</div>
+<div class="container" style="background-color:#151515">
+  <section class="episode-details" style="width: 50%; margin:auto">
+    <mat-card class="custom-mat-card" style="height: auto;">
+      <app-resolution-picker [media]="media" [mediaCategory]="mediaCategory">
+        
+      </app-resolution-picker>
+    </mat-card>
+  </section>
 </div>
