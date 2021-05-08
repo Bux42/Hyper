@@ -45,6 +45,7 @@ import { RegisterFormComponent } from './register-form/register-form.component';
 import { UsernameFormComponent } from './username-form/username-form.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { ClassicAccountComponent } from './classic-account/classic-account.component';
+import { WatchHistoryComponent } from './watch-history/watch-history.component';
 
 @NgModule({
     declarations: [
@@ -66,7 +67,8 @@ import { ClassicAccountComponent } from './classic-account/classic-account.compo
         RegisterFormComponent,
         UsernameFormComponent,
         LoginFormComponent,
-        ClassicAccountComponent
+        ClassicAccountComponent,
+        WatchHistoryComponent
     ],
     imports: [
         MatTabsModule,

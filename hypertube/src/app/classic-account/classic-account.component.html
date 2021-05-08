@@ -47,43 +47,7 @@
         </form>
         <button style="margin: auto; display: flex;" (click)="logout()" mat-flat-button color="primary">{{languageService.getTranslation('Logout')}}</button>
     </mat-card>
-    <mat-card style="background-color: #131212;">
-        <div class="custom-title">
-            {{languageService.getTranslation('You did see')}}
-        </div>
-        <hr style="width:80%">
-        <div style="overflow-y:auto; height: 275px;">
-            <mat-grid-list cols="3" rowHeight="2:1">
-                <mat-grid-tile>
-                    <!--<div style="background-image: url({{media.images.banner}});vertical-align:top;margin: 25px;">
-                        <div style="height: 20px; margin-top: 5px;vertical-align: middle; font-weight: bold;">
-                            {{media.title}}
-                        </div>
-                    </div>-->
-                </mat-grid-tile>
-                <mat-grid-tile>2</mat-grid-tile>
-                <mat-grid-tile>3</mat-grid-tile>
-                <mat-grid-tile>4</mat-grid-tile>
-                <mat-grid-tile>5</mat-grid-tile>
-                <mat-grid-tile>6</mat-grid-tile>
-                <mat-grid-tile>7</mat-grid-tile>
-                <mat-grid-tile>8</mat-grid-tile>
-                <mat-grid-tile>9</mat-grid-tile>
-                <mat-grid-tile>10</mat-grid-tile>
-                <mat-grid-tile>11</mat-grid-tile>
-                <mat-grid-tile>12</mat-grid-tile>
-                <mat-grid-tile>2</mat-grid-tile>
-                <mat-grid-tile>3</mat-grid-tile>
-                <mat-grid-tile>4</mat-grid-tile>
-                <mat-grid-tile>5</mat-grid-tile>
-                <mat-grid-tile>6</mat-grid-tile>
-                <mat-grid-tile>7</mat-grid-tile>
-                <mat-grid-tile>8</mat-grid-tile>
-                <mat-grid-tile>9</mat-grid-tile>
-                <mat-grid-tile>10</mat-grid-tile>
-                <mat-grid-tile>11</mat-grid-tile>
-                <mat-grid-tile>12</mat-grid-tile>
-            </mat-grid-list>
-        </div>
-    </mat-card>
+    <app-watch-history>
+        
+    </app-watch-history>
 </div>

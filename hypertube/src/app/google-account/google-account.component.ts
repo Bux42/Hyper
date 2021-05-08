@@ -13,8 +13,6 @@ import { UserService } from '../user.service';
     styleUrls: ['./google-account.component.css']
 })
 export class GoogleAccountComponent implements OnInit {
-    loadHistory: any = true;
-    history: any[] = [];
     account: any = null;
     dselected: any = 'English';
     availableLanguages: string[] = ["English", "Français"];
@@ -25,30 +23,6 @@ export class GoogleAccountComponent implements OnInit {
         if (this.account) {
             this.dselected = this.languageService.getLangCodeToLanguage(this.account.language);
         }
-
-        var watchHistoryClean = this.userService.user.WatchHistory.filter((wh: any) => wh.watch_time > 0);
-        watchHistoryClean.forEach((wh: any) => {
-            this.mediaService.fetchMovie(wh.media_id).subscribe(res => {
-                this.history.push({"Type": "movies", "Details": wh, "Data": res});
-            })
-        })
-        this.userService.user.WatchHistoryShows.forEach((whs: any) => {
-            this.mediaService.fetchShow(whs.imdb_id).subscribe(res => {
-                var checkShow = this.history.find((x: any) => x.Data.imdb_id == whs.imdb_id);
-
-                if (!checkShow) {
-                    this.history.push({"Type": "shows", "Details": whs, "Data": res});
-                }
-            });
-        });
-
-        
-        /*
-        this.mediaService.fetchMovie("tt9742794").subscribe(res => {
-            console.log(res);
-        })
-        */
-        this.loadHistory = false;
     }
     logout() {
         this.userService.logout().subscribe(() => {
@@ -62,30 +36,6 @@ export class GoogleAccountComponent implements OnInit {
                 if (result.Okay) {
                     this.languageService.setLanguage(langCode);
                 }
-            });
-        }
-    }
-    historyItemClicked(historyItem: any) {
-        console.log(historyItem);
-        if (historyItem.Type == "movies") {
-            const dialogRef = this.dialog.open(MediaDetailsComponent, {
-                width: '80vh',
-                height: '80vh',
-                data: {
-                    media: historyItem.Data,
-                    mediaCategory: historyItem.Type
-                },
-                panelClass: 'custom-dialog-container'
-            });
-        } else {
-            const dialogRef = this.dialog.open(MediaDetailsEpisodesComponent, {
-                width: '90vh',
-                height: '90vh',
-                data: {
-                    media: historyItem.Data,
-                    mediaCategory: historyItem.Type
-                },
-                panelClass: 'custom-dialog-container'
             });
         }
     }
