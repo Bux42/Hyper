@@ -34,7 +34,7 @@ export class MediaListItemComponent implements OnInit {
     mediaMouseClick() {
         if (this.mediaCategory == "movies") {
             const dialogRef = this.dialog.open(MediaDetailsComponent, {
-                width: '80vh',
+                width: '90%',
                 height: '80vh',
                 data: {
                     media: this.media,
@@ -44,7 +44,7 @@ export class MediaListItemComponent implements OnInit {
             });
         } else {
             const dialogRef = this.dialog.open(MediaDetailsEpisodesComponent, {
-                width: '90vh',
+                width: '90%',
                 height: '90vh',
                 data: {
                     media: this.media,
