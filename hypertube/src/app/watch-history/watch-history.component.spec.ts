@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoogleAccountComponent } from './google-account.component';
+import { WatchHistoryComponent } from './watch-history.component';
 
-describe('GoogleAccountComponent', () => {
-  let component: GoogleAccountComponent;
-  let fixture: ComponentFixture<GoogleAccountComponent>;
+describe('WatchHistoryComponent', () => {
+  let component: WatchHistoryComponent;
+  let fixture: ComponentFixture<WatchHistoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GoogleAccountComponent ]
+      declarations: [ WatchHistoryComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GoogleAccountComponent);
+    fixture = TestBed.createComponent(WatchHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

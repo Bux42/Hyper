@@ -17,6 +17,7 @@ export class MediaDetailsEpisodesComponent implements OnInit {
     episodeNumber: any;
     mediaEpisodes: any;
     seasons: any = [];
+    mediaGenres: any[] = [];
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<MediaDetailsEpisodesComponent>, private mediaService: MediaService, private userService: UserService) { }
 
     ngOnInit(): void {
@@ -27,10 +28,9 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             "MediaCategory": this.mediaCategory,
             "MediaId": this.media._id
         };
-        console.log(this.mediaCategory);
         this.mediaService.fetchMediaEpisodes(filters).subscribe(data => {
             this.mediaEpisodes = data;
-            console.log(this.mediaEpisodes);
+            this.mediaGenres = this.mediaEpisodes.genres.join(" / ");
 
             for (var i = 0; i < this.mediaEpisodes.episodes.length; i++) {
                 var season = this.seasons.find((x: { season: any; }) => x.season == this.mediaEpisodes.episodes[i].season);
@@ -61,21 +61,17 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             }
             this.selectedEpisode = this.selectedSeason.episodes[0];
             this.episodeNumber = this.selectedEpisode.episode;
-            console.log(this.seasons);
         },
             error => {
                 console.log(error);
             });
     }
     switchSeason(season: any) {
-        console.log(season);
         this.selectedSeason = this.seasons.find((x: any) => x.season == season);
         this.selectedEpisode = this.selectedSeason.episodes[0];
     }
     selectEpisode(episode: any) {
-        console.log(episode);
         this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.title == episode);
-        console.log(this.selectedEpisode);
         this.episodeNumber = this.selectedEpisode.episode;
     }
 }

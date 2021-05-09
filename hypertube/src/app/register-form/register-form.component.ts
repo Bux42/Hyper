@@ -91,6 +91,7 @@ export class RegisterFormComponent implements OnInit {
             } else {
                 this.loginError = "";
                 this.loginSuccess = true;
+                this.accountCreated = false;
                 setTimeout(function () {
                     window.location.reload();
                 }, 500);

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GoogleOauthService } from '../google-oauth.service';
 import { LanguageService } from '../language.service';
 import { MediaDetailsEpisodesComponent } from '../media-details-episodes/media-details-episodes.component';
 import { MediaDetailsComponent } from '../media-details/media-details.component';
@@ -8,24 +7,16 @@ import { MediaService } from '../media.service';
 import { UserService } from '../user.service';
 
 @Component({
-    selector: 'app-google-account',
-    templateUrl: './google-account.component.html',
-    styleUrls: ['./google-account.component.css']
+    selector: 'app-watch-history',
+    templateUrl: './watch-history.component.html',
+    styleUrls: ['./watch-history.component.css']
 })
-export class GoogleAccountComponent implements OnInit {
+export class WatchHistoryComponent implements OnInit {
     loadHistory: any = true;
     history: any[] = [];
-    account: any = null;
-    dselected: any = 'English';
-    availableLanguages: string[] = ["English", "Français"];
-    constructor(public dialog: MatDialog, private userService: UserService, private googleOauth: GoogleOauthService, public languageService: LanguageService, private mediaService: MediaService) { }
+    constructor(private userService: UserService, public dialog: MatDialog, public languageService: LanguageService, private mediaService: MediaService) { }
 
     ngOnInit(): void {
-        this.account = this.userService.user.Account;
-        if (this.account) {
-            this.dselected = this.languageService.getLangCodeToLanguage(this.account.language);
-        }
-
         var watchHistoryClean = this.userService.user.WatchHistory.filter((wh: any) => wh.watch_time > 0);
         watchHistoryClean.forEach((wh: any) => {
             this.mediaService.fetchMovie(wh.media_id).subscribe(res => {
@@ -41,30 +32,9 @@ export class GoogleAccountComponent implements OnInit {
                 }
             });
         });
-
-        
-        /*
-        this.mediaService.fetchMovie("tt9742794").subscribe(res => {
-            console.log(res);
-        })
-        */
         this.loadHistory = false;
     }
-    logout() {
-        this.userService.logout().subscribe(() => {
-            this.googleOauth.disconnect();
-        });
-    }
-    languageChanged(language: string) {
-        if (language) {
-            let langCode = this.languageService.getLanguageToLangCode(language);
-            this.userService.setLanguage(langCode).subscribe((result) => {
-                if (result.Okay) {
-                    this.languageService.setLanguage(langCode);
-                }
-            });
-        }
-    }
+
     historyItemClicked(historyItem: any) {
         console.log(historyItem);
         if (historyItem.Type == "movies") {
@@ -89,4 +59,5 @@ export class GoogleAccountComponent implements OnInit {
             });
         }
     }
+
 }
