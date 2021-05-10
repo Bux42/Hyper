@@ -65,12 +65,14 @@ body {
   cursor: pointer;
 
 }
+
 .custom-oauth-icon {
-  width: 20%; 
+  width: 20%;
   display: inline;
   margin: auto;
   border-right: 1px solid #171717;
 }
+
 .custom-oauth-text {
   width: 80%;
   display: inline;
@@ -82,16 +84,17 @@ body {
 }
 
 .custom-title {
-  display: flex; 
-  margin: auto; 
+  display: flex;
+  margin: auto;
   justify-content: center;
-  font-size: 18px; 
+  font-size: 18px;
   padding: 5px;
 }
 
 .custom-disabled-color {
   color: rgb(255 255 255 / 38%) !important;
 }
+
 .custom-mat-card {
   background: #2e2e2e;
   height: 100%;
@@ -104,8 +107,13 @@ body {
 .custom-mat-option:hover {
   background: #525252 !important;
 }
+
 .custom-dialog-container .mat-dialog-container {
   background-color: rgba(0, 0, 0, 0.9);
+}
+
+.custom-resume-dialog-container .mat-dialog-container {
+  background-color: rgba(50, 50, 50, 0.9);
 }
 
 .custom-mat-drawer-container {
@@ -136,19 +144,18 @@ body {
   color: white !important;
 }
 
-.custom-mat-form-field {
-}
+.custom-mat-form-field {}
 
 .mat-header-cell {
-    color:white;
+  color: white;
 }
 
 .mat-header-row {
-    background: #282828;
+  background: #282828;
 }
 
 .mat-cell {
-    color: white;
+  color: white;
 }
 
 .mat-progress-spinner circle,
@@ -191,5 +198,5 @@ body {
 }
 
 .cdk-global-scrollblock {
-    overflow-y: auto;
+  overflow-y: auto;
 }

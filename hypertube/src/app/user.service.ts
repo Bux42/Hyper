@@ -45,11 +45,13 @@ export class UserService {
             var mediaResume = this.user.WatchHistoryShows.find((x: any) => x.tvdb_id == tvdb_id);
             if (mediaResume) {
                 mediaResume.watch_time = watchTime;
+                mediaResume.date = Date.now();
             } else {
                 this.user.WatchHistoryShows.push({
                     show_imdb_id: show_imdb_id,
                     media_id: tvdb_id,
-                    watch_time: watchTime
+                    watch_time: watchTime,
+                    date: Date.now()
                 });
             }
             console.log("newWH:", this.user.WatchHistory);
@@ -71,10 +73,12 @@ export class UserService {
             var mediaResume = this.user.WatchHistory.find((x: any) => x.media_id == media_id);
             if (mediaResume) {
                 mediaResume.watch_time = watchTime;
+                mediaResume.date = Date.now();
             } else {
                 this.user.WatchHistory.push({
                     media_id: media_id,
-                    watch_time: watchTime
+                    watch_time: watchTime,
+                    date: Date.now()
                 });
             }
             console.log("newWH:", this.user.WatchHistory);

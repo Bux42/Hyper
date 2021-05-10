@@ -44,6 +44,7 @@ import { RegisterFormComponent } from './register-form/register-form.component';
 import { UsernameFormComponent } from './username-form/username-form.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { WatchHistoryComponent } from './watch-history/watch-history.component';
+import { ResumeDialogComponent } from './resume-dialog/resume-dialog.component';
 
 @NgModule({
     declarations: [
@@ -64,7 +65,8 @@ import { WatchHistoryComponent } from './watch-history/watch-history.component';
         RegisterFormComponent,
         UsernameFormComponent,
         LoginFormComponent,
-        WatchHistoryComponent
+        WatchHistoryComponent,
+        ResumeDialogComponent
     ],
     imports: [
         MatTabsModule,
