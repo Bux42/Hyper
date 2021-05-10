@@ -279,7 +279,8 @@ app.get('/set-show-watch-time', (req, res, next) => {
         if (!wh) {
             var newWh = {
                 media_id: req.query.show_imdb_id,
-                watch_time: 0
+                watch_time: 0,
+                date: Date.now()
             };
             console.log("add new wh", newWh);
             req.session.user.WatchHistory.push(newWh);
@@ -310,10 +311,12 @@ app.get('/set-watch-time', (req, res, next) => {
         var wh = req.session.user.WatchHistory.find(x => x.media_id == req.query.mediaId);
         if (wh) {
             wh.watch_time = req.query.watch_time;
+            wh.date = Date.now();
         } else {
             req.session.user.WatchHistory.push({
                 media_id: req.query.mediaId,
-                watch_time: req.query.watch_time
+                watch_time: req.query.watch_time,
+                date: Date.now()
             });
         }
     } else {
