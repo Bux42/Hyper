@@ -37,6 +37,17 @@ export class UserService {
             .set('username', username);
         return (this.http.get<any>('http://localhost:3000/check-username', { params, withCredentials: true }));
     }
+    recoverPassword(email: any) {
+        const params = new HttpParams()
+            .set('email', email);
+        return (this.http.get<any>('http://localhost:3000/recover-password', { params, withCredentials: true }));
+    }
+    changePassword(form: any) {
+        return (this.http.post<any>('http://localhost:3000/change-password', {form: form}, { withCredentials: true }));
+    }
+    checkRecoveryCode(form: any) {
+        return (this.http.post<any>('http://localhost:3000/check-recovery-code', {form: form}, { withCredentials: true }));
+    }
     setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any, userVolume: any, episode_number: any, season_number: any) {
         console.log("setShowWatchTime", this.user,this.user.WatchHistoryShows)
         if (this.user && this.user.WatchHistoryShows) {

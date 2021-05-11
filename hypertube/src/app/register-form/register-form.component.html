@@ -13,7 +13,8 @@
         <mat-card class="custom-mat-card">
           <mat-form-field appearance="fill">
             <mat-label>Enter your email</mat-label>
-            <input matInput placeholder="pat@example.com" [formControl]="emailLogin" [(ngModel)]="loginEmailInput" required>
+            <input matInput placeholder="pat@example.com" [formControl]="emailLogin" [(ngModel)]="loginEmailInput"
+              required>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Enter your password</mat-label>
@@ -51,7 +52,8 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Enter your email</mat-label>
-            <input matInput placeholder="pat@example.com" [formControl]="emailRegister" [(ngModel)]="emailInput" required>
+            <input matInput placeholder="pat@example.com" [formControl]="emailRegister" [(ngModel)]="emailInput"
+              required>
             <mat-error *ngIf="emailRegister.invalid">{{getErrorMessageRegister()}}</mat-error>
             <mat-hint class="hint-error" *ngIf="emailInputError.length > 0">{{emailInputError}}</mat-hint>
           </mat-form-field>
@@ -84,9 +86,30 @@
       <mat-card class="custom-mat-card">
         <mat-form-field appearance="fill">
           <mat-label>Enter your email</mat-label>
-          <input matInput placeholder="pat@example.com" [formControl]="emailTrouble" required>
+          <input [attr.disabled]="(emailRecoverySuccess ? 'true' : 'false')" matInput placeholder="pat@example.com"
+            [formControl]="emailTrouble" [(ngModel)]="emailRecovery" required>
+          <mat-hint class="hint-error" *ngIf="emailRecoveryError != null">{{emailRecoveryError}}</mat-hint>
+          <mat-hint class="hint-success" *ngIf="emailRecoverySuccess">Success, check your emails</mat-hint>
         </mat-form-field>
-        <button mat-stroked-button style="background-color: #673ab7; display: block;">Confirm</button>
+        <button [disabled]="(emailRecoverySuccess ? 'true' : 'false')" mat-stroked-button (click)="recoverEmail()"
+          style="background-color: #673ab7; display: block;">Confirm</button>
+        <mat-form-field appearance="fill" *ngIf="emailRecoverySuccess">
+          <mat-label>Enter the code</mat-label>
+          <input [attr.disabled]="(recoveryCodeSuccess ? 'true' : 'false')"  [type]="hide ? 'password' : 'text'" matInput placeholder="Recovery code" [(ngModel)]="recoveryCode" required>
+          <mat-hint class="hint-error" *ngIf="recoveryCodeError != null">{{recoveryCodeError}}</mat-hint>
+          <mat-hint class="hint-success" *ngIf="recoveryCodeSuccess">Code is valid!</mat-hint>
+        </mat-form-field>
+        <button [disabled]="(recoveryCodeSuccess ? 'true' : 'false')" *ngIf="emailRecoverySuccess" mat-stroked-button
+          (click)="checkRecoveryCode()" style="background-color: #673ab7; display: block;">Check code</button>
+        <mat-form-field appearance="fill" *ngIf="recoveryCodeSuccess">
+          <mat-label>Enter your new password</mat-label>
+          <input [attr.disabled]="(changePasswordSuccess ? 'true' : 'false')" [type]="hide ? 'password' : 'text'" (input)="newPasswordInputChanged()"  matInput placeholder="New password" [(ngModel)]="newPassword" required>
+          <mat-hint class="hint-error" *ngIf="newPasswordError.length > 0">{{newPasswordError}}</mat-hint>
+          <mat-hint class="hint-error" *ngIf="changePasswordError.length > 0">{{changePasswordError}}</mat-hint>
+          <mat-hint class="hint-success" *ngIf="changePasswordSuccess">Password updated, you can log in</mat-hint>
+        </mat-form-field>
+        <button [disabled]="!validNewPassword ? 'true' : 'false'" *ngIf="recoveryCodeSuccess && !changePasswordSuccess" mat-stroked-button
+          (click)="changePassword()" style="background-color: #673ab7; display: block;">Change password</button>
       </mat-card>
     </mat-tab>
   </mat-tab-group>

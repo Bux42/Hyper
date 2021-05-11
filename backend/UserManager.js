@@ -3,7 +3,9 @@ const bcrypt = require('bcrypt');
 const {
     use
 } = require('passport');
-const { resolve } = require('path');
+const {
+    resolve
+} = require('path');
 
 const saltRounds = 10;
 
@@ -31,6 +33,7 @@ module.exports = class UserManager {
                 if (!docs.length) {
                     console.log("create account", req.body.UserData);
                     var account = {
+                        type: "Google",
                         id: req.body.UserData.FS,
                         first_name: req.body.UserData.qU,
                         last_name: req.body.UserData.lS,
@@ -74,7 +77,9 @@ module.exports = class UserManager {
         console.log("um.setShowWatchTime", req.query);
         return new Promise(resolve => {
             const userCol = this.Db.collection('users');
-            userCol.updateOne({id: req.session.user.Account.id}, {
+            userCol.updateOne({
+                id: req.session.user.Account.id
+            }, {
                 $set: {
                     volume: req.query.user_volume
                 }
@@ -116,7 +121,9 @@ module.exports = class UserManager {
                             date: Date.now()
                         }
                     };
-                    collection.updateOne({_id: docs[0]._id}, newvalues);
+                    collection.updateOne({
+                        _id: docs[0]._id
+                    }, newvalues);
                 }
             });
             resolve(true);
@@ -125,7 +132,9 @@ module.exports = class UserManager {
     setWatchTime(req) {
         return new Promise(resolve => {
             const userCol = this.Db.collection('users');
-            userCol.updateOne({id: req.session.user.Account.id}, {
+            userCol.updateOne({
+                id: req.session.user.Account.id
+            }, {
                 $set: {
                     volume: req.query.user_volume
                 }
@@ -151,7 +160,9 @@ module.exports = class UserManager {
                             date: Date.now()
                         }
                     };
-                    collection.updateOne({_id: docs[0]._id}, newvalues);
+                    collection.updateOne({
+                        _id: docs[0]._id
+                    }, newvalues);
                     resolve(true);
                 }
             });
@@ -293,6 +304,7 @@ module.exports = class UserManager {
                             bcrypt.genSalt(saltRounds, function (err, salt) {
                                 bcrypt.hash(form.password1, salt, function (err, hash) {
                                     var account = {
+                                        type: "Classic",
                                         id: newId,
                                         first_name: form.firstName,
                                         last_name: form.lastName,
@@ -331,9 +343,68 @@ module.exports = class UserManager {
         return new Promise(resolve => {
             this.getWatchHistory(account.id).then(wHistory => {
                 this.getWatchHistoryShows(account.id).then(wsHistory => {
-                    resolve (new Account(wHistory, wsHistory, accountType, account));
+                    resolve(new Account(wHistory, wsHistory, accountType, account));
                 })
             })
+        });
+    }
+    checkPasswordRecoveryHash(hash, email, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.find({
+                email: email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    if (docs[0].emailRecoverySecret == hash) {
+                        resolve({
+                            "Error": null
+                        });
+                    } else {
+                        resolve({
+                            "Error": "Invalid code"
+                        });
+                    }
+                } else {
+                    resolve({
+                        "Error": "Email not found"
+                    });
+                }
+            });
+        });
+    }
+    changePassword(email, password, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.find({
+                email: email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    bcrypt.compare(password, docs[0].password, function (err, result) {
+                        if (!result) {
+                            bcrypt.genSalt(saltRounds, function (err, salt) {
+                                bcrypt.hash(password, salt, function (err, hash) {
+                                    docs[0].password = hash;
+                                    delete docs[0].emailRecoverySecret;
+                                    collection.update({
+                                        id: docs[0].id
+                                    }, docs[0]);
+                                    resolve({
+                                        "Error": null
+                                    });
+                                });
+                            });
+                        } else {
+                            resolve({
+                                Error: "New password must be different"
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        "Error": "Email not found"
+                    });
+                }
+            });
         });
     }
 }

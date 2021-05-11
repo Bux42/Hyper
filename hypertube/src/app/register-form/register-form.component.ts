@@ -18,6 +18,17 @@ export class RegisterFormComponent implements OnInit {
     selectedIndex: any = 0;
     hide = true;
     hide2 = true;
+    emailRecovery: any = "";
+    emailRecoveryError: any = "";
+    emailRecoverySuccess: any = false;
+    recoveryCode: any = "";
+    recoveryCodeError: any = null;
+    recoveryCodeSuccess: any = false;
+    newPassword: any = "";
+    newPasswordError: any = "";
+    validNewPassword: any = false;
+    changePasswordError: any = "";
+    changePasswordSuccess: any = false;
     password: any = "";
     firstName: any = "";
     firstNameError: any = "";
@@ -184,5 +195,66 @@ export class RegisterFormComponent implements OnInit {
             valid = false;
         }
         this.validForm = valid;
+    }
+    recoverEmail() {
+        this.userService.recoverPassword(this.emailRecovery).subscribe(result => {
+            if (result.Error != null) {
+                this.emailRecoveryError = result.Error;
+                this.emailRecoverySuccess = false;
+            } else {
+                this.emailRecoverySuccess = true;
+                this.emailRecoveryError = "";
+            }
+            console.log(result);
+        });
+        console.log(this.emailRecovery);
+    }
+    checkRecoveryCode() {
+        console.log(this.recoveryCode);
+        this.userService.checkRecoveryCode({
+            "email": this.emailRecovery,
+            "code": this.recoveryCode
+        }).subscribe(result => {
+            console.log(result);
+            if (result.Error) {
+                this.recoveryCodeError = result.Error;
+            } else {
+                this.recoveryCodeError = null;
+                this.recoveryCodeSuccess = true;
+            }
+        });
+    }
+    newPasswordInputChanged() {
+        console.log(this.newPassword);
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,20}$/;
+        if (this.newPassword.length < 8) {
+            this.newPasswordError = "Password too short";
+        } else if (this.newPassword.length > 20) {
+            this.newPasswordError = "Password too big";
+        } else if (!regex.test(this.newPassword)) {
+            this.newPasswordError = "Missing one upper case, lower case, digit or special character";
+        } else {
+            this.newPasswordError = "";
+        }
+        if (this.newPasswordError.length == 0) {
+            this.validNewPassword = true;
+        } else {
+            this.validNewPassword = false;
+        }
+    }
+    changePassword() {
+        this.userService.changePassword({
+            "email": this.emailRecovery,
+            "password": this.newPassword
+        }).subscribe(result => {
+            console.log(result);
+            if (result.Error) {
+                this.changePasswordError = result.Error;
+            } else {
+                this.changePasswordError = "";
+                this.changePasswordSuccess = true;
+                this.loginEmailInput = this.emailRecovery;
+            }
+        });
     }
 }

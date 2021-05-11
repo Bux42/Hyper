@@ -8,6 +8,8 @@ const assert = require('assert');
 const MediaApi = require('./MediaApi');
 const TorrentManager = require('./TorrentManager');
 const UserManager = require('./UserManager');
+const MailManager = require('./MailManager');
+
 const fs = require('fs');
 const {
     serialize
@@ -58,6 +60,7 @@ const dbName = 'hypertube';
 var db = null;
 
 var um = null;
+var mm = null;
 
 const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
@@ -69,6 +72,7 @@ mongoClient.connect(function (err) {
     console.log('Connected successfully to server');
     db = mongoClient.db(dbName);
     um = new UserManager(db);
+    mm = new MailManager(settings);
 });
 
 var clearDownloads = false;
@@ -453,4 +457,33 @@ app.get('/fetch-show', (req, res, next) => {
     mediaApi.fetchShow(req.query.imdb_id, db).then(result => {
         res.send(result);
     });
+});
+
+app.get('/recover-password', (req, res, next) => {
+    um.isEmailAvailable(req.query.email).then(result => {
+        if (!result) {
+            res.send({
+                "Error": null
+            });
+            mm.sendPasswordRecovery(req.query.email, db);
+        } else {
+            res.send({
+                "Error": "Invalid email"
+            });
+        }
+    });
+});
+
+app.post('/check-recovery-code', (req, res, next) => {
+    um.checkPasswordRecoveryHash(req.body.form.code, req.body.form.email, db).then(result => {
+        console.log(result);
+        res.send(result);
+    })
+});
+
+app.post('/change-password', (req, res, next) => {
+    um.changePassword(req.body.form.email, req.body.form.password, db).then(result => {
+        console.log(result);
+        res.send(result);
+    })
 });
