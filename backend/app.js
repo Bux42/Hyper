@@ -296,6 +296,8 @@ app.get('/set-show-watch-time', (req, res, next) => {
         } else {
             req.session.user.WatchHistoryShows.push({
                 tvdb_id: req.query.tvdb_id,
+                imdb_id: req.query.show_imdb_id,
+                watch_time: req.query.watch_time,
                 date: Date.now()
             });
         }

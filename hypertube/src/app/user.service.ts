@@ -59,8 +59,8 @@ export class UserService {
                 mediaResume.date = Date.now();
             } else {
                 this.user.WatchHistoryShows.push({
-                    show_imdb_id: show_imdb_id,
-                    media_id: tvdb_id,
+                    imdb_id: show_imdb_id,
+                    tvdb_id: tvdb_id,
                     watch_time: watchTime,
                     date: Date.now()
                 });

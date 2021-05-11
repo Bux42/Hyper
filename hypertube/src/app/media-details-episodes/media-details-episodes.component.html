@@ -25,7 +25,7 @@
     </div>
     <mat-button-toggle-group style="display: flex; width: 85%; margin: auto;" vertical="true" aria-label="Font Style" value="{{selectedSeason.season}}">
       <mat-button-toggle *ngFor="let season of seasons" value="{{season.season}}" (click)="switchSeason(season.season)">
-        Season {{season.season}}
+        {{season.season}}
       </mat-button-toggle>
     </mat-button-toggle-group>
   </section>
