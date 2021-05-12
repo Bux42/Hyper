@@ -9,6 +9,7 @@ const MediaApi = require('./MediaApi');
 const TorrentManager = require('./TorrentManager');
 const UserManager = require('./UserManager');
 const MailManager = require('./MailManager');
+const CommentManager = require('./CommentManager');
 
 const fs = require('fs');
 const {
@@ -61,6 +62,7 @@ var db = null;
 
 var um = null;
 var mm = null;
+var cm = null;
 
 const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
@@ -73,6 +75,7 @@ mongoClient.connect(function (err) {
     db = mongoClient.db(dbName);
     um = new UserManager(db);
     mm = new MailManager(settings);
+    cm = new CommentManager();
 });
 
 var clearDownloads = false;
@@ -491,3 +494,44 @@ app.post('/change-password', (req, res, next) => {
         res.send(result);
     })
 });
+
+app.get('/get-comments', (req, res, next) => {
+    cm.getCommentsByImdbId(req.query.imdb_id, db).then(result => {
+        res.send(result);
+    });
+})
+
+
+app.get('/get-user-infos', (req, res, next) => {
+    um.getUserInfos(req.query.user_id, db).then(result => {
+        res.send(result);
+    });
+})
+
+app.post('/post-comment', (req, res, next) => {
+    if (!req.session.user) {
+        res.send({"Comment": null, "Error": "You must be logged in"});
+    } else {
+        if (req.session.user.lastComment) {
+            console.log(req.session.user.lastComment);
+            console.log(Date.now() - req.session.user.lastComment);
+            if (Date.now() - req.session.user.lastComment < 3000) {
+                res.send({"Comment": null, "Error": "You are going too fast"});
+            } else {
+                cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
+                    console.log(result);
+                    res.send({"Comment": result, "Error": null});
+                });
+                req.session.user.lastComment = Date.now();
+            }
+        } else {
+            cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
+                console.log(result);
+                res.send({"Comment": result, "Error": null});
+            });
+            req.session.user.lastComment = Date.now();
+        }
+    }
+    console.log(req.body);
+    
+})

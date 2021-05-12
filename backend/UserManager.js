@@ -310,7 +310,7 @@ module.exports = class UserManager {
                                         last_name: form.lastName,
                                         email: form.emailInput,
                                         password: hash,
-                                        img: "",
+                                        img: "/assets/alphabet/" + form.firstName.toUpperCase()[0] + ".png",
                                         username: form.username,
                                         language: "en",
                                         volume: 0.5
@@ -403,6 +403,23 @@ module.exports = class UserManager {
                     resolve({
                         "Error": "Email not found"
                     });
+                }
+            });
+        });
+    }
+    getUserInfos(user_id, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.find({
+                id: user_id
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    resolve({
+                        username: docs[0].username,
+                        profilePic: docs[0].img
+                    });
+                } else {
+                    resolve(null);
                 }
             });
         });
