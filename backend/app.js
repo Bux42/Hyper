@@ -298,7 +298,9 @@ app.get('/set-show-watch-time', (req, res, next) => {
                 tvdb_id: req.query.tvdb_id,
                 imdb_id: req.query.show_imdb_id,
                 watch_time: req.query.watch_time,
-                date: Date.now()
+                date: Date.now(),
+                season_number: req.query.season_number,
+                episode_number: req.query.episode_number
             });
         }
     }

@@ -60,6 +60,13 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             }
             this.selectedEpisode = this.selectedSeason.episodes[0];
             this.episodeNumber = this.selectedEpisode.episode;
+            var lastestSeen = this.userService.getLatestSeenEpisode(this.mediaEpisodes.imdb_id);
+
+            if (lastestSeen) {
+                this.selectedSeason = this.seasons.find((x: any) => x.season == parseInt(lastestSeen.season_number));
+                this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.episode == parseInt(lastestSeen.episode_number));
+                this.episodeNumber = parseInt(lastestSeen.episode_number);
+            }
         },
             error => {
                 console.log(error);

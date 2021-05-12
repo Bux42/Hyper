@@ -62,7 +62,9 @@ export class UserService {
                     imdb_id: show_imdb_id,
                     tvdb_id: tvdb_id,
                     watch_time: watchTime,
-                    date: Date.now()
+                    date: Date.now(),
+                    season_number: season_number,
+                    episode_number: episode_number
                 });
             }
             console.log("newWH:", this.user.WatchHistory);
@@ -123,5 +125,23 @@ export class UserService {
     }
     logout() {
         return (this.http.get<any>('http://localhost:3000/logout', {  withCredentials: true }));
+    }
+    getLatestSeenEpisode(imdb_id: any): any {
+        var watchHistoryClean = this.user.WatchHistoryShows.filter((wh: any) => wh.imdb_id == imdb_id);
+
+        if (watchHistoryClean.length > 0) {
+            console.log(watchHistoryClean);
+            var lastestEpisode = watchHistoryClean[0];
+            for (var i = 0; i < watchHistoryClean.length; i++) {
+                if (watchHistoryClean[i].season_number > lastestEpisode.season_number) {
+                    lastestEpisode = watchHistoryClean[i];
+                } else if (watchHistoryClean[i].episode_number > lastestEpisode.episode_number) {
+                    lastestEpisode = watchHistoryClean[i];
+                }
+            }
+            return (lastestEpisode);
+        } else {
+            return (null);
+        }
     }
 }
