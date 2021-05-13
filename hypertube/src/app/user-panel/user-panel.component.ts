@@ -22,6 +22,9 @@ export class UserPanelComponent implements OnInit {
             if (this.userService.user.AccountType == "Google") {
                 this.svgPath = "/assets/google.svg";
             }
+            if (this.userService.user.AccountType == "School") {
+                this.svgPath = "/assets/42.svg";
+            }
         }
     }
     languageChanged(language: string) {

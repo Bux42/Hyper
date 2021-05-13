@@ -418,7 +418,8 @@ module.exports = class UserManager {
                 if (docs.length > 0) {
                     resolve({
                         username: docs[0].username,
-                        profilePic: docs[0].img
+                        profilePic: docs[0].img,
+                        type: docs[0].type
                     });
                 } else {
                     resolve(null);

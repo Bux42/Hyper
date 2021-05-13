@@ -24,14 +24,22 @@ export class CommentListComponent implements OnInit {
     }
     postComment() {
         console.log(this.comment);
-        this.userService.postComment(this.comment, this.imdb_id).subscribe((result: any) => {
-            console.log(result);
-            if (!result.Error) {
-                this.comments.unshift(result.Comment);
-                this.commentError = "";
+        this.commentError = "";
+        if (this.comment.length > 0) {
+            if (this.comment.length > 100) {
+                this.commentError = "100 characters max";
             } else {
-                this.commentError = result.Error;
+                this.userService.postComment(this.comment, this.imdb_id).subscribe((result: any) => {
+                    console.log(result);
+                    if (!result.Error) {
+                        this.comment = "";
+                        this.comments.unshift(result.Comment);
+                        this.commentError = "";
+                    } else {
+                        this.commentError = result.Error;
+                    }
+                });
             }
-        });
+        }
     }
 }
