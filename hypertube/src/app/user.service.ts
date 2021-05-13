@@ -187,4 +187,9 @@ export class UserService {
             .set('user_id', user_id);
         return (this.http.get<any>('http://localhost:3000/get-user-infos', { params, withCredentials: true }));
     }
+    checkSchoolLogin(code: any) {
+        return (this.http.post<any>('http://localhost:3000/school-login', {
+            code: code
+        }, { withCredentials: true }));
+    }
 }

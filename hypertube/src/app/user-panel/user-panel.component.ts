@@ -39,7 +39,7 @@ export class UserPanelComponent implements OnInit {
             if (this.userService.user.AccountType == "Google") {
                 this.googleOauth.disconnect();
             }
-            window.location.reload();
+            window.location.replace("/");
         });
     }
 }

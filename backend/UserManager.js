@@ -1,4 +1,5 @@
 const assert = require('assert');
+const request = require('request');
 const bcrypt = require('bcrypt');
 const {
     use
@@ -19,8 +20,9 @@ class Account {
 }
 
 module.exports = class UserManager {
-    constructor(db) {
+    constructor(db, settings) {
         this.Db = db;
+        this.Settings = settings;
     }
     getGoogleAccount(req) {
         return new Promise(resolve => {
@@ -420,6 +422,70 @@ module.exports = class UserManager {
                     });
                 } else {
                     resolve(null);
+                }
+            });
+        });
+    }
+    checkSchoolLogin(code, db) {
+        return new Promise(resolve => {
+            var url = 'https://api.intra.42.fr/oauth/token';
+            request.post(url, {
+                form: {
+                    grant_type: 'authorization_code',
+                    client_id: this.Settings.school_client_id,
+                    client_secret: this.Settings.school_client_secret,
+                    code: code,
+                    redirect_uri: 'http://localhost:4200/school-oauth',
+                }
+            }, function optionalCallback(err, httpResponse, body) {
+                var bodyJson = JSON.parse(body);
+
+                if (bodyJson.access_token) {
+                    request.get("https://api.intra.42.fr/v2/me", {
+                        headers: {
+                            'Authorization': 'Bearer ' + bodyJson.access_token
+                        }
+                    }, function callBack2(err2, httpResponse2, body2) {
+                        var user42 = JSON.parse(body2);
+
+                        const collection = db.collection('users');
+                        collection.find({
+                            email: user42.email
+                        }).toArray(function (err, docs) {
+                            assert.equal(err, null);
+                            if (!docs.length) {
+                                var newId = "";
+                                for (var i = 0; i < 21; ++i) {
+                                    newId += Math.floor(Math.random() * 10);
+                                }
+                                var account = {
+                                    type: "School",
+                                    id: newId,
+                                    first_name: user42.first_name,
+                                    last_name: user42.last_name,
+                                    email: user42.email,
+                                    img: user42.image_url,
+                                    username: null,
+                                    language: "en",
+                                    volume: 0.5
+                                };
+                                collection.insertOne(account);
+                                resolve({
+                                    "Error": null,
+                                    "Account": account
+                                });
+                            } else {
+                                resolve({
+                                    "Error": null,
+                                    "Account": docs[0]
+                                });
+                            }
+                        });
+                    })
+                } else {
+                    resolve({
+                        "Error": "invalid_grant"
+                    });
                 }
             });
         });

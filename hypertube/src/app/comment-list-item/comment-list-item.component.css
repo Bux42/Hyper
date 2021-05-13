@@ -6,3 +6,13 @@
 .left {
     float: left;
 }
+
+.school-profile-pic {
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: 50% 50%;
+    border-radius: 50%;
+}

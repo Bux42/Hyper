@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LanguageService } from './language.service';
 import { UserService } from './user.service';
 
@@ -11,7 +12,9 @@ export class AppComponent {
     title = 'hypertube';
     backendAvailable: any = false;
     errorMessage: any = null;
-    constructor(private userService: UserService, private languageService: LanguageService) {}
+    constructor(private _route: ActivatedRoute, private userService: UserService, private languageService: LanguageService) {
+        
+    }
 
     ngOnInit() {
         this.userService.pingBackend().subscribe(result => {
@@ -23,18 +26,28 @@ export class AppComponent {
                     this.backendAvailable = true;
                 });
             } else {
-                this.userService.getUser().then((user) => {
-                    if (!user) {
-                        this.backendAvailable = true;
+                this._route.queryParams.subscribe(params => {
+                    if (params.code) {
+                        console.log(params.code);
+                        this.userService.checkSchoolLogin(params.code).subscribe(result => {
+                            console.log(result);
+                            window.location.replace("/");
+                        });
                     } else {
-                        this.userService.setUser(user).subscribe((userInfos) => {
-                            this.userService.user = userInfos.Account;
-                            console.log(this.userService.user);
-                            this.languageService.setLanguage(this.userService.user.Account.language);
-                            this.backendAvailable = true;
+                        this.userService.getUser().then((user) => {
+                            if (!user) {
+                                this.backendAvailable = true;
+                            } else {
+                                this.userService.setUser(user).subscribe((userInfos) => {
+                                    this.userService.user = userInfos.Account;
+                                    console.log(this.userService.user);
+                                    this.languageService.setLanguage(this.userService.user.Account.language);
+                                    this.backendAvailable = true;
+                                });
+                            }
+                            
                         });
                     }
-                    
                 });
             }
         },

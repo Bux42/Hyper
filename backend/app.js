@@ -73,7 +73,7 @@ mongoClient.connect(function (err) {
     assert.equal(null, err);
     console.log('Connected successfully to server');
     db = mongoClient.db(dbName);
-    um = new UserManager(db);
+    um = new UserManager(db, settings);
     mm = new MailManager(settings);
     cm = new CommentManager();
 });
@@ -510,28 +510,61 @@ app.get('/get-user-infos', (req, res, next) => {
 
 app.post('/post-comment', (req, res, next) => {
     if (!req.session.user) {
-        res.send({"Comment": null, "Error": "You must be logged in"});
+        res.send({
+            "Comment": null,
+            "Error": "You must be logged in"
+        });
     } else {
         if (req.session.user.lastComment) {
             console.log(req.session.user.lastComment);
             console.log(Date.now() - req.session.user.lastComment);
             if (Date.now() - req.session.user.lastComment < 3000) {
-                res.send({"Comment": null, "Error": "You are going too fast"});
+                res.send({
+                    "Comment": null,
+                    "Error": "You are going too fast"
+                });
             } else {
                 cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
                     console.log(result);
-                    res.send({"Comment": result, "Error": null});
+                    res.send({
+                        "Comment": result,
+                        "Error": null
+                    });
                 });
                 req.session.user.lastComment = Date.now();
             }
         } else {
             cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
                 console.log(result);
-                res.send({"Comment": result, "Error": null});
+                res.send({
+                    "Comment": result,
+                    "Error": null
+                });
             });
             req.session.user.lastComment = Date.now();
         }
     }
     console.log(req.body);
-    
+
 })
+
+app.post('/school-login', (req, res, next) => {
+    delete req.session.user;
+    um.checkSchoolLogin(req.body.code, db).then(result => {
+        if (!result.Error) {
+            um.createUserInfos("School", result.Account).then(acc => {
+                req.session.user = acc;
+                console.log({
+                    "Error": null,
+                    "Account": acc
+                });
+                res.send({
+                    "Error": null,
+                    "Account": acc
+                });
+            });
+        } else {
+            res.send(result);
+        }
+    });
+});
