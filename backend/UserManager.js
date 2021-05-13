@@ -1,9 +1,12 @@
 const assert = require('assert');
+const request = require('request');
 const bcrypt = require('bcrypt');
 const {
     use
 } = require('passport');
-const { resolve } = require('path');
+const {
+    resolve
+} = require('path');
 
 const saltRounds = 10;
 
@@ -17,8 +20,9 @@ class Account {
 }
 
 module.exports = class UserManager {
-    constructor(db) {
+    constructor(db, settings) {
         this.Db = db;
+        this.Settings = settings;
     }
     getGoogleAccount(req) {
         return new Promise(resolve => {
@@ -31,6 +35,7 @@ module.exports = class UserManager {
                 if (!docs.length) {
                     console.log("create account", req.body.UserData);
                     var account = {
+                        type: "Google",
                         id: req.body.UserData.FS,
                         first_name: req.body.UserData.qU,
                         last_name: req.body.UserData.lS,
@@ -74,7 +79,9 @@ module.exports = class UserManager {
         console.log("um.setShowWatchTime", req.query);
         return new Promise(resolve => {
             const userCol = this.Db.collection('users');
-            userCol.updateOne({id: req.session.user.Account.id}, {
+            userCol.updateOne({
+                id: req.session.user.Account.id
+            }, {
                 $set: {
                     volume: req.query.user_volume
                 }
@@ -116,7 +123,9 @@ module.exports = class UserManager {
                             date: Date.now()
                         }
                     };
-                    collection.updateOne({_id: docs[0]._id}, newvalues);
+                    collection.updateOne({
+                        _id: docs[0]._id
+                    }, newvalues);
                 }
             });
             resolve(true);
@@ -125,7 +134,9 @@ module.exports = class UserManager {
     setWatchTime(req) {
         return new Promise(resolve => {
             const userCol = this.Db.collection('users');
-            userCol.updateOne({id: req.session.user.Account.id}, {
+            userCol.updateOne({
+                id: req.session.user.Account.id
+            }, {
                 $set: {
                     volume: req.query.user_volume
                 }
@@ -151,7 +162,9 @@ module.exports = class UserManager {
                             date: Date.now()
                         }
                     };
-                    collection.updateOne({_id: docs[0]._id}, newvalues);
+                    collection.updateOne({
+                        _id: docs[0]._id
+                    }, newvalues);
                     resolve(true);
                 }
             });
@@ -293,12 +306,13 @@ module.exports = class UserManager {
                             bcrypt.genSalt(saltRounds, function (err, salt) {
                                 bcrypt.hash(form.password1, salt, function (err, hash) {
                                     var account = {
+                                        type: "Classic",
                                         id: newId,
                                         first_name: form.firstName,
                                         last_name: form.lastName,
                                         email: form.emailInput,
                                         password: hash,
-                                        img: "",
+                                        img: "/assets/alphabet/" + form.firstName.toUpperCase()[0] + ".png",
                                         username: form.username,
                                         language: "en",
                                         volume: 0.5
@@ -331,9 +345,150 @@ module.exports = class UserManager {
         return new Promise(resolve => {
             this.getWatchHistory(account.id).then(wHistory => {
                 this.getWatchHistoryShows(account.id).then(wsHistory => {
-                    resolve (new Account(wHistory, wsHistory, accountType, account));
+                    resolve(new Account(wHistory, wsHistory, accountType, account));
                 })
             })
+        });
+    }
+    checkPasswordRecoveryHash(hash, email, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.find({
+                email: email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    if (docs[0].emailRecoverySecret == hash) {
+                        resolve({
+                            "Error": null
+                        });
+                    } else {
+                        resolve({
+                            "Error": "Invalid code"
+                        });
+                    }
+                } else {
+                    resolve({
+                        "Error": "Email not found"
+                    });
+                }
+            });
+        });
+    }
+    changePassword(email, password, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.find({
+                email: email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    bcrypt.compare(password, docs[0].password, function (err, result) {
+                        if (!result) {
+                            bcrypt.genSalt(saltRounds, function (err, salt) {
+                                bcrypt.hash(password, salt, function (err, hash) {
+                                    docs[0].password = hash;
+                                    delete docs[0].emailRecoverySecret;
+                                    collection.update({
+                                        id: docs[0].id
+                                    }, docs[0]);
+                                    resolve({
+                                        "Error": null
+                                    });
+                                });
+                            });
+                        } else {
+                            resolve({
+                                Error: "New password must be different"
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        "Error": "Email not found"
+                    });
+                }
+            });
+        });
+    }
+    getUserInfos(user_id, db) {
+        return new Promise(resolve => {
+            const collection = db.collection('users');
+            collection.find({
+                id: user_id
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    resolve({
+                        username: docs[0].username,
+                        profilePic: docs[0].img,
+                        type: docs[0].type
+                    });
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
+    checkSchoolLogin(code, db) {
+        return new Promise(resolve => {
+            var url = 'https://api.intra.42.fr/oauth/token';
+            request.post(url, {
+                form: {
+                    grant_type: 'authorization_code',
+                    client_id: this.Settings.school_client_id,
+                    client_secret: this.Settings.school_client_secret,
+                    code: code,
+                    redirect_uri: 'http://localhost:4200/school-oauth',
+                }
+            }, function optionalCallback(err, httpResponse, body) {
+                var bodyJson = JSON.parse(body);
+
+                if (bodyJson.access_token) {
+                    request.get("https://api.intra.42.fr/v2/me", {
+                        headers: {
+                            'Authorization': 'Bearer ' + bodyJson.access_token
+                        }
+                    }, function callBack2(err2, httpResponse2, body2) {
+                        var user42 = JSON.parse(body2);
+
+                        const collection = db.collection('users');
+                        collection.find({
+                            email: user42.email
+                        }).toArray(function (err, docs) {
+                            assert.equal(err, null);
+                            if (!docs.length) {
+                                var newId = "";
+                                for (var i = 0; i < 21; ++i) {
+                                    newId += Math.floor(Math.random() * 10);
+                                }
+                                var account = {
+                                    type: "School",
+                                    id: newId,
+                                    first_name: user42.first_name,
+                                    last_name: user42.last_name,
+                                    email: user42.email,
+                                    img: user42.image_url,
+                                    username: null,
+                                    language: "en",
+                                    volume: 0.5
+                                };
+                                collection.insertOne(account);
+                                resolve({
+                                    "Error": null,
+                                    "Account": account
+                                });
+                            } else {
+                                resolve({
+                                    "Error": null,
+                                    "Account": docs[0]
+                                });
+                            }
+                        });
+                    })
+                } else {
+                    resolve({
+                        "Error": "invalid_grant"
+                    });
+                }
+            });
         });
     }
 }

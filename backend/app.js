@@ -8,6 +8,9 @@ const assert = require('assert');
 const MediaApi = require('./MediaApi');
 const TorrentManager = require('./TorrentManager');
 const UserManager = require('./UserManager');
+const MailManager = require('./MailManager');
+const CommentManager = require('./CommentManager');
+
 const fs = require('fs');
 const {
     serialize
@@ -58,6 +61,8 @@ const dbName = 'hypertube';
 var db = null;
 
 var um = null;
+var mm = null;
+var cm = null;
 
 const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
@@ -68,7 +73,9 @@ mongoClient.connect(function (err) {
     assert.equal(null, err);
     console.log('Connected successfully to server');
     db = mongoClient.db(dbName);
-    um = new UserManager(db);
+    um = new UserManager(db, settings);
+    mm = new MailManager(settings);
+    cm = new CommentManager();
 });
 
 var clearDownloads = false;
@@ -279,7 +286,8 @@ app.get('/set-show-watch-time', (req, res, next) => {
         if (!wh) {
             var newWh = {
                 media_id: req.query.show_imdb_id,
-                watch_time: 0
+                watch_time: 0,
+                date: Date.now()
             };
             console.log("add new wh", newWh);
             req.session.user.WatchHistory.push(newWh);
@@ -291,7 +299,11 @@ app.get('/set-show-watch-time', (req, res, next) => {
         } else {
             req.session.user.WatchHistoryShows.push({
                 tvdb_id: req.query.tvdb_id,
-                date: Date.now()
+                imdb_id: req.query.show_imdb_id,
+                watch_time: req.query.watch_time,
+                date: Date.now(),
+                season_number: req.query.season_number,
+                episode_number: req.query.episode_number
             });
         }
     }
@@ -310,10 +322,12 @@ app.get('/set-watch-time', (req, res, next) => {
         var wh = req.session.user.WatchHistory.find(x => x.media_id == req.query.mediaId);
         if (wh) {
             wh.watch_time = req.query.watch_time;
+            wh.date = Date.now();
         } else {
             req.session.user.WatchHistory.push({
                 media_id: req.query.mediaId,
-                watch_time: req.query.watch_time
+                watch_time: req.query.watch_time,
+                date: Date.now()
             });
         }
     } else {
@@ -449,5 +463,108 @@ app.get('/fetch-movie', (req, res, next) => {
 app.get('/fetch-show', (req, res, next) => {
     mediaApi.fetchShow(req.query.imdb_id, db).then(result => {
         res.send(result);
+    });
+});
+
+app.get('/recover-password', (req, res, next) => {
+    um.isEmailAvailable(req.query.email).then(result => {
+        if (!result) {
+            res.send({
+                "Error": null
+            });
+            mm.sendPasswordRecovery(req.query.email, db);
+        } else {
+            res.send({
+                "Error": "Invalid email"
+            });
+        }
+    });
+});
+
+app.post('/check-recovery-code', (req, res, next) => {
+    um.checkPasswordRecoveryHash(req.body.form.code, req.body.form.email, db).then(result => {
+        console.log(result);
+        res.send(result);
+    })
+});
+
+app.post('/change-password', (req, res, next) => {
+    um.changePassword(req.body.form.email, req.body.form.password, db).then(result => {
+        console.log(result);
+        res.send(result);
+    })
+});
+
+app.get('/get-comments', (req, res, next) => {
+    cm.getCommentsByImdbId(req.query.imdb_id, db).then(result => {
+        res.send(result);
+    });
+})
+
+
+app.get('/get-user-infos', (req, res, next) => {
+    um.getUserInfos(req.query.user_id, db).then(result => {
+        res.send(result);
+    });
+})
+
+app.post('/post-comment', (req, res, next) => {
+    if (!req.session.user) {
+        res.send({
+            "Comment": null,
+            "Error": "You must be logged in"
+        });
+    } else {
+        if (req.session.user.lastComment) {
+            console.log(req.session.user.lastComment);
+            console.log(Date.now() - req.session.user.lastComment);
+            if (Date.now() - req.session.user.lastComment < 3000) {
+                res.send({
+                    "Comment": null,
+                    "Error": "You are going too fast"
+                });
+            } else {
+                cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
+                    console.log(result);
+                    res.send({
+                        "Comment": result,
+                        "Error": null
+                    });
+                });
+                req.session.user.lastComment = Date.now();
+            }
+        } else {
+            cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
+                console.log(result);
+                res.send({
+                    "Comment": result,
+                    "Error": null
+                });
+            });
+            req.session.user.lastComment = Date.now();
+        }
+    }
+    console.log(req.body);
+
+})
+
+app.post('/school-login', (req, res, next) => {
+    delete req.session.user;
+    um.checkSchoolLogin(req.body.code, db).then(result => {
+        if (!result.Error) {
+            um.createUserInfos("School", result.Account).then(acc => {
+                req.session.user = acc;
+                console.log({
+                    "Error": null,
+                    "Account": acc
+                });
+                res.send({
+                    "Error": null,
+                    "Account": acc
+                });
+            });
+        } else {
+            res.send(result);
+        }
     });
 });

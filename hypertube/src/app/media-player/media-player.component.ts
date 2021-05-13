@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MediaService } from '../media.service';
+import { ResumeDialogComponent } from '../resume-dialog/resume-dialog.component';
 import { UserService } from '../user.service';
 
 export interface DialogData {
@@ -46,9 +47,10 @@ export class MediaPlayerComponent implements OnInit {
         console.log(this.media, this.subtitlesSrc);
         if (this.media.resume) {
             var resumeTime = this.mediaService.watchTimeToString(this.media.resume.watch_time);
-            const dialogRef = this.dialog.open(ResumeDialog, {
+            const dialogRef = this.dialog.open(ResumeDialogComponent, {
                 width: '250px',
-                data: { resumeData: resumeTime }
+                data: { resumeData: resumeTime },
+                panelClass: 'custom-resume-dialog-container'
             });
 
             dialogRef.afterClosed().subscribe(result => {
@@ -61,8 +63,6 @@ export class MediaPlayerComponent implements OnInit {
                 if (video) {
                     video.play();
                 }
-                
-                console.log('The dialog was closed', result);
             });
         }
     }
@@ -124,22 +124,5 @@ export class MediaPlayerComponent implements OnInit {
         if (this.videoTag) {
             this.currentVolume = this.videoTag?.nativeElement.volume;
         }
-    }
-}
-
-@Component({
-    selector: 'resume-dialog',
-    templateUrl: 'resume-dialog.html',
-})
-export class ResumeDialog {
-    constructor(
-        public dialogRef: MatDialogRef<ResumeDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-    resume(resume: any) {
-        this.dialogRef.close(resume);
     }
 }

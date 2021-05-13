@@ -44,6 +44,9 @@ import { RegisterFormComponent } from './register-form/register-form.component';
 import { UsernameFormComponent } from './username-form/username-form.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { WatchHistoryComponent } from './watch-history/watch-history.component';
+import { ResumeDialogComponent } from './resume-dialog/resume-dialog.component';
+import { CommentListComponent } from './comment-list/comment-list.component';
+import { CommentListItemComponent } from './comment-list-item/comment-list-item.component';
 
 @NgModule({
     declarations: [
@@ -64,7 +67,10 @@ import { WatchHistoryComponent } from './watch-history/watch-history.component';
         RegisterFormComponent,
         UsernameFormComponent,
         LoginFormComponent,
-        WatchHistoryComponent
+        WatchHistoryComponent,
+        ResumeDialogComponent,
+        CommentListComponent,
+        CommentListItemComponent
     ],
     imports: [
         MatTabsModule,

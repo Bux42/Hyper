@@ -1,6 +1,12 @@
-.profile-user {
-  cursor: pointer;
+.comment-container {
+    background-color: #333333;
+    height: 45px;
 }
+
+.left {
+    float: left;
+}
+
 .school-profile-pic {
     cursor: pointer;
     height: 40px;

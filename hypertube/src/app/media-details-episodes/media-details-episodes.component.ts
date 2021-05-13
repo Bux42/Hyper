@@ -54,13 +54,19 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             }
             this.seasons.sort(function (a: { season: number; }, b: { season: number; }) { return (a.season > b.season) ? 1 : ((b.season > a.season) ? -1 : 0); });
             this.selectedSeason = this.seasons[0];
-            this.selectedEpisode = this.selectedSeason.episodes[0];
 
             for (var i = 0; i < this.seasons.length; i++) {
                 this.seasons[i].episodes.sort(function (a: { episode: number; }, b: { episode: number; }) { return (a.episode > b.episode) ? 1 : ((b.episode > a.episode) ? -1 : 0); });
             }
             this.selectedEpisode = this.selectedSeason.episodes[0];
             this.episodeNumber = this.selectedEpisode.episode;
+            var lastestSeen = this.userService.getLatestSeenEpisode(this.mediaEpisodes.imdb_id);
+
+            if (lastestSeen) {
+                this.selectedSeason = this.seasons.find((x: any) => x.season == parseInt(lastestSeen.season_number));
+                this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.episode == parseInt(lastestSeen.episode_number));
+                this.episodeNumber = parseInt(lastestSeen.episode_number);
+            }
         },
             error => {
                 console.log(error);
@@ -72,6 +78,7 @@ export class MediaDetailsEpisodesComponent implements OnInit {
     }
     selectEpisode(episode: any) {
         this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.title == episode);
+        console.log("selectedEpisode:", episode, this.selectedEpisode);
         this.episodeNumber = this.selectedEpisode.episode;
     }
 }
