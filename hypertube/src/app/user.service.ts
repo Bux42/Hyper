@@ -179,6 +179,8 @@ export class UserService {
             fuzzy = Math.floor(delta / hour) + ' hours ago.';
         } else if (delta < day * 2) {
             fuzzy = 'yesterday';
+        } else if (delta < day * 8) {
+            fuzzy = parseInt((delta / day).toString()) +  ' days ago'
         }
         return (fuzzy);
     }

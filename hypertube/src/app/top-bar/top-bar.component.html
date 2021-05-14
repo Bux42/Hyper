@@ -1,9 +1,6 @@
 <a [routerLink]="['/']">
   <img src="/assets/Hypertube.svg">
 </a>
-<div *ngIf="!schoolUser">
-  <img height="45" width="45" (click)="emitDrawerToggle()" class="profile-user" [src]="profilePic">
-</div>
-<div *ngIf="schoolUser" (click)="emitDrawerToggle()" [style]="'background-image: url(' + profilePic + ');'" class="school-profile-pic">
+<div  (click)="emitDrawerToggle()" [style]="'background-image: url(' + profilePic + ');'" class="school-profile-pic">
 
 </div>
