@@ -516,8 +516,6 @@ app.post('/post-comment', (req, res, next) => {
         });
     } else {
         if (req.session.user.lastComment) {
-            console.log(req.session.user.lastComment);
-            console.log(Date.now() - req.session.user.lastComment);
             if (Date.now() - req.session.user.lastComment < 3000) {
                 res.send({
                     "Comment": null,
@@ -525,7 +523,6 @@ app.post('/post-comment', (req, res, next) => {
                 });
             } else {
                 cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
-                    console.log(result);
                     res.send({
                         "Comment": result,
                         "Error": null
@@ -535,7 +532,6 @@ app.post('/post-comment', (req, res, next) => {
             }
         } else {
             cm.postComment(req.body.comment, req.body.imdb_id, req.session.user.Account.id, db).then(result => {
-                console.log(result);
                 res.send({
                     "Comment": result,
                     "Error": null
@@ -567,4 +563,31 @@ app.post('/school-login', (req, res, next) => {
             res.send(result);
         }
     });
+});
+
+app.post('/update-profile', (req, res, next) => {
+    um.updateProfile(req.body.form, db, req.session.user).then(result => {
+        if (result.UpdatedProfile) {
+            req.session.user.Account = result.UpdatedProfile;
+        }
+        res.send(result);
+    })
+});
+
+app.post('/update-email', (req, res, next) => {
+    um.updateEmail(req.body.form, db, req.session.user).then(result => {
+        if (result.UpdatedProfile) {
+            req.session.user.Account = result.UpdatedProfile;
+        }
+        res.send(result);
+    })
+});
+
+app.post('/update-password', (req, res, next) => {
+    um.updatePassword(req.body.form, db, req.session.user).then(result => {
+        if (result.UpdatedProfile) {
+            req.session.user.Account = result.UpdatedProfile;
+        }
+        res.send(result);
+    })
 });

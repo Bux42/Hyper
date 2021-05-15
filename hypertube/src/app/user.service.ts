@@ -179,6 +179,8 @@ export class UserService {
             fuzzy = Math.floor(delta / hour) + ' hours ago.';
         } else if (delta < day * 2) {
             fuzzy = 'yesterday';
+        } else if (delta < day * 8) {
+            fuzzy = parseInt((delta / day).toString()) +  ' days ago'
         }
         return (fuzzy);
     }
@@ -190,6 +192,21 @@ export class UserService {
     checkSchoolLogin(code: any) {
         return (this.http.post<any>('http://localhost:3000/school-login', {
             code: code
+        }, { withCredentials: true }));
+    }
+    updateProfile(form: any) {
+        return (this.http.post<any>('http://localhost:3000/update-profile', {
+            form: form
+        }, { withCredentials: true }));
+    }
+    updateEmail(form: any) {
+        return (this.http.post<any>('http://localhost:3000/update-email', {
+            form: form
+        }, { withCredentials: true }));
+    }
+    updatePassword(form: any) {
+        return (this.http.post<any>('http://localhost:3000/update-password', {
+            form: form
         }, { withCredentials: true }));
     }
 }

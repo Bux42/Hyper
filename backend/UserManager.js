@@ -1,6 +1,7 @@
 const assert = require('assert');
 const request = require('request');
 const bcrypt = require('bcrypt');
+const isImageURL = require('valid-image-url');
 const {
     use
 } = require('passport');
@@ -211,6 +212,24 @@ module.exports = class UserManager {
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
                     resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    }
+    canUpdateUsername(username, user_id) {
+        return new Promise(resolve => {
+            const collection = this.Db.collection('users');
+            collection.find({
+                username: username
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    if (docs[0].id != user_id) {
+                        resolve(false);
+                    } else {
+                        resolve(true);
+                    }
                 } else {
                     resolve(true);
                 }
@@ -490,5 +509,190 @@ module.exports = class UserManager {
                 }
             });
         });
+    }
+    updateProfile(form, db, user) {
+        return (new Promise(resolve => {
+            var that = this;
+            var result = {
+                Errors: {},
+                UpdatedProfile: null
+            }
+            const collection = db.collection('users');
+            collection.find({
+                email: user.Account.email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    that.canUpdateUsername(form.newUsername, user.Account.id).then(available => {
+                        if (available) {
+                            var firstNameError = that.validFirstname(form.newFirstName);
+                            if (firstNameError) {
+                                result.Errors["FirstNameError"] = firstNameError;
+                                resolve(result);
+                            } else {
+                                var lastNameError = that.validLastname(form.newLastName);
+                                if (lastNameError) {
+                                    result.Errors["LastNameError"] = lastNameError;
+                                    resolve(result);
+                                } else {
+                                    isImageURL(form.newImg).then(validImg => {
+                                        if (validImg) {
+                                            docs[0].first_name = form.newFirstName;
+                                            docs[0].last_name = form.newLastName;
+                                            docs[0].img = form.newImg;
+                                            docs[0].username = form.newUsername;
+                                            collection.update({
+                                                id: docs[0].id
+                                            }, docs[0]);
+                                            result.UpdatedProfile = docs[0];
+                                            resolve(result);
+                                        } else {
+                                            result.Errors["ImgError"] = "Invalid img url";
+                                            resolve(result);
+                                        }
+                                    });
+                                }
+                            }
+                        } else {
+                            result.Errors["UsernameError"] = "Username not available";
+                            resolve(result);
+                        }
+                    })
+                } else {
+                    result.Errors["Other"] = "User not found";
+                    resolve(result);
+                }
+            });
+        }))
+    }
+    updateEmail(form, db, user) {
+        return (new Promise(resolve => {
+            var that = this;
+            var result = {
+                Errors: {},
+                UpdatedProfile: null
+            }
+            const collection = db.collection('users');
+            collection.find({
+                email: user.Account.email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    if (that.validEmail(form.newEmail)) {
+                        that.isEmailAvailable(form.newEmail).then(emailAvailable => {
+                            if (emailAvailable) {
+                                bcrypt.compare(form.changeMailPassword, docs[0].password, function (err, validPassword) {
+                                    if (!validPassword) {
+                                        result.Errors["ChangeMailPassword"] = "Invalid password";
+                                        resolve(result);
+                                    } else {
+                                        docs[0].email = form.newEmail;
+                                        collection.update({
+                                            id: docs[0].id
+                                        }, docs[0]);
+                                        result.UpdatedProfile = docs[0];
+                                        resolve(result);
+                                    }
+                                });
+                            } else {
+                                result.Errors["ChangeMailEmail"] = "Email not available";
+                                resolve(result);
+                            }
+                        });
+                    } else {
+                        result.Errors["ChangeMailEmail"] = "Invalid Email";
+                        resolve(result);
+                    }
+                } else {
+                    result.Errors["Other"] = "User not found";
+                    resolve(result);
+                }
+            });
+        }));
+    }
+    updatePassword(form, db, user) {
+        return (new Promise(resolve => {
+            var that = this;
+            var result = {
+                Errors: {},
+                UpdatedProfile: null
+            }
+            const collection = db.collection('users');
+            collection.find({
+                email: user.Account.email
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    if (form.newPassword == form.newPasswordConfirm) {
+                        var passwordError = that.validPassword(form.newPassword);
+                        if (!passwordError) {
+                            bcrypt.compare(form.changePasswordPassword, docs[0].password, function (err, validPassword) {
+                                if (!validPassword) {
+                                    result.Errors["ChangePasswordPassword"] = "Invalid password";
+                                    resolve(result);
+                                } else {
+                                    bcrypt.genSalt(saltRounds, function (err, salt) {
+                                        bcrypt.hash(form.newPasswordConfirm, salt, function (err, hash) {
+                                            docs[0].password = hash;
+                                            collection.update({
+                                                id: docs[0].id
+                                            }, docs[0]);
+                                            result.UpdatedProfile = docs[0];
+                                            resolve(result);
+                                        });
+                                    });
+                                }
+                            });
+                        } else {
+                            result.Errors["ChangePasswordNew"] = passwordError;
+                            resolve(result);
+                        }
+                    } else {
+                        result.Errors["ChangePasswordNew"] = "Password don't match";
+                        resolve(result);
+                    }
+                } else {
+                    result.Errors["Other"] = "User not found";
+                    resolve(result);
+                }
+            });
+        }));
+    }
+    validPassword(password) {
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,20}$/;
+        var ret = null;
+        if (password.length < 8) {
+            ret = "Password too short";
+        } else if (password.length > 20) {
+            ret = "Password too big";
+        } else if (!regex.test(password)) {
+            ret = "Missing one upper case, lower case, digit or special character";
+        }
+        return (ret);
+    }
+    validEmail(email) {
+        var regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        return (regex.test(email));
+    }
+    validFirstname(first_name) {
+        var regex = /^[a-zA-Z\s]*$/;
+        var ret = null;
+        if (!regex.test(first_name)) {
+            ret = "Illegal characters";
+        } else if (first_name.length < 3) {
+            ret = "Too short";
+        } else if (first_name.length > 20) {
+            ret = "Too big";
+        }
+        return (ret);
+    }
+    validLastname(last_name) {
+        var regex = /^[a-zA-Z\s]*$/;
+        var ret = null;
+        if (!regex.test(last_name)) {
+            ret = "Illegal characters";
+        } else if (last_name.length < 3) {
+            ret = "Too short";
+        } else if (last_name.length > 20) {
+            ret = "Too big";
+        }
+        return (ret);
     }
 }
