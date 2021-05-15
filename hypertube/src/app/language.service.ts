@@ -42,6 +42,34 @@ export class LanguageService {
         this.translated["Your profile"] = {};
         this.translated["Your profile"]["en"] = "Your profile";
         this.translated["Your profile"]["fr"] = "Votre profil";
+        
+        this.translated["Edit profile"] = {};
+        this.translated["Edit profile"]["en"] = "Edit profile";
+        this.translated["Edit profile"]["fr"] = "Modifier profil";
+
+        this.translated["Save"] = {};
+        this.translated["Save"]["en"] = "Save";
+        this.translated["Save"]["fr"] = "Enregistrer";
+
+        this.translated["Update email"] = {};
+        this.translated["Update email"]["en"] = "Update email";
+        this.translated["Update email"]["fr"] = "Changer email";
+        
+        this.translated["Update password"] = {};
+        this.translated["Update password"]["en"] = "Update password";
+        this.translated["Update password"]["fr"] = "Changer mot de passe";
+
+        this.translated["Profile updated"] = {};
+        this.translated["Profile updated"]["en"] = "Profile updated";
+        this.translated["Profile updated"]["fr"] = "Profil modifié";
+
+        this.translated["Email updated"] = {};
+        this.translated["Email updated"]["en"] = "Email updated";
+        this.translated["Email updated"]["fr"] = "Email modifié";
+        
+        this.translated["Password updated"] = {};
+        this.translated["Password updated"]["en"] = "Password updated";
+        this.translated["Password updated"]["fr"] = "Mot de passe modifié";
 
         this.translated["Hello"] = {};
         this.translated["Hello"]["en"] = "Hello";
@@ -50,6 +78,22 @@ export class LanguageService {
         this.translated["Email"] = {};
         this.translated["Email"]["en"] = "Email";
         this.translated["Email"]["fr"] = "Email";
+
+        this.translated["Password"] = {};
+        this.translated["Password"]["en"] = "Password";
+        this.translated["Password"]["fr"] = "Mot de passe";
+
+        this.translated["New password"] = {};
+        this.translated["New password"]["en"] = "New password";
+        this.translated["New password"]["fr"] = "Nouveau mot de passe";
+        
+        this.translated["New email"] = {};
+        this.translated["New email"]["en"] = "New email";
+        this.translated["New email"]["fr"] = "Nouvel email";
+
+        this.translated["Confirm new password"] = {};
+        this.translated["Confirm new password"]["en"] = "Confirm new password";
+        this.translated["Confirm new password"]["fr"] = "Confirmer mot de passe";
 
         this.translated["Username"] = {};
         this.translated["Username"]["en"] = "Username";

@@ -194,4 +194,19 @@ export class UserService {
             code: code
         }, { withCredentials: true }));
     }
+    updateProfile(form: any) {
+        return (this.http.post<any>('http://localhost:3000/update-profile', {
+            form: form
+        }, { withCredentials: true }));
+    }
+    updateEmail(form: any) {
+        return (this.http.post<any>('http://localhost:3000/update-email', {
+            form: form
+        }, { withCredentials: true }));
+    }
+    updatePassword(form: any) {
+        return (this.http.post<any>('http://localhost:3000/update-password', {
+            form: form
+        }, { withCredentials: true }));
+    }
 }

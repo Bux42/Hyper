@@ -1,50 +1,111 @@
-<div width="250px">
-  <mat-card class="custom-mat-card">
-    <div class="custom-title">
-      {{languageService.getTranslation('Your profile')}}
-    </div>
-    <hr style="width: 80%">
-    <div style="display:inline">
-      <div *ngIf="svgPath != null">
-        <img width="13px" [src]="svgPath">
+<mat-tab-group>
+  <mat-tab label="{{languageService.getTranslation('Your profile')}}">
+    <mat-card class="custom-mat-card">
+      <div style="display:inline">
+        <div *ngIf="svgPath != null">
+          <img width="13px" [src]="svgPath">
+        </div>
+        {{languageService.getTranslation('Hello')}} <div style="display:inline; font-weight: bold;">
+          {{account.first_name}}</div>
       </div>
-      {{languageService.getTranslation('Hello')}} <div style="display:inline; font-weight: bold;">
-        {{account.first_name}}</div>
-    </div>
-    <br><br>
-    <form class="example-form">
-      <mat-form-field class="example-full-width">
-        <mat-label>{{languageService.getTranslation('Email')}}</mat-label>
-        <input class="custom-disabled-color" disabled matInput placeholder="email@mail.com" value="{{account.email}}">
-      </mat-form-field>
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <mat-label>{{languageService.getTranslation('Email')}}</mat-label>
+          <input class="custom-disabled-color" disabled matInput placeholder="email@mail.com" value="{{account.email}}">
+        </mat-form-field>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>{{languageService.getTranslation('Username')}}</mat-label>
-        <input class="custom-disabled-color" disabled matInput placeholder="mypsoeudo" value="{{account.username}}">
-      </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>{{languageService.getTranslation('Username')}}</mat-label>
+          <input class="custom-disabled-color" disabled matInput placeholder="mypsoeudo" value="{{account.username}}">
+        </mat-form-field>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>{{languageService.getTranslation('Last Name')}}</mat-label>
-        <input class="custom-disabled-color" disabled matInput placeholder="Lastname" value="{{account.last_name}}">
-      </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>{{languageService.getTranslation('Last Name')}}</mat-label>
+          <input class="custom-disabled-color" disabled matInput placeholder="Lastname" value="{{account.last_name}}">
+        </mat-form-field>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>{{languageService.getTranslation('First Name')}}</mat-label>
-        <input class="custom-disabled-color" disabled matInput placeholder="Firstname" value="{{account.first_name}}">
-      </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>{{languageService.getTranslation('First Name')}}</mat-label>
+          <input class="custom-disabled-color" disabled matInput placeholder="Firstname" value="{{account.first_name}}">
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>{{languageService.getTranslation('Prefered Language')}}</mat-label>
-        <mat-select (selectionChange)="languageChanged($event.value)" [(value)]="dselected">
-          <mat-option *ngFor="let language of availableLanguages" class="custom-mat-option" [value]="language">
-            {{language}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-    <button style="margin: auto; display: flex;" (click)="logout()" mat-flat-button
-      color="primary">{{languageService.getTranslation('Logout')}}</button>
-  </mat-card>
-  <app-watch-history>
+        <mat-form-field appearance="fill">
+          <mat-label>{{languageService.getTranslation('Prefered Language')}}</mat-label>
+          <mat-select (selectionChange)="languageChanged($event.value)" [(value)]="dselected">
+            <mat-option *ngFor="let language of availableLanguages" class="custom-mat-option" [value]="language">
+              {{language}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <button style="margin: auto; margin-bottom: 10px; display: flex;" (click)="logout()" mat-flat-button
+        color="primary">{{languageService.getTranslation('Logout')}}</button>
+      <app-watch-history>
 
-  </app-watch-history>
-</div>
+      </app-watch-history>
+    </mat-card>
+
+  </mat-tab>
+  <mat-tab label="{{languageService.getTranslation('Edit profile')}}">
+    <mat-card class="custom-mat-card">
+      <form>
+        <mat-form-field>
+          <mat-label>{{languageService.getTranslation('Last Name')}}</mat-label>
+          <input matInput name="1" placeholder="Lastname" [(ngModel)]="newLastName">
+          <mat-hint class="hint-error" *ngIf="updatedProfileErrors['LastNameError']">{{updatedProfileErrors['LastNameError']}}</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{languageService.getTranslation('First Name')}}</mat-label>
+          <input matInput name="2" placeholder="Firstname" [(ngModel)]="newFirstName">
+          <mat-hint class="hint-error" *ngIf="updatedProfileErrors['FirstNameError']">{{updatedProfileErrors['FirstNameError']}}</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{languageService.getTranslation('Username')}}</mat-label>
+          <input matInput name="3" placeholder="Username" [(ngModel)]="newUsername">
+          <mat-hint class="hint-error" *ngIf="updatedProfileErrors['UsernameError']">{{updatedProfileErrors['UsernameError']}}</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Image url</mat-label>
+          <input matInput name="4" placeholder="ImageUrl" [(ngModel)]="newImg">
+          <mat-hint class="hint-error" *ngIf="updatedProfileErrors['ImgError']">{{updatedProfileErrors['ImgError']}}</mat-hint>
+          <mat-hint class="hint-success" *ngIf="updatedProfileSuccess">{{languageService.getTranslation('Profile updated')}}</mat-hint>
+        </mat-form-field>
+        <button [disabled]="busy" style="margin: auto; display: flex;" (click)="updateProfile()" mat-flat-button
+          color="primary">{{languageService.getTranslation('Save')}}</button>
+      </form>
+      <form *ngIf="account.type == 'Classic'">
+        <mat-form-field>
+            <mat-label>{{languageService.getTranslation('Password')}}</mat-label>
+            <input matInput name="5" placeholder="Password" [(ngModel)]="changeMailPassword" [type]="hide2 ? 'password' : 'text'" required>
+            <mat-hint class="hint-error" *ngIf="updatedEmailErrors['ChangeMailPassword']">{{updatedEmailErrors['ChangeMailPassword']}}</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{languageService.getTranslation('New email')}}</mat-label>
+          <input matInput name="6" placeholder="Email" [(ngModel)]="newEmail" [formControl]="emailLogin">
+          <mat-hint class="hint-error" *ngIf="updatedEmailErrors['ChangeMailEmail']">{{updatedEmailErrors['ChangeMailEmail']}}</mat-hint>
+          <mat-hint class="hint-success" *ngIf="updatedEmailSuccess">{{languageService.getTranslation('Email updated')}}</mat-hint>
+        </mat-form-field>
+        <button [disabled]="busy" style="margin: auto; display: flex;" (click)="updateEmail()" mat-flat-button
+          color="primary">{{languageService.getTranslation('Update email')}}</button>
+      </form>
+      <form *ngIf="account.type == 'Classic'">
+        <mat-form-field>
+            <mat-label>{{languageService.getTranslation('Password')}}</mat-label>
+            <input matInput name="5" placeholder="Password" [(ngModel)]="changePasswordPassword" [type]="hide3 ? 'password' : 'text'" required>
+            <mat-hint class="hint-error" *ngIf="updatedPasswordErrors['ChangePasswordPassword']">{{updatedPasswordErrors['ChangePasswordPassword']}}</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{languageService.getTranslation('New password')}}</mat-label>
+          <input matInput name="6" placeholder="Password" [(ngModel)]="newPassword" [type]="hide ? 'password' : 'text'" required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{languageService.getTranslation('Confirm new password')}}</mat-label>
+            <input matInput name="6" placeholder="NewPassword" [(ngModel)]="newPasswordConfirm" [type]="hide4 ? 'password' : 'text'" required>
+            <mat-hint class="hint-error" *ngIf="updatedPasswordErrors['ChangePasswordNew']">{{updatedPasswordErrors['ChangePasswordNew']}}</mat-hint>
+            <mat-hint class="hint-success" *ngIf="updatedPasswordSuccess">{{languageService.getTranslation('Password updated')}}</mat-hint>
+          </mat-form-field>
+        <button [disabled]="busy" style="margin: auto; display: flex;" (click)="updatePassword()" mat-flat-button
+          color="primary">{{languageService.getTranslation('Update password')}}</button>
+      </form>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>
