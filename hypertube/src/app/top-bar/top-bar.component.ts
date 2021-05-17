@@ -13,6 +13,7 @@ export class TopBarComponent implements OnInit {
     constructor(private userService: UserService) { }
 
     ngOnInit(): void {
+        this.userService.setBody(this.body);
         if (this.userService.user) {
             this.profilePic = this.userService.user.Account.img;
             if (this.profilePic.length == 0) {

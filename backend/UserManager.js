@@ -519,7 +519,7 @@ module.exports = class UserManager {
             }
             const collection = db.collection('users');
             collection.find({
-                email: user.Account.email
+                id: user.Account.id
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
                     that.canUpdateUsername(form.newUsername, user.Account.id).then(available => {
@@ -573,7 +573,7 @@ module.exports = class UserManager {
             }
             const collection = db.collection('users');
             collection.find({
-                email: user.Account.email
+                id: user.Account.id
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
                     if (that.validEmail(form.newEmail)) {
@@ -617,7 +617,7 @@ module.exports = class UserManager {
             }
             const collection = db.collection('users');
             collection.find({
-                email: user.Account.email
+                id: user.Account.id
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
                     if (form.newPassword == form.newPasswordConfirm) {

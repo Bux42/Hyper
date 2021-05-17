@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 
@@ -87,6 +88,7 @@ import { CommentListItemComponent } from './comment-list-item/comment-list-item.
         MatInputModule,
         MatIconModule,
         MatCardModule,
+        MatSnackBarModule,
         MatTableModule,
         MatMenuModule,
         HttpClientModule,

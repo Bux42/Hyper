@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { GoogleOauthService } from './google-oauth.service';
+import { BodyComponent } from './body/body.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
     user: any = null;
+    body: any;
     constructor(private http: HttpClient, private googleOauth: GoogleOauthService) { }
 
     pingBackend() {
@@ -208,5 +210,11 @@ export class UserService {
         return (this.http.post<any>('http://localhost:3000/update-password', {
             form: form
         }, { withCredentials: true }));
+    }
+    setBody(body: BodyComponent | undefined) {
+        this.body = body;
+    }
+    toggleBodyDrawer() {
+        this.body?.toggleDrawer();
     }
 }
