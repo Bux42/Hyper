@@ -25,7 +25,7 @@ export class ResolutionPickerComponent implements OnInit {
     selectedSubtitles: string = "none";
     subtitlesSrc: any = null;
     torrents: any[] = [];
-    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) { }
+    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) {}
     
     inputChanged() {
         this.subtitlesList = [];
@@ -43,6 +43,7 @@ export class ResolutionPickerComponent implements OnInit {
                 });
             })
         } else if (this.media.tvdb_id) {
+            this.displayedColumns = ['resolution', 'seeds', 'peers', 'watch', 'state'];
             this.media.show_imdb_id = this.show_imdb_id;
             if (this.userService.user && this.userService.user.WatchHistoryShows) {
                 this.media.resume = this.userService.user.WatchHistoryShows.find((x: any) => x.tvdb_id == this.media.tvdb_id);
@@ -146,6 +147,7 @@ export class ResolutionPickerComponent implements OnInit {
                                 },
                                 panelClass: 'custom-dialog-container'
                             });
+                            this.userService.setMediaPlayerDialogRef(dialogRef);
                             dialogRef.afterClosed().subscribe(result => {
                                 console.log(this.media);
                                 this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {

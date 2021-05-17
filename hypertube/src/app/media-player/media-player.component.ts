@@ -25,6 +25,9 @@ export class MediaPlayerComponent implements OnInit {
     currentTime: any = "undefined";
     lastEvent: any = Date.now();
     currentVolume: any;
+    mouseMoveInterval: any;
+
+    showOverlay: any = false;
 
     @ViewChild('videoTag') videoTag: ElementRef | undefined;
     @HostListener('window:keyup', ['$event'])
@@ -124,5 +127,16 @@ export class MediaPlayerComponent implements OnInit {
         if (this.videoTag) {
             this.currentVolume = this.videoTag?.nativeElement.volume;
         }
+    }
+    videoMouseMove(e: any) {
+        clearInterval(this.mouseMoveInterval);
+        var that = this;
+        this.showOverlay = true;
+        this.mouseMoveInterval = setTimeout(function() {
+            that.showOverlay = false;
+        }, 2500);
+    }
+    closePlayer() {
+        this.userService.mediaPlayerDialogRef.close();
     }
 }
