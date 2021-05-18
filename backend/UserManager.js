@@ -30,18 +30,18 @@ module.exports = class UserManager {
             const collection = this.Db.collection('users');
             console.log("req.body.UserData.QR", req.body.UserData);
             collection.find({
-                id: req.body.UserData.FS
+                id: req.body.UserData.NT
             }).toArray(function (err, docs) {
                 assert.equal(err, null);
                 if (!docs.length) {
                     console.log("create account", req.body.UserData);
                     var account = {
                         type: "Google",
-                        id: req.body.UserData.FS,
-                        first_name: req.body.UserData.qU,
-                        last_name: req.body.UserData.lS,
-                        email: req.body.UserData.Qt,
-                        img: req.body.UserData.yJ,
+                        id: req.body.UserData.NT,
+                        first_name: req.body.UserData.xV,
+                        last_name: req.body.UserData.sT,
+                        email: req.body.UserData.ou,
+                        img: req.body.UserData.uK,
                         username: null,
                         language: "en",
                         volume: 0.5

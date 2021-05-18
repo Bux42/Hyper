@@ -78,17 +78,19 @@ mongoClient.connect(function (err) {
     cm = new CommentManager();
 });
 
-var clearDownloads = false;
+var clearDownloads = true;
 
 if (clearDownloads) {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
 
     torrentDir.forEach((el) => {
         if (fs.lstatSync("F:\\torrent-stream\\" + el).isDirectory()) {
-            console.log("Deleting folder: " + el);
-            fs.rmdirSync("F:\\torrent-stream\\" + el, {
-                recursive: true
-            });
+            if (el != "subtitles") {
+                console.log("Deleting folder: " + el);
+                fs.rmdirSync("F:\\torrent-stream\\" + el, {
+                    recursive: true
+                });
+            }
         } else {
             console.log("Deleting file: " + el);
             fs.unlinkSync("F:\\torrent-stream\\" + el);
@@ -169,13 +171,13 @@ app.get('/media-state', (req, res, next) => {
 app.get('/select-media', (req, res, next) => {
     console.log("/select-media", req.sessionID);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
-    console.log("req.query.magnetUrl:", req.query.magnetUrl);
+    console.log("req.query.magnetUrl:", req.query.magnetUrl, "req.query.torrentFile:", req.query.torrentFile);
     req.session.magnetUrl = req.query.magnetUrl;
     console.log("req.session.magnetUrl:", req.session.magnetUrl);
 
     if (!torrent) {
         console.log("add magnet: " + req.query.magnetUrl);
-        var torrent = torrentManager.addTorrent(req.query.magnetUrl);
+        var torrent = torrentManager.addTorrent(req.query.magnetUrl, req.query.torrentFile);
         torrent.start((mediaPath) => {
             console.log("torrent.start callback recieved", fs.existsSync(mediaPath));
             var interval = setInterval(() => {

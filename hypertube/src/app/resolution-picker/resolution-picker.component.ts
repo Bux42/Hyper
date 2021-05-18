@@ -19,6 +19,7 @@ export class ResolutionPickerComponent implements OnInit {
     busyElement: any;
     mediaStateInterval: any;
     torrentUrl: any;
+    torrentFile: any;
     resolutions: any[] = ["480p", "720p", "1080p", "2160p"];
     displayedColumns: string[] = ['resolution', 'size', 'seeds', 'peers', 'watch', 'state'];
     subtitlesList: string[] = ["none"];
@@ -115,7 +116,8 @@ export class ResolutionPickerComponent implements OnInit {
         console.log(this.media.show_imdb_id);
 
         this.torrentUrl = this.media.torrents.en ? this.media.torrents.en[el.resolution].url : this.media.torrents[el.resolution].url;
-        this.mediaService.selectMedia(this.torrentUrl, this.media._id).subscribe(data => {
+        this.torrentFile = this.media.torrents.en ? this.media.torrents.en[el.resolution].file : this.media.torrents[el.resolution].file;
+        this.mediaService.selectMedia(this.torrentUrl, this.torrentFile, this.media._id).subscribe(data => {
             console.log(data);
             this.mediaStateInterval = setInterval(() => {
                 this.mediaService.getMediaState(this.torrentUrl).subscribe(data => {
@@ -127,6 +129,9 @@ export class ResolutionPickerComponent implements OnInit {
 
                     if (data.ok) {
                         var buffer = data.progressPercent * 20;
+                        if (data.format != ".mp4") {
+                            buffer = data.progressPercent * 5;
+                        }
                         if (buffer > 100) {
                             buffer = 100;
                         }
