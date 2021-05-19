@@ -28,6 +28,7 @@ class Torrent {
         }
     }
     start(callback) {
+        console.log("Start", this.MagnetLink);
         this.Engine = torrentStream(this.MagnetLink, {
             tmp: this.TorrentFolder,
             tracker: this.Trackers.length > 0 ? true : false,
@@ -37,17 +38,24 @@ class Torrent {
         var engine = this.Engine;
         var that = this;
         this.Engine.on('ready', function () {
-            //console.log(engine);
+            console.log("engine ready", that.TorrentFile);
             that.TotalChunks = engine.torrent.pieces.length;
             engine.files.forEach(function (file) {
-                var stream = file.createReadStream();
-                    if (file.path.endsWith(".mp4") ||
-                        file.path.endsWith(".mkv") ||
-                        file.path.endsWith(".avi")) {
+                if (file.path.endsWith(".mp4") ||
+                    file.path.endsWith(".mkv") ||
+                    file.path.endsWith(".avi")) {
+                    if (that.TorrentFile == "undefined") {
+                        file.createReadStream();
+                        that.Format = file.path.substr(file.path.lastIndexOf('.') + 1);
+                        var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
+                        that.MediaPath = engine.path + "\\" + file.path;
+                    } else if (that.TorrentFile == file.path.split("\\")[1]) {
+                        file.createReadStream();
                         that.Format = file.path.substr(file.path.lastIndexOf('.') + 1);
                         var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                         that.MediaPath = engine.path + "\\" + file.path;
                     }
+                }
             });
             if (callback) {
                 callback(that.MediaPath);
@@ -64,21 +72,15 @@ class Torrent {
         });
         this.Engine.on('idle', () => {
             engine.files.forEach(function (file) {
-                if (that.TorrentFile) {
-                    if (file.path.split('\\')[1] == that.TorrentFile) {
-                        var stream = file.createReadStream();
-                        if (file.path.endsWith(".mp4") ||
-                            file.path.endsWith(".mkv") ||
-                            file.path.endsWith(".avi")) {
-                            var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
-                            that.MediaPath = engine.path + "\\" + file.path;
-                        }
-                    }
-                } else {
-                    var stream = file.createReadStream();
-                    if (file.path.endsWith(".mp4") ||
-                        file.path.endsWith(".mkv") ||
-                        file.path.endsWith(".avi")) {
+                if (file.path.endsWith(".mp4") ||
+                    file.path.endsWith(".mkv") ||
+                    file.path.endsWith(".avi")) {
+                    if (that.TorrentFile == "undefined") {
+                        that.Format = file.path.substr(file.path.lastIndexOf('.') + 1);
+                        var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
+                        that.MediaPath = engine.path + "\\" + file.path;
+                    } else if (that.TorrentFile == file.path.split("\\")[1]) {
+                        that.Format = file.path.substr(file.path.lastIndexOf('.') + 1);
                         var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                         that.MediaPath = engine.path + "\\" + file.path;
                     }

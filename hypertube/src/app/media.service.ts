@@ -30,8 +30,9 @@ export class MediaService {
             .set('mediaId', mediaId);
         return (this.http.get<any>('http://localhost:3000/select-media', { params, withCredentials: true }));
     }
-    getMediaState(magnet: any) {
+    getMediaState(magnet: any, torrentFile: any) {
         const params = new HttpParams()
+            .set('torrentFile', torrentFile)
             .set('magnetUrl', magnet);
         return (this.http.get<any>('http://localhost:3000/media-state', { params, withCredentials: true }));
     }

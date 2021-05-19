@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MediaPlayerComponent } from '../media-player/media-player.component';
 import { MediaService } from '../media.service';
@@ -9,7 +9,7 @@ import { UserService } from '../user.service';
     templateUrl: './resolution-picker.component.html',
     styleUrls: ['./resolution-picker.component.css']
 })
-export class ResolutionPickerComponent implements OnInit {
+export class ResolutionPickerComponent implements OnInit, OnDestroy {
     @Input() media: any;
     @Input() show_imdb_id: any;
     @Input() episode_number: any;
@@ -81,6 +81,9 @@ export class ResolutionPickerComponent implements OnInit {
     ngOnInit(): void {
         
     }
+    ngOnDestroy(): void {
+        this.cancelWatch(null);
+    }
     subtitleChanged(e: any) {
         if (e != "none") {
             console.log(e);
@@ -120,7 +123,7 @@ export class ResolutionPickerComponent implements OnInit {
         this.mediaService.selectMedia(this.torrentUrl, this.torrentFile, this.media._id).subscribe(data => {
             console.log(data);
             this.mediaStateInterval = setInterval(() => {
-                this.mediaService.getMediaState(this.torrentUrl).subscribe(data => {
+                this.mediaService.getMediaState(this.torrentUrl, this.torrentFile).subscribe(data => {
                     if (!this.busyElement) {
                         clearInterval(this.mediaStateInterval);
                         return;
@@ -128,9 +131,9 @@ export class ResolutionPickerComponent implements OnInit {
                     console.log(data);
 
                     if (data.ok) {
-                        var buffer = data.progressPercent * 20;
-                        if (data.format != ".mp4") {
-                            buffer = data.progressPercent * 5;
+                        var buffer = data.progressPercent * 10;
+                        if (this.torrentFile) {
+                            buffer = data.progressPercent * 3;
                         }
                         if (buffer > 100) {
                             buffer = 100;
