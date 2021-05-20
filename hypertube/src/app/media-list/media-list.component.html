@@ -1,7 +1,7 @@
 <div *ngIf="loaded">
-  <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
+  <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select" >
     <mat-label>{{languageService.getTranslation('Genre')}}</mat-label>
-    <mat-select (selectionChange)="genreChanged($event.value)" [(value)]="selectedCategory">
+    <mat-select (selectionChange)="genreChanged($event.value)" [(value)]="selectedCategory" [disabled]="!loggedIn" (click)="inputClicked()">
       <mat-option *ngFor="let category of categories[mediaCategory]" [value]="category">
         {{category}}
       </mat-option>
@@ -9,15 +9,15 @@
   </mat-form-field>
   <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
     <mat-label>{{languageService.getTranslation('Sort by')}}</mat-label>
-    <mat-select (selectionChange)="sortChanged($event.value)" [(value)]="selectedFilter">
+    <mat-select (selectionChange)="sortChanged($event.value)" [(value)]="selectedFilter" [disabled]="!loggedIn" (click)="inputClicked()">
       <mat-option *ngFor="let sortBy of sortByList" [value]="sortBy">
         {{sortBy}}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="custom-mat-form-field search-input">
-    <mat-label>{{languageService.getTranslation('Search')}}</mat-label>
-    <input matInput (input)="searchInputChanged()" type="text" [(ngModel)]="searchInput">
+  <mat-form-field class="custom-mat-form-field search-input" (click)="inputClicked()">
+    <mat-label >{{languageService.getTranslation('Search')}}</mat-label>
+    <input matInput (input)="searchInputChanged()" type="text" [(ngModel)]="searchInput" [disabled]="!loggedIn">
     <button mat-button *ngIf="searchInput" matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
       <mat-icon (click)="clearSearchInput()">close</mat-icon>
     </button>
