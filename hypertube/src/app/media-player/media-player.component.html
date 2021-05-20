@@ -13,7 +13,7 @@
       <img height="100" width="100" src="/assets/back.svg">
     </div>
   </div>
-  <video crossorigin="use-credentials" [volume]="this.currentVolume" controls
+  <video *ngIf="playerOpened" crossorigin="use-credentials" [volume]="this.currentVolume" controls
     [attr.autoplay]="media.resume ? null : true" #videoTag (loaded)="loaded($event)" (loadeddata)="loadeddata($event)"
     (progress)="progress($event)" (timeupdate)="timeupdate($event)" (volumechange)="volumeChanged($event)"
     (mousemove)="videoMouseMove($event)">

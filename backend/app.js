@@ -167,7 +167,7 @@ app.get('/media-state', (req, res, next) => {
         res.send({
             "ok": true,
             "progress": torrent.DownloadedChunks + " / " + torrent.TotalChunks,
-            "progressPercent": ((torrent.DownloadedChunks / torrent.TotalChunks) * 100),
+            "progressPercent": ((torrent.DownloadedChunks / (torrent.TotalChunks / torrent.TotalMediaFiles)) * 100),
             "format": torrent.Format,
             "size": torrent.MediaSize
         });
@@ -181,7 +181,7 @@ app.get('/select-media', (req, res, next) => {
     if (req.query.torrentFile != "undefined") {
         req.session.torrentFile = req.query.torrentFile;
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.query.torrentFile);
-        console.log("Torrent file present, torrent:", torrent);
+        console.log("Torrent file present");
     } else {
         req.session.torrentFile = undefined;
     }
@@ -216,7 +216,7 @@ app.get('/select-media', (req, res, next) => {
 
 app.get('/player-closed', (req, res, next) => {
     console.log("/player-closed", req.sessionID);
-    
+
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
     if (req.session.torrentFile != undefined) {
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.session.torrentFile);
@@ -228,7 +228,7 @@ app.get('/player-closed', (req, res, next) => {
         torrent.Idle = false;
     }
     if (userToReadStream[req.sessionID]) {
-        userToReadStream[req.sessionID].close();
+        userToReadStream[req.sessionID].emit('end');
         delete userToReadStream[req.sessionID];
     }
     req.session.torrentFile = undefined;
@@ -247,18 +247,31 @@ app.get('/watch-media', (req, res, next) => {
     }
     if (torrent) {
         console.log("Find torrent, mediaPath: ", torrent.MediaPath);
-        const stat = fs.statSync(torrent.MediaPath)
-        const fileSize = stat.size
-        const range = req.headers.range
+        const stat = fs.statSync(torrent.MediaPath);
+        const fileSize = stat.size;
+        const range = req.headers.range;
         if (range) {
             console.log("range == true");
-            const parts = range.replace(/bytes=/, "").split("-")
-            const start = parseInt(parts[0], 10)
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
             const end = parts[1] ?
                 parseInt(parts[1], 10) :
                 fileSize - 1;
+            if (start > end) {
+                start = 0;
+            }
             const chunksize = (end - start) + 1;
-            console.log("Start: " + start + " end: " + end + " chunkSize: " + chunksize);
+            console.log("Start: " + start + " end: " + end + " chunkSize: " + chunksize, "fileSize:", stat.size, "torrentFileSize:", torrent.MediaSize);
+            if (start != 0) {
+                if (userToReadStream[req.sessionID]) {
+                    userToReadStream[req.sessionID].emit('end');
+                }
+                torrent.EngineFile.createReadStream({
+                    start,
+                    end
+                });
+            }
+
             userToReadStream[req.sessionID] = fs.createReadStream(torrent.MediaPath, {
                 start,
                 end
@@ -271,14 +284,20 @@ app.get('/watch-media', (req, res, next) => {
             }
             res.writeHead(206, head);
             userToReadStream[req.sessionID].pipe(res);
+            setTimeout(() => {
+                userToReadStream[req.sessionID].emit('end');
+            }, 1000);
         } else {
             console.log("range == false");
             const head = {
                 'Content-Length': fileSize,
                 'Content-Type': 'video/mp4',
             }
-            res.writeHead(200, head)
-            fs.createReadStream(torrent.MediaPath).pipe(res)
+            res.writeHead(200, head);
+            var rs = fs.createReadStream(torrent.MediaPath).pipe(res);
+            setTimeout(() => {
+                rs.emit('end');
+            }, 500);
         }
     } else {
         console.log(req.session.magnetUrl, " torrent not found?");

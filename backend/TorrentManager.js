@@ -6,6 +6,7 @@ class Torrent {
         this.FullMagnet = magnet;
         this.MagnetLink = magnet;
         this.TorrentFile = torrentFile;
+        this.EngineFile = null;
         if (this.TorrentFile.includes("/")) {
             this.TorrentFile = this.TorrentFile.split("/")[1];
         }
@@ -19,6 +20,7 @@ class Torrent {
         this.TotalChunks = 0;
         this.DownloadedChunks = 0;
         this.Format = "Unknown";
+        this.TotalMediaFiles = 0;
 
         if (this.MagnetSplit.length > 1) {
             this.MagnetLink = this.MagnetSplit[0];
@@ -44,16 +46,21 @@ class Torrent {
                 if (file.path.endsWith(".mp4") ||
                     file.path.endsWith(".mkv") ||
                     file.path.endsWith(".avi")) {
+                    that.TotalMediaFiles++;
                     if (that.TorrentFile == "undefined") {
                         file.createReadStream();
+                        that.EngineFile = file;
                         that.Format = file.path.substr(file.path.lastIndexOf('.') + 1);
                         var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                         that.MediaPath = engine.path + "\\" + file.path;
+                        that.MediaSize = file.length;
                     } else if (that.TorrentFile == file.path.split("\\")[1]) {
                         file.createReadStream();
+                        that.EngineFile = file;
                         that.Format = file.path.substr(file.path.lastIndexOf('.') + 1);
                         var lowerPath = that.MagnetLink.split("btih:")[1].toLowerCase();
                         that.MediaPath = engine.path + "\\" + file.path;
+                        that.MediaSize = file.length;
                     }
                 }
             });
