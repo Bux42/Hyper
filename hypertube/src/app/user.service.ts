@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { GoogleOauthService } from './google-oauth.service';
+import { BodyComponent } from './body/body.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
     user: any = null;
+    body: any;
+    mediaPlayerDialogRef: any;
     constructor(private http: HttpClient, private googleOauth: GoogleOauthService) { }
 
     pingBackend() {
@@ -65,6 +68,14 @@ export class UserService {
                     date: Date.now(),
                     season_number: season_number,
                     episode_number: episode_number
+                });
+            }
+            var mediaResume = this.user.WatchHistory.find((x: any) => x.media_id == show_imdb_id);
+            if (!mediaResume) {
+                this.user.WatchHistory.push({
+                    media_id: show_imdb_id,
+                    watch_time: 0,
+                    date: Date.now()
                 });
             }
             console.log("newWH:", this.user.WatchHistory);
@@ -208,5 +219,14 @@ export class UserService {
         return (this.http.post<any>('http://localhost:3000/update-password', {
             form: form
         }, { withCredentials: true }));
+    }
+    setBody(body: BodyComponent | undefined) {
+        this.body = body;
+    }
+    setMediaPlayerDialogRef(dialogRef: any) {
+        this.mediaPlayerDialogRef = dialogRef;
+    }
+    toggleBodyDrawer() {
+        this.body?.toggleDrawer();
     }
 }

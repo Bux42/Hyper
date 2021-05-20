@@ -32,6 +32,10 @@ export class MediaListItemComponent implements OnInit {
     }
 
     mediaMouseClick() {
+        if (!this.userService.user) {
+            this.userService.toggleBodyDrawer();
+            return;
+        }
         if (this.mediaCategory == "movies") {
             const dialogRef = this.dialog.open(MediaDetailsComponent, {
                 width: '90%',

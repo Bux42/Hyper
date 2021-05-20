@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MediaPlayerComponent } from '../media-player/media-player.component';
 import { MediaService } from '../media.service';
@@ -9,7 +9,7 @@ import { UserService } from '../user.service';
     templateUrl: './resolution-picker.component.html',
     styleUrls: ['./resolution-picker.component.css']
 })
-export class ResolutionPickerComponent implements OnInit {
+export class ResolutionPickerComponent implements OnInit, OnDestroy {
     @Input() media: any;
     @Input() show_imdb_id: any;
     @Input() episode_number: any;
@@ -19,13 +19,14 @@ export class ResolutionPickerComponent implements OnInit {
     busyElement: any;
     mediaStateInterval: any;
     torrentUrl: any;
+    torrentFile: any;
     resolutions: any[] = ["480p", "720p", "1080p", "2160p"];
     displayedColumns: string[] = ['resolution', 'size', 'seeds', 'peers', 'watch', 'state'];
     subtitlesList: string[] = ["none"];
     selectedSubtitles: string = "none";
     subtitlesSrc: any = null;
     torrents: any[] = [];
-    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) { }
+    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) {}
     
     inputChanged() {
         this.subtitlesList = [];
@@ -43,6 +44,7 @@ export class ResolutionPickerComponent implements OnInit {
                 });
             })
         } else if (this.media.tvdb_id) {
+            this.displayedColumns = ['resolution', 'seeds', 'peers', 'watch', 'state'];
             this.media.show_imdb_id = this.show_imdb_id;
             if (this.userService.user && this.userService.user.WatchHistoryShows) {
                 this.media.resume = this.userService.user.WatchHistoryShows.find((x: any) => x.tvdb_id == this.media.tvdb_id);
@@ -79,6 +81,9 @@ export class ResolutionPickerComponent implements OnInit {
     ngOnInit(): void {
         
     }
+    ngOnDestroy(): void {
+        this.cancelWatch(null);
+    }
     subtitleChanged(e: any) {
         if (e != "none") {
             console.log(e);
@@ -114,10 +119,11 @@ export class ResolutionPickerComponent implements OnInit {
         console.log(this.media.show_imdb_id);
 
         this.torrentUrl = this.media.torrents.en ? this.media.torrents.en[el.resolution].url : this.media.torrents[el.resolution].url;
-        this.mediaService.selectMedia(this.torrentUrl, this.media._id).subscribe(data => {
+        this.torrentFile = this.media.torrents.en ? this.media.torrents.en[el.resolution].file : this.media.torrents[el.resolution].file;
+        this.mediaService.selectMedia(this.torrentUrl, this.torrentFile, this.media._id).subscribe(data => {
             console.log(data);
             this.mediaStateInterval = setInterval(() => {
-                this.mediaService.getMediaState(this.torrentUrl).subscribe(data => {
+                this.mediaService.getMediaState(this.torrentUrl, this.torrentFile).subscribe(data => {
                     if (!this.busyElement) {
                         clearInterval(this.mediaStateInterval);
                         return;
@@ -125,7 +131,10 @@ export class ResolutionPickerComponent implements OnInit {
                     console.log(data);
 
                     if (data.ok) {
-                        var buffer = data.progressPercent * 20;
+                        var buffer = data.progressPercent * 10;
+                        if (this.torrentFile) {
+                            buffer = data.progressPercent * 2;
+                        }
                         if (buffer > 100) {
                             buffer = 100;
                         }
@@ -146,6 +155,7 @@ export class ResolutionPickerComponent implements OnInit {
                                 },
                                 panelClass: 'custom-dialog-container'
                             });
+                            this.userService.setMediaPlayerDialogRef(dialogRef);
                             dialogRef.afterClosed().subscribe(result => {
                                 console.log(this.media);
                                 this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {

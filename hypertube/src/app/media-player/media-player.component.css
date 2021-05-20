@@ -26,3 +26,12 @@ video {
   left: 50vw;
   top: 100px;
 }
+
+.video-controls-overlay {
+    left: 0;
+    top: 0;
+    opacity: 0.8;
+    position: absolute;
+    z-index: 300000;
+    cursor: pointer;
+}

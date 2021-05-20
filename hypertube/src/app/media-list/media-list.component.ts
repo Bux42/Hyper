@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '../language.service';
 import { MediaService } from '../media.service';
 import { UserService } from '../user.service';
@@ -11,6 +12,7 @@ import { UserService } from '../user.service';
 export class MediaListComponent implements OnInit {
     @Input() mediaCategory: any;
     @Input() media: any;
+    loggedIn: any = false;
     tv_sh_error: any = "";
     searchInput: any = "";
     searchTimeout: any;
@@ -25,9 +27,10 @@ export class MediaListComponent implements OnInit {
     selectedFilter: string = "Trending";
     selectedCategory: string = "All";
 
-    constructor(private mediaService: MediaService, public languageService: LanguageService) { }
+    constructor(private _snackBar: MatSnackBar, private userService: UserService, private mediaService: MediaService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
+        this.loggedIn = this.userService.user != null;
         this.selectedCategory = this.classicCategories[0];
         this.tv_sh_error = "";
         this.mediaService.fetchMedia(this.getFilters()).subscribe(data => {
@@ -40,6 +43,11 @@ export class MediaListComponent implements OnInit {
             error => {
                 console.log(error);
             });
+    }
+    inputClicked() {
+        if (!this.loggedIn) {
+            this.userService.toggleBodyDrawer();
+        }
     }
     searchInputChanged() {
         clearInterval(this.searchTimeout);

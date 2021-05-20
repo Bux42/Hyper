@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MediaService } from '../media.service';
 import { ResumeDialogComponent } from '../resume-dialog/resume-dialog.component';
@@ -13,7 +13,7 @@ export interface DialogData {
     templateUrl: './media-player.component.html',
     styleUrls: ['./media-player.component.css']
 })
-export class MediaPlayerComponent implements OnInit {
+export class MediaPlayerComponent implements OnInit, OnDestroy {
     @Input() media: any;
     @Input() subtitlesSrc: any;
     @Input() season_number: any;
@@ -21,10 +21,14 @@ export class MediaPlayerComponent implements OnInit {
 
     i: any = 0;
     showStats: any = false;
+    playerOpened: any = true;
     timeStamp: any = "undefined";
     currentTime: any = "undefined";
     lastEvent: any = Date.now();
     currentVolume: any;
+    mouseMoveInterval: any;
+
+    showOverlay: any = false;
 
     @ViewChild('videoTag') videoTag: ElementRef | undefined;
     @HostListener('window:keyup', ['$event'])
@@ -41,6 +45,9 @@ export class MediaPlayerComponent implements OnInit {
         if (this.userService.user) {
             this.currentVolume = this.userService.user.Account.volume;
         }
+    }
+    ngOnDestroy(): void {
+        this.playerOpened = false;
     }
 
     ngOnInit(): void {
@@ -124,5 +131,16 @@ export class MediaPlayerComponent implements OnInit {
         if (this.videoTag) {
             this.currentVolume = this.videoTag?.nativeElement.volume;
         }
+    }
+    videoMouseMove(e: any) {
+        clearInterval(this.mouseMoveInterval);
+        var that = this;
+        this.showOverlay = true;
+        this.mouseMoveInterval = setTimeout(function() {
+            that.showOverlay = false;
+        }, 2500);
+    }
+    closePlayer() {
+        this.userService.mediaPlayerDialogRef.close();
     }
 }

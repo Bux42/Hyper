@@ -23,14 +23,16 @@ export class MediaService {
             .set('mediaId', filters.MediaId);
         return (this.http.get<any>('http://localhost:3000/media-episodes', { params, withCredentials: true }));
     }
-    selectMedia(magnet: any, mediaId: any) {
+    selectMedia(magnet: any, torrentFile: any, mediaId: any) {
         const params = new HttpParams()
             .set('magnetUrl', magnet)
+            .set('torrentFile', torrentFile)
             .set('mediaId', mediaId);
         return (this.http.get<any>('http://localhost:3000/select-media', { params, withCredentials: true }));
     }
-    getMediaState(magnet: any) {
+    getMediaState(magnet: any, torrentFile: any) {
         const params = new HttpParams()
+            .set('torrentFile', torrentFile)
             .set('magnetUrl', magnet);
         return (this.http.get<any>('http://localhost:3000/media-state', { params, withCredentials: true }));
     }

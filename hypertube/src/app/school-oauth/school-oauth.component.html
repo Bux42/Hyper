@@ -1,11 +1,8 @@
-<a
-  href="https://api.intra.42.fr/oauth/authorize?client_id=419b5a8b20bcd909cf60fb0d28679f3857d1e7682904cc169b8ec7be6ed72412&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fschool-oauth&response_type=code">
-  <div class="custom-oauth-button">
-    <div class="custom-oauth-icon" style="background-color: black;">
-      <img src="/assets/42.svg" style="width: 80%; display: flex; margin: auto">
-    </div>
-    <div class="custom-oauth-text">
-      Sign in with 42
-    </div>
+<div (click)="schoolOauthClicked()" class="custom-oauth-button">
+  <div class="custom-oauth-icon" style="background-color: black;">
+    <img src="/assets/42.svg" style="width: 80%; display: flex; margin: auto">
   </div>
-</a>
+  <div class="custom-oauth-text">
+    Sign in with 42
+  </div>
+</div>
