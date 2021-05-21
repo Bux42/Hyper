@@ -1,4 +1,4 @@
-<div class="container" style="position: relative; overflow: hidden; margin: auto; padding: 10px; border: 1px solid #151515;">
+<div class="container description" >
   <img src="{{media.images.fanart}}" style=" position: absolute; left: 0; top: 0; width: 100%; height: auto; opacity: 0.2;">
   <div class="media-poster left">
     <img style="width: 100px; border-radius: 5%; margin-right: 10px;" src="{{media.images.banner}}">
@@ -9,12 +9,12 @@
     </button>
     <h1 class="media-title">{{media.title}}</h1>
     <div class="media-infos-min">
-      <pre>{{media.year}}  •  {{media.runtime}} min  •  {{mediaGenres}}</pre>
+      <div style="font-weight: 600;">{{media.year}}  •  {{media.runtime}} min  •  {{mediaGenres}}</div>
     </div>
     <p>{{media.synopsis}}</p>
   </div>
 </div>
-<div class="container" style="background-color:#151515">
+<div class="container peerDetails" >
   <section class="episode-details" style="width: 100%; margin:auto">
     <mat-card class="custom-mat-card" style="height: auto;">
       <app-resolution-picker [media]="media" [mediaCategory]="mediaCategory">

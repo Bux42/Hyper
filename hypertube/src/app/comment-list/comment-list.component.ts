@@ -26,8 +26,8 @@ export class CommentListComponent implements OnInit {
         console.log(this.comment);
         this.commentError = "";
         if (this.comment.length > 0) {
-            if (this.comment.length > 100) {
-                this.commentError = "100 characters max";
+            if (this.comment.length > 500) {
+                this.commentError = "500 characters max";
             } else {
                 this.userService.postComment(this.comment, this.imdb_id).subscribe((result: any) => {
                     console.log(result);

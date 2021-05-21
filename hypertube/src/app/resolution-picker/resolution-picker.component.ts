@@ -111,6 +111,7 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
         this.busy = true;
         this.busyElement = el;
         el.state = "Check magnet";
+        el.buff = "0";
         
         if (this.media.tvdb_id) {
             this.media.show_imdb_id = this.show_imdb_id;
@@ -139,6 +140,7 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                             buffer = 100;
                         }
                         el.state = "Buffer: " + buffer.toFixed(2) + "%";
+                        el.buff = buffer.toFixed(2);
                         if (buffer == 100) {
                             el.state = "Ready";
                             this.busy = false;

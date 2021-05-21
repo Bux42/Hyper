@@ -29,6 +29,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { MediaListComponent } from './media-list/media-list.component';
 import { MediaListItemComponent } from './media-list-item/media-list-item.component';
@@ -48,6 +49,7 @@ import { WatchHistoryComponent } from './watch-history/watch-history.component';
 import { ResumeDialogComponent } from './resume-dialog/resume-dialog.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentListItemComponent } from './comment-list-item/comment-list-item.component';
+
 
 @NgModule({
     declarations: [
@@ -82,6 +84,7 @@ import { CommentListItemComponent } from './comment-list-item/comment-list-item.
         MatButtonModule,
         MatChipsModule,
         MatGridListModule,
+        MatProgressBarModule,
         MatProgressSpinnerModule,
         MatDividerModule,
         MatSelectModule,

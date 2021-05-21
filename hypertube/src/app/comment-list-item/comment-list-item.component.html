@@ -1,12 +1,14 @@
-<section class="left" style="width: 10%">
+<section class="left" >
   <div  [style]="'background-image: url(' + profilePicUrl + ');'" class="school-profile-pic">
   </div>
 </section>
-<section style="width: 40%">
-  <div class="comment-date">
-    {{comment.dateStr}} by {{username}}
+<section style="width: 100%; margin-bottom: 10px;">
+  <div style="display: flex; border-bottom: 1px solid #292929;">
+    <div style="word-wrap: break-word; width: 100%;">
+      {{comment.comment}}
+      <div class="comment-date" style="font-weight: 400; font-size: 12px; font-style: italic;">
+        {{comment.dateStr}} by {{username}}
+      </div>
+    </div>
   </div>
-  <p>
-    {{comment.comment}}
-  </p>
 </section>
