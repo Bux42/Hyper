@@ -32,8 +32,10 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
         this.subtitlesList = [];
         this.torrents = [];
 
-        console.log(this.media, this.mediaCategory, this.season_number, this.episode_number);
         if (this.media.imdb_id) {
+            if (this.userService.user && this.userService.user.WatchHistory) {
+                this.media.resume = this.userService.user.WatchHistory.find((x: any) => x.media_id == this.media.imdb_id);
+            }
             this.mediaService.fetchMediaSubtitlesImdb({
                 imdb_id: this.media.imdb_id,
                 media_category: this.mediaCategory
@@ -70,8 +72,8 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                     "state": "Unknown"
                 });
             }
-
         });
+        console.log(this.media, this.mediaCategory, this.season_number, this.episode_number);
     }
 
     ngOnChanges(changes: any) {
