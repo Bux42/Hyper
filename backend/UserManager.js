@@ -435,10 +435,18 @@ module.exports = class UserManager {
                 id: user_id
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
-                    resolve({
-                        username: docs[0].username,
-                        profilePic: docs[0].img,
-                        type: docs[0].type
+                    const commentCollection = db.collection('comments');
+                    commentCollection.find({
+                        user_id: user_id
+                    }).toArray(function(err, docs2) {
+                        resolve({
+                            username: docs[0].username,
+                            first_name: docs[0].first_name,
+                            last_name: docs[0].lastName,
+                            profilePic: docs[0].img,
+                            commentCount: docs2.length,
+                            type: docs[0].type
+                        });
                     });
                 } else {
                     resolve(null);
