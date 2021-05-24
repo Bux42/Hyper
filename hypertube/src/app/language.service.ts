@@ -19,6 +19,22 @@ export class LanguageService {
         this.translated["Movies"]["en"] = "Movies";
         this.translated["Movies"]["fr"] = "Films";
 
+        this.translated["Leave a comment"] = {};
+        this.translated["Leave a comment"]["en"] = "Leave a comment";
+        this.translated["Leave a comment"]["fr"] = "Laisser un commentaire";
+
+        this.translated["Quality"] = {};
+        this.translated["Quality"]["en"] = "Quality";
+        this.translated["Quality"]["fr"] = "Résolution";
+
+        this.translated["Size"] = {};
+        this.translated["Size"]["en"] = "Size";
+        this.translated["Size"]["fr"] = "Taille";
+        
+        this.translated["Post comment"] = {};
+        this.translated["Post comment"]["en"] = "Post comment";
+        this.translated["Post comment"]["fr"] = "Publier commentaire";
+
         this.translated["Series"] = {};
         this.translated["Series"]["en"] = "Series";
         this.translated["Series"]["fr"] = "Series";

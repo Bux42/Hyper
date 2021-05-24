@@ -14,12 +14,16 @@ export class TopBarComponent implements OnInit {
 
     ngOnInit(): void {
         this.userService.setBody(this.body);
+        this.userService.setTopBar(this);
         if (this.userService.user) {
             this.profilePic = this.userService.user.Account.img;
             if (this.profilePic.length == 0) {
                 this.profilePic = "/assets/alphabet/" + this.userService.user.Account.first_name.toUpperCase()[0] + ".png";
             }
         }
+    }
+    profileImgUpdate() {
+        this.profilePic = this.userService.user.Account.img;
     }
     emitDrawerToggle() {
         this.body?.toggleDrawer();

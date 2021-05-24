@@ -25,21 +25,15 @@ export class WatchHistoryComponent implements OnInit {
                 this.loadHistory = false;
             });
         });
-        /*
-        watchHistoryClean.forEach((wh: any) => {
-            this.mediaService.fetchMovie(wh.media_id).subscribe(res => {
-                this.history.push({"Type": "movies", "Details": wh, "Data": res});
-            })
-        })
-        this.userService.user.WatchHistoryShows.forEach((whs: any) => {
-            this.mediaService.fetchShow(whs.imdb_id).subscribe(res => {
-                var checkShow = this.history.find((x: any) => x.Data.imdb_id == whs.imdb_id);
-                if (!checkShow) {
-                    this.history.push({"Type": "shows", "Details": whs, "Data": res});
-                }
+    }
+    updateWatchHistory() {
+        this.fetchMovies().then(result => {
+            this.fetchShows().then(result => {
+                this.history.sort((a,b) => (a.Details.date < b.Details.date) ? 1 : ((b.Details.date < a.Details.date) ? -1 : 0));
+                console.log(this.history);
+                this.loadHistory = false;
             });
         });
-        */
     }
 
     async fetchShows() {

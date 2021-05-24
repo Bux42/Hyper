@@ -2,13 +2,13 @@
   <h4>{{comments.length}} comments</h4>
   <div *ngIf="userService.user != null">
     <mat-form-field appearance="fill" style="width: 100%;margin-bottom: 15px; height: auto; background: #1b1b1b; border-radius: 4px;">
-      <mat-label>Leave a comment</mat-label>
+      <mat-label>{{languageService.getTranslation('Leave a comment')}}</mat-label>
       <textarea [(ngModel)]="comment" matInput style="height: 80px; background: #1c1c1c;" maxlength="500"></textarea>
       <mat-hint class="hint-error" *ngIf="commentError.length > 0">{{commentError}}</mat-hint>
     </mat-form-field>
     <button (click)="postComment()" mat-stroked-button
             style="background-color: #673ab7; display: flex;
-            margin: auto;margin-bottom: 15px;">Post comment</button>
+            margin: auto;margin-bottom: 15px;">{{languageService.getTranslation('Post comment')}}</button>
   </div>
 </div>
 <div class="comment-list" *ngIf="!loadingComments">

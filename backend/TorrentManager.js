@@ -21,6 +21,7 @@ class Torrent {
         this.DownloadedChunks = 0;
         this.Format = "Unknown";
         this.TotalMediaFiles = 0;
+        this.RealSeeds = -1;
 
         if (this.MagnetSplit.length > 1) {
             this.MagnetLink = this.MagnetSplit[0];
@@ -40,6 +41,7 @@ class Torrent {
         var engine = this.Engine;
         var that = this;
         this.Engine.on('ready', function () {
+            that.RealSeeds = Object.keys(engine.swarm._peers).length;
             console.log("engine ready", that.TorrentFile);
             that.TotalChunks = engine.torrent.pieces.length;
             engine.files.forEach(function (file) {
@@ -73,6 +75,7 @@ class Torrent {
         //Solar.Opposites.S01.COMPLETE.720p.HULU.WEBRip.x264-GalaxyTV[TGx]/Solar.Opposites.S01E01.720p.HULU.WEBRip.x264-GalaxyTV.mkv
 
         this.Engine.on('download', (index) => {
+            that.RealSeeds = Object.keys(engine.swarm._peers).length;
             that.DownloadedChunks++;
             console.log(`Engine downloading chunk: [${index}] ${that.DownloadedChunks} / ${that.TotalChunks}`);
             //console.log('Engine swarm downloaded : ', engine.swarm.downloaded)

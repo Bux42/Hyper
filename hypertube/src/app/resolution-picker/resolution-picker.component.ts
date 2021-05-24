@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { LanguageService } from '../language.service';
 import { MediaPlayerComponent } from '../media-player/media-player.component';
 import { MediaService } from '../media.service';
 import { UserService } from '../user.service';
@@ -26,7 +27,7 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
     selectedSubtitles: string = "none";
     subtitlesSrc: any = null;
     torrents: any[] = [];
-    constructor(public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) {}
+    constructor(public languageService: LanguageService, public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) {}
     
     inputChanged() {
         this.subtitlesList = [];

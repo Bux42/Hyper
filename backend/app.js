@@ -170,7 +170,8 @@ app.get('/media-state', (req, res, next) => {
             "progress": torrent.DownloadedChunks + " / " + torrent.TotalChunks,
             "progressPercent": ((torrent.DownloadedChunks / (torrent.TotalChunks / torrent.TotalMediaFiles)) * 100),
             "format": torrent.Format,
-            "size": torrent.MediaSize
+            "size": torrent.MediaSize,
+            "realSeeds": torrent.RealSeeds
         });
     }
 });

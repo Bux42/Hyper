@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { GoogleOauthService } from './google-oauth.service';
 import { BodyComponent } from './body/body.component';
+import { TopBarComponent } from './top-bar/top-bar.component';
+import { WatchHistoryComponent } from './watch-history/watch-history.component';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +11,8 @@ import { BodyComponent } from './body/body.component';
 export class UserService {
     user: any = null;
     body: any;
+    topBar: any;
+    watchHistory: any;
     mediaPlayerDialogRef: any;
     constructor(private http: HttpClient, private googleOauth: GoogleOauthService) { }
 
@@ -228,5 +232,17 @@ export class UserService {
     }
     toggleBodyDrawer() {
         this.body?.toggleDrawer();
+    }
+    setTopBar(topBar: TopBarComponent | undefined) {
+        this.topBar = topBar;
+    }
+    updateTopBarImg() {
+        this.topBar?.profileImgUpdate();
+    }
+    setWatchHistory(watchHistory: WatchHistoryComponent | undefined) {
+        this.watchHistory = watchHistory;
+    }
+    updateWatchHistory() {
+        this.watchHistory?.updateWatchHistory();
     }
 }

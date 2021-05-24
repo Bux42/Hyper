@@ -1,7 +1,7 @@
 <div *ngIf="userInfos != null">
   <section class="left">
     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-      <img height="40" width="40" [src]="userInfos.profilePic" />
+      <img [src]="userInfos.profilePic" class="school-profile-pic" />
     </button>
     <mat-menu #menu="matMenu" class="mat-menu-custom">
       <mat-card class="mat-card-custom">

@@ -91,6 +91,7 @@ export class UserPanelComponent implements OnInit {
                 this.userService.user.Account.last_name = result.UpdatedProfile.last_name;
                 this.userService.user.Account.username = result.UpdatedProfile.username;
                 this.userService.user.Account.img = result.UpdatedProfile.img;
+                this.userService.updateTopBarImg();
                 this.account = this.userService.user.Account;
             } else {
                 this.updatedProfileSuccess = false;
