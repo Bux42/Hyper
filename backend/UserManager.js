@@ -442,7 +442,7 @@ module.exports = class UserManager {
                         resolve({
                             username: docs[0].username,
                             first_name: docs[0].first_name,
-                            last_name: docs[0].lastName,
+                            last_name: docs[0].last_name,
                             profilePic: docs[0].img,
                             commentCount: docs2.length,
                             type: docs[0].type

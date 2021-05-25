@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LanguageService } from '../language.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { UserService } from '../user.service';
 export class CommentListItemComponent implements OnInit {
     @Input() comment: any;
     userInfos: any = null;
-    constructor(private userService: UserService) { }
+    constructor(public languageService: LanguageService, private userService: UserService) { }
 
     ngOnInit(): void {
         this.comment.dateStr = this.userService.getRelativeTime(this.comment.date);

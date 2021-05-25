@@ -150,6 +150,10 @@ export class LanguageService {
         this.translated["Confirm"] = {};
         this.translated["Confirm"]["en"] = "Confirm";
         this.translated["Confirm"]["fr"] = "Confirmer";
+
+        this.translated["comments"] = {};
+        this.translated["comments"]["en"] = "comments";
+        this.translated["comments"]["fr"] = "commentaires";
     }
     getTranslation(word: string) {
         return (this.translated[word][this.language]);

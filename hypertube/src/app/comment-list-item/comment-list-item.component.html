@@ -4,13 +4,19 @@
       <img [src]="userInfos.profilePic" class="school-profile-pic" />
     </button>
     <mat-menu #menu="matMenu" class="mat-menu-custom">
-      <mat-card class="mat-card-custom">
+      <mat-card class="mat-card-custom" style="background-color: #292929;">
         <img height="40" width="40" [src]="userInfos.profilePic" />
         <div class="first-last-name">
-            {{userInfos.first_name}} {{userInfos.last_name}}
+            {{languageService.getTranslation('First Name')}}: {{userInfos.first_name}}
+        </div>
+        <div class="first-last-name">
+            {{languageService.getTranslation('Last Name')}}: {{userInfos.last_name}}
+        </div>
+        <div class="username">
+            {{languageService.getTranslation('Username')}}: {{userInfos.username}}
         </div>
         <div class="user-comment-count">
-            {{userInfos.commentCount}} comments
+            {{userInfos.commentCount}} {{languageService.getTranslation('comments')}}
         </div>
       </mat-card>
     </mat-menu>
