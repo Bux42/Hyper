@@ -81,6 +81,8 @@ export class UserService {
                     watch_time: 0,
                     date: Date.now()
                 });
+            } else {
+                mediaResume.date = Date.now();
             }
             console.log("newWH:", this.user.WatchHistory);
         }

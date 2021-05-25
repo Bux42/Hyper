@@ -44,6 +44,8 @@ export class WatchHistoryComponent implements OnInit {
                 var checkShow = this.history.find((x: any) => x.Data.imdb_id == result.imdb_id);
                 if (!checkShow) {
                     this.history.push(historyItem);
+                } else {
+                    console.log(checkShow, historyItem);
                 }
             })
         });

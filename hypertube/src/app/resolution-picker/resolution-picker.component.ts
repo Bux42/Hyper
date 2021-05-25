@@ -136,9 +136,6 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
 
                     if (data.ok) {
                         var buffer = data.progressPercent * 10;
-                        if (this.torrentFile) {
-                            buffer = data.progressPercent * 2;
-                        }
                         if (buffer > 100) {
                             buffer = 100;
                         }

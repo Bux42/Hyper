@@ -97,8 +97,18 @@ module.exports = class UserManager {
                     col.insertOne({
                         user_id: req.session.user.Account.id,
                         media_id: req.query.show_imdb_id,
-                        watch_time: 0
+                        watch_time: 0,
+                        date: Date.now()
                     });
+                } else {
+                    var newvalues = {
+                        $set: {
+                            date: Date.now()
+                        }
+                    };
+                    collection.updateOne({
+                        _id: docs[0]._id
+                    }, newvalues);
                 }
             });
             const collection = this.Db.collection('watch_history_shows');

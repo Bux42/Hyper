@@ -154,6 +154,14 @@ export class LanguageService {
         this.translated["comments"] = {};
         this.translated["comments"]["en"] = "comments";
         this.translated["comments"]["fr"] = "commentaires";
+        
+        this.translated["Season"] = {};
+        this.translated["Season"]["en"] = "Season";
+        this.translated["Season"]["fr"] = "Saison";
+
+        this.translated["Episode"] = {};
+        this.translated["Episode"]["en"] = "Episode";
+        this.translated["Episode"]["fr"] = "Episode";
     }
     getTranslation(word: string) {
         return (this.translated[word][this.language]);
