@@ -136,6 +136,10 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
 
                     if (data.ok) {
                         var buffer = data.progressPercent * 10;
+                        if (this.mediaCategory != "movies") {
+                            console.log("not a movie");
+                            buffer = data.progressPercent * 5;
+                        }
                         if (buffer > 100) {
                             buffer = 100;
                         }

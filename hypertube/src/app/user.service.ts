@@ -147,7 +147,6 @@ export class UserService {
         var watchHistoryClean = this.user.WatchHistoryShows.filter((wh: any) => wh.imdb_id == imdb_id);
 
         if (watchHistoryClean.length > 0) {
-            console.log(watchHistoryClean);
             var lastestEpisode = watchHistoryClean[0];
             for (var i = 0; i < watchHistoryClean.length; i++) {
                 if (watchHistoryClean[i].season_number > lastestEpisode.season_number) {
