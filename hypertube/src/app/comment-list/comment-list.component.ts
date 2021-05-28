@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LanguageService } from '../language.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class CommentListComponent implements OnInit {
     loadingComments: any = true;
     comment: any = "";
     commentError: any = "";
-    constructor(public userService: UserService) { }
+    constructor(public userService: UserService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
         console.log(this.imdb_id);

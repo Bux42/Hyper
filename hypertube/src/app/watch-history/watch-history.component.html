@@ -9,11 +9,24 @@
     </div>
     <mat-grid-list *ngIf="!loadHistory" cols="2" rowHeight="1:1">
       <mat-grid-tile *ngFor="let h of history"
-        style="background-image: url({{h.Data.images.fanart}}); background-size: cover; background-position: center; cursor: pointer;"
+        style="background-image: url({{h.Data.images.fanart}}); background-size: cover; background-position: center; cursor: pointer; vertical-align: middle;"
         (click)="historyItemClicked(h)">
-        <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align: center;">
-          {{h.Data.title}}
-        </h3>
+        <div *ngIf="!h.Details.season_number">
+          <h2 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+            {{h.Data.title}}
+          </h2>
+        </div>
+        <div *ngIf="h.Details.season_number">
+          <h2 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+            {{h.Data.title}}
+          </h2>
+          <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+            {{languageService.getTranslation("Season")}} {{h.Details.season_number}}
+          </h3>
+          <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+            {{languageService.getTranslation("Episode")}} {{h.Details.episode_number}}
+          </h3>
+        </div>
       </mat-grid-tile>
     </mat-grid-list>
   </div>

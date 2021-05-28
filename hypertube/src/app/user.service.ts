@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { GoogleOauthService } from './google-oauth.service';
 import { BodyComponent } from './body/body.component';
+import { TopBarComponent } from './top-bar/top-bar.component';
+import { WatchHistoryComponent } from './watch-history/watch-history.component';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +11,8 @@ import { BodyComponent } from './body/body.component';
 export class UserService {
     user: any = null;
     body: any;
+    topBar: any;
+    watchHistory: any;
     mediaPlayerDialogRef: any;
     constructor(private http: HttpClient, private googleOauth: GoogleOauthService) { }
 
@@ -77,6 +81,8 @@ export class UserService {
                     watch_time: 0,
                     date: Date.now()
                 });
+            } else {
+                mediaResume.date = Date.now();
             }
             console.log("newWH:", this.user.WatchHistory);
         }
@@ -141,7 +147,6 @@ export class UserService {
         var watchHistoryClean = this.user.WatchHistoryShows.filter((wh: any) => wh.imdb_id == imdb_id);
 
         if (watchHistoryClean.length > 0) {
-            console.log(watchHistoryClean);
             var lastestEpisode = watchHistoryClean[0];
             for (var i = 0; i < watchHistoryClean.length; i++) {
                 if (watchHistoryClean[i].season_number > lastestEpisode.season_number) {
@@ -228,5 +233,17 @@ export class UserService {
     }
     toggleBodyDrawer() {
         this.body?.toggleDrawer();
+    }
+    setTopBar(topBar: TopBarComponent | undefined) {
+        this.topBar = topBar;
+    }
+    updateTopBarImg() {
+        this.topBar?.profileImgUpdate();
+    }
+    setWatchHistory(watchHistory: WatchHistoryComponent | undefined) {
+        this.watchHistory = watchHistory;
+    }
+    updateWatchHistory() {
+        this.watchHistory?.updateWatchHistory();
     }
 }

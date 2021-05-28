@@ -1,5 +1,5 @@
 <div class="subtitles">
-  Subtitles : 
+    {{languageService.getTranslation('Subtitles')}} : 
   <mat-button-toggle-group style="flex-wrap: wrap;" name="fontStyle" aria-label="Font Style">
     <mat-button-toggle *ngFor="let sub of subtitlesList" value="{{sub}}" (click)="subtitleChanged(sub)">
         <img height="32" width="32" [src]="'/assets/flags/' + sub + '.svg'">
@@ -8,11 +8,11 @@
 </div>
 <table mat-table [dataSource]="torrents" class="mat-elevation-z8 mat-elevation-custom">
   <ng-container matColumnDef="resolution">
-    <th mat-header-cell *matHeaderCellDef class="xSmall"> Quality </th>
+    <th mat-header-cell *matHeaderCellDef class="xSmall">{{languageService.getTranslation('Quality')}}</th>
     <td mat-cell *matCellDef="let element" class="xSmall"> {{element.resolution}} </td>
   </ng-container>
   <ng-container matColumnDef="size" *ngIf="!media.tvdb_id">
-    <th mat-header-cell *matHeaderCellDef class="hideMobile"> Size </th>
+    <th mat-header-cell *matHeaderCellDef class="hideMobile">{{languageService.getTranslation('Size')}}</th>
     <td mat-cell *matCellDef="let element" class="hideMobile"> {{element.size}} </td>
   </ng-container>
   <ng-container matColumnDef="seeds">

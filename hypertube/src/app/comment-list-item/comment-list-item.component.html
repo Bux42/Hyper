@@ -1,14 +1,34 @@
-<section class="left" >
-  <div  [style]="'background-image: url(' + profilePicUrl + ');'" class="school-profile-pic">
-  </div>
-</section>
-<section style="width: 100%; margin-bottom: 10px;">
-  <div style="display: flex; border-bottom: 1px solid #292929;">
-    <div style="word-wrap: break-word; width: 100%;">
-      {{comment.comment}}
-      <div class="comment-date" style="font-weight: 400; font-size: 12px; font-style: italic;">
-        {{comment.dateStr}} by {{username}}
+<div *ngIf="userInfos != null">
+  <section class="left">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <img [src]="userInfos.profilePic" class="school-profile-pic" />
+    </button>
+    <mat-menu #menu="matMenu" class="mat-menu-custom">
+      <mat-card class="mat-card-custom" style="background-color: #292929;">
+        <img height="40" width="40" [src]="userInfos.profilePic" />
+        <div class="first-last-name">
+            {{languageService.getTranslation('First Name')}}: {{userInfos.first_name}}
+        </div>
+        <div class="first-last-name">
+            {{languageService.getTranslation('Last Name')}}: {{userInfos.last_name}}
+        </div>
+        <div class="username">
+            {{languageService.getTranslation('Username')}}: {{userInfos.username}}
+        </div>
+        <div class="user-comment-count">
+            {{userInfos.commentCount}} {{languageService.getTranslation('comments')}}
+        </div>
+      </mat-card>
+    </mat-menu>
+  </section>
+  <section style="width: 100%; margin-bottom: 10px;">
+    <div style="display: flex; border-bottom: 1px solid #292929;">
+      <div style="word-wrap: break-word; width: 100%;">
+        {{comment.comment}}
+        <div class="comment-date" style="font-weight: 400; font-size: 12px; font-style: italic;">
+          {{comment.dateStr}} by {{userInfos.username}}
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>

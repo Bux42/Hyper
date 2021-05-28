@@ -1,22 +1,26 @@
 .comment-container {
-    background-color: #333333;
-    height: 45px;
+  background-color: #333333;
+  height: 45px;
 }
 
 .left {
-    float: left;
-    width: 5%;
+  float: left;
+  width: 5%;
 }
 
 .school-profile-pic {
-    margin: auto;
-    cursor: pointer;
-    height: 40px;
-    width: 40px;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: 50% 50%;
-    border-radius: 50%;
+  margin: auto;
+  cursor: pointer;
+  height: 40px;
+  width: 40px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: 50% 50%;
+  border-radius: 50%;
+}
+
+::ng-deep .mat-menu-content {
+  background-color: #333333;
 }
 
 /* 
@@ -25,78 +29,80 @@
 */
 
 @media (min-width: 1281px) {
-  
-    /* CSS */
-    
-  }
-  
-  /* 
+
+  /* CSS */
+
+}
+
+/* 
     ##Device = Laptops, Desktops
     ##Screen = B/w 1025px to 1280px
   */
-  
-  @media (min-width: 1025px) and (max-width: 1280px) {
-    
-    /* CSS */
-    
-  }
-  
-  /* 
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+
+  /* CSS */
+
+}
+
+/* 
     ##Device = Tablets, Ipads (portrait)
     ##Screen = B/w 768px to 1024px
   */
-  
-  @media (min-width: 768px) and (max-width: 1024px) {
-    
-    /* CSS */
-    .left {
-        display: contents;
-    }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  /* CSS */
+  .left {
+    display: contents;
   }
-  
-  /* 
+}
+
+/* 
     ##Device = Tablets, Ipads (landscape)
     ##Screen = B/w 768px to 1024px
   */
-  
-  @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-    
-    /* CSS */
-    .left {
-        display: contents;
-    }
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+
+  /* CSS */
+  .left {
+    display: contents;
   }
-  
-  /* 
+}
+
+/* 
     ##Device = Low Resolution Tablets, Mobiles (Landscape)
     ##Screen = B/w 481px to 767px
   */
-  
-  @media (min-width: 481px) and (max-width: 767px) {
-    
-    /* CSS */
-    .left {
-        display: contents;
-    }
+
+@media (min-width: 481px) and (max-width: 767px) {
+
+  /* CSS */
+  .left {
+    display: contents;
   }
-  
-  /* 
+}
+
+/* 
     ##Device = Most of the Smartphones Mobiles (Portrait)
     ##Screen = B/w 320px to 479px
   */
-  
-  @media (min-width: 320px) and (max-width: 480px) {
-      /* CSS */
-      .left {
-        display: contents;
-      }
-    
+
+@media (min-width: 320px) and (max-width: 480px) {
+
+  /* CSS */
+  .left {
+    display: contents;
   }
 
-  @media (max-width: 320px) {
-    /* CSS */
-    .left {
-      display: contents;
-    }
-  
+}
+
+@media (max-width: 320px) {
+
+  /* CSS */
+  .left {
+    display: contents;
   }
+
+}

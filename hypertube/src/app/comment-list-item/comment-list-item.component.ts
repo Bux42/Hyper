@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LanguageService } from '../language.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -8,15 +9,14 @@ import { UserService } from '../user.service';
 })
 export class CommentListItemComponent implements OnInit {
     @Input() comment: any;
-    profilePicUrl: any = "";
-    username: any = "";
-    constructor(private userService: UserService) { }
+    userInfos: any = null;
+    constructor(public languageService: LanguageService, private userService: UserService) { }
 
     ngOnInit(): void {
         this.comment.dateStr = this.userService.getRelativeTime(this.comment.date);
         this.userService.getUserInfos(this.comment.user_id).subscribe(result => {
-            this.profilePicUrl = result.profilePic;
-            this.username = result.username;
+            console.log("UserInfos:", result);
+            this.userInfos = result;
         });
     }
 

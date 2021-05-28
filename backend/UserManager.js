@@ -97,8 +97,18 @@ module.exports = class UserManager {
                     col.insertOne({
                         user_id: req.session.user.Account.id,
                         media_id: req.query.show_imdb_id,
-                        watch_time: 0
+                        watch_time: 0,
+                        date: Date.now()
                     });
+                } else {
+                    var newvalues = {
+                        $set: {
+                            date: Date.now()
+                        }
+                    };
+                    collection.updateOne({
+                        _id: docs[0]._id
+                    }, newvalues);
                 }
             });
             const collection = this.Db.collection('watch_history_shows');
@@ -435,10 +445,18 @@ module.exports = class UserManager {
                 id: user_id
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
-                    resolve({
-                        username: docs[0].username,
-                        profilePic: docs[0].img,
-                        type: docs[0].type
+                    const commentCollection = db.collection('comments');
+                    commentCollection.find({
+                        user_id: user_id
+                    }).toArray(function(err, docs2) {
+                        resolve({
+                            username: docs[0].username,
+                            first_name: docs[0].first_name,
+                            last_name: docs[0].last_name,
+                            profilePic: docs[0].img,
+                            commentCount: docs2.length,
+                            type: docs[0].type
+                        });
                     });
                 } else {
                     resolve(null);

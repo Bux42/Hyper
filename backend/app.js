@@ -170,7 +170,8 @@ app.get('/media-state', (req, res, next) => {
             "progress": torrent.DownloadedChunks + " / " + torrent.TotalChunks,
             "progressPercent": ((torrent.DownloadedChunks / (torrent.TotalChunks / torrent.TotalMediaFiles)) * 100),
             "format": torrent.Format,
-            "size": torrent.MediaSize
+            "size": torrent.MediaSize,
+            "realSeeds": torrent.RealSeeds
         });
     }
 });
@@ -178,6 +179,7 @@ app.get('/media-state', (req, res, next) => {
 app.get('/select-media', (req, res, next) => {
     console.log("/select-media", req.sessionID);
 
+    console.log(req.query);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
     if (req.query.torrentFile != "undefined") {
         req.session.torrentFile = req.query.torrentFile;
@@ -188,7 +190,7 @@ app.get('/select-media', (req, res, next) => {
     }
     console.log("req.query.magnetUrl:", req.query.magnetUrl, "req.query.torrentFile:", req.query.torrentFile);
     req.session.magnetUrl = req.query.magnetUrl;
-    console.log("req.session.magnetUrl:", req.session.magnetUrl);
+    console.log("torrent:", !torrent ? "null" : "exists");
 
     if (!torrent) {
         console.log("add magnet: " + req.query.magnetUrl);
@@ -231,6 +233,7 @@ app.get('/player-closed', (req, res, next) => {
     if (userToReadStream[req.sessionID]) {
         userToReadStream[req.sessionID].emit('end');
         delete userToReadStream[req.sessionID];
+        console.log("userToReadStream[req.sessionID].emit('end');");
     }
     req.session.torrentFile = undefined;
     res.send({
@@ -269,12 +272,12 @@ app.get('/watch-media', (req, res, next) => {
                 'Content-Type': 'video/mp4'
             });
             if (torrent.Idle) {
-                var stream = fs.createReadStream(torrent.MediaPath, { start: range.start, end: range.end });//torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
-                console.log("stream.pipe(res) 1");
+                var stream = fs.createReadStream(torrent.MediaPath, { start: range.start, end: range.end });
+                console.log("stream.pipe(res) 1", torrent.MediaPath);
                 stream.pipe(res);
             } else {
                 var stream = torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
-                console.log("stream.pipe(res) 2");
+                console.log("stream.pipe(res) 2", torrent.EngineFile);
                 stream.pipe(res);
             }
             

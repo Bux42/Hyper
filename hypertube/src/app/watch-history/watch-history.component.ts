@@ -25,28 +25,43 @@ export class WatchHistoryComponent implements OnInit {
                 this.loadHistory = false;
             });
         });
-        /*
-        watchHistoryClean.forEach((wh: any) => {
-            this.mediaService.fetchMovie(wh.media_id).subscribe(res => {
-                this.history.push({"Type": "movies", "Details": wh, "Data": res});
-            })
-        })
-        this.userService.user.WatchHistoryShows.forEach((whs: any) => {
-            this.mediaService.fetchShow(whs.imdb_id).subscribe(res => {
-                var checkShow = this.history.find((x: any) => x.Data.imdb_id == whs.imdb_id);
-                if (!checkShow) {
-                    this.history.push({"Type": "shows", "Details": whs, "Data": res});
-                }
+    }
+    updateWatchHistory() {
+        this.fetchMovies().then(result => {
+            this.fetchShows().then(result => {
+                this.history.sort((a,b) => (a.Details.date < b.Details.date) ? 1 : ((b.Details.date < a.Details.date) ? -1 : 0));
+                console.log(this.history);
+                this.loadHistory = false;
             });
         });
-        */
     }
 
     async fetchShows() {
-        const promises = this.userService.user.WatchHistoryShows.map((wh: any) => this.fetchShowPromise(wh.imdb_id));
+        var watchHistoryShowsClean: any[] = [];
+        this.userService.user.WatchHistoryShows.forEach((whs: any) => {
+            var whsi = watchHistoryShowsClean.find(x => x.imdb_id == whs.imdb_id);
+            if (!whsi) {
+                watchHistoryShowsClean.push(whs);
+            } else {
+                let season1 = parseInt(whsi.season_number);
+                let season2 = parseInt(whs.season_number);
+
+                let episode1 = parseInt(whsi.episode_number);
+                let episode2 = parseInt(whs.episode_number);
+
+                if (season1 < season2) {
+                    watchHistoryShowsClean.splice(watchHistoryShowsClean.indexOf(whsi, 1));
+                    watchHistoryShowsClean.push(whs);
+                } else if (season1 == season2 && episode1 < episode2) {
+                    watchHistoryShowsClean.splice(watchHistoryShowsClean.indexOf(whsi, 1));
+                    watchHistoryShowsClean.push(whs);
+                }
+            }
+        });
+        const promises = watchHistoryShowsClean.map((wh: any) => this.fetchShowPromise(wh.imdb_id));
         return await Promise.all(promises).then((results: any) => {
             results.forEach((result: any) => {
-                var historyItem = {"Type": "shows", "Details": this.userService.user.WatchHistoryShows.find((x: any) => x.imdb_id == result.imdb_id), "Data": result};
+                var historyItem = {"Type": "shows", "Details": watchHistoryShowsClean.find((x: any) => x.imdb_id == result.imdb_id), "Data": result};
                 var checkShow = this.history.find((x: any) => x.Data.imdb_id == result.imdb_id);
                 if (!checkShow) {
                     this.history.push(historyItem);
