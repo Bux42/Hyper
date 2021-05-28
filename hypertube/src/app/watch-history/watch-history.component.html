@@ -12,20 +12,20 @@
         style="background-image: url({{h.Data.images.fanart}}); background-size: cover; background-position: center; cursor: pointer; vertical-align: middle;"
         (click)="historyItemClicked(h)">
         <div *ngIf="!h.Details.season_number">
-          <h2 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+          <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align:center; margin: 0px; word-wrap: break-word;">
             {{h.Data.title}}
-          </h2>
+          </h3>
         </div>
         <div *ngIf="h.Details.season_number">
-          <h2 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+          <h4 style="color: white; text-shadow: 1px 1px 5px black; text-align:center; margin: 0px; word-wrap: break-word;">
             {{h.Data.title}}
-          </h2>
-          <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+          </h4>
+          <h4 style="color: white; text-shadow: 1px 1px 5px black; text-align:center; margin: 0px; word-wrap: break-word;">
             {{languageService.getTranslation("Season")}} {{h.Details.season_number}}
-          </h3>
-          <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align:center;">
+          </h4>
+          <h4 style="color: white; text-shadow: 1px 1px 5px black; text-align:center; margin: 0px; word-wrap: break-word;">
             {{languageService.getTranslation("Episode")}} {{h.Details.episode_number}}
-          </h3>
+          </h4>
         </div>
       </mat-grid-tile>
     </mat-grid-list>
