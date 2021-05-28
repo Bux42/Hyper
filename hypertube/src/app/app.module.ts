@@ -49,6 +49,7 @@ import { WatchHistoryComponent } from './watch-history/watch-history.component';
 import { ResumeDialogComponent } from './resume-dialog/resume-dialog.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentListItemComponent } from './comment-list-item/comment-list-item.component';
+import { ResolutionSeriesDialogComponent } from './resolution-series-dialog/resolution-series-dialog.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { CommentListItemComponent } from './comment-list-item/comment-list-item.
         WatchHistoryComponent,
         ResumeDialogComponent,
         CommentListComponent,
-        CommentListItemComponent
+        CommentListItemComponent,
+        ResolutionSeriesDialogComponent
     ],
     imports: [
         MatTabsModule,

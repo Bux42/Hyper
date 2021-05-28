@@ -1,7 +1,14 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MediaService } from '../media.service';
+import { ResolutionSeriesDialogComponent } from '../resolution-series-dialog/resolution-series-dialog.component';
 import { UserService } from '../user.service';
+
+export interface DialogData {
+    selectedSeason: any;
+    selectedEpisode: any;
+    episodeNumber: any;
+}
 
 @Component({
     selector: 'app-media-details-episodes',
@@ -18,7 +25,8 @@ export class MediaDetailsEpisodesComponent implements OnInit {
     mediaEpisodes: any;
     seasons: any = [];
     mediaGenres: any[] = [];
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<MediaDetailsEpisodesComponent>, private mediaService: MediaService, private userService: UserService) { }
+
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public dialogRef: MatDialogRef<MediaDetailsEpisodesComponent>, private mediaService: MediaService, private userService: UserService) { }
 
     ngOnInit(): void {
         this.media = this.data.media;
@@ -80,5 +88,19 @@ export class MediaDetailsEpisodesComponent implements OnInit {
         this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.title == episode);
         console.log("selectedEpisode:", episode, this.selectedEpisode);
         this.episodeNumber = this.selectedEpisode.episode;
+
+        const dialogRef = this.dialog.open(ResolutionSeriesDialogComponent, {
+            width: 'auto',
+            data: { 
+                selectedEpisode: this.selectedEpisode, 
+                media: this.data.media, 
+                episodeNumber: this.episodeNumber, 
+                selectedSeason : this.selectedSeason.season
+            },
+            panelClass: 'custom-dialog-container'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
     }
 }

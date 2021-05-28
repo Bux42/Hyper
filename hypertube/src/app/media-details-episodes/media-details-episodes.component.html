@@ -19,7 +19,7 @@
   </div>
 </div>
 <div class="container" *ngIf="selectedSeason" style="background-color:#151515">
-  <section class="left" style="width: 10%">
+  <section class="left" style="width: 15%">
     <div class="custom-title" >
       Saisons
     </div>
@@ -29,7 +29,7 @@
       </mat-button-toggle>
     </mat-button-toggle-group>
   </section>
-  <section style="width: 40%" >
+  <section style="width: 85%" >
     <div class="custom-title">
       Episodes
     </div>
@@ -41,17 +41,6 @@
         <div class="episode-title">{{episode.title}} </div>
       </mat-button-toggle>
     </mat-button-toggle-group>
-  </section>
-  <section class="episode-details" style="width: 50%">
-    <div class="custom-title">
-      Resume
-    </div>
-    <mat-card class="custom-mat-card" style="height: auto;">
-      <h1>{{selectedEpisode.title}}</h1>
-      <p>{{selectedEpisode.overview}}</p>
-      <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id" [episode_number]="episodeNumber" [season_number]="selectedSeason.season">
-      </app-resolution-picker>
-    </mat-card>
   </section>
 </div>
 <div class="load-spinner" *ngIf="!mediaEpisodes">

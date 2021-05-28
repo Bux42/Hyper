@@ -1,17 +1,17 @@
 <mat-card style="background-color: #131212;">
   <div class="custom-title">
-    {{languageService.getTranslation('You did see')}}
+    {{languageService.getTranslation('History')}}
   </div>
   <hr style="width:80%">
   <div style="overflow-y:auto; height: 275px;">
     <div class="centered">
       <mat-spinner *ngIf="loadHistory"></mat-spinner>
     </div>
-    <mat-grid-list *ngIf="!loadHistory" cols="1" rowHeight="2:1">
+    <mat-grid-list *ngIf="!loadHistory" cols="2" rowHeight="1:1">
       <mat-grid-tile *ngFor="let h of history"
         style="background-image: url({{h.Data.images.fanart}}); background-size: cover; background-position: center; cursor: pointer;"
         (click)="historyItemClicked(h)">
-        <h3 style="color: white; text-shadow: 1px 1px 5px black;">
+        <h3 style="color: white; text-shadow: 1px 1px 5px black; text-align: center;">
           {{h.Data.title}}
         </h3>
       </mat-grid-tile>

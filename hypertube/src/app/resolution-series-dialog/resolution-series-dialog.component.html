@@ -1,0 +1,9 @@
+<mat-card class="custom-mat-card" style="height: auto;">
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+        <mat-icon class="close-icon" color="warn">close</mat-icon>
+    </button>
+    <h1>{{selectedEpisode.title}}</h1>
+    <p>{{selectedEpisode.overview}}</p>
+    <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id" [episode_number]="episodeNumber" [season_number]="selectedSeason.season">
+    </app-resolution-picker>
+</mat-card>

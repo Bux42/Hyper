@@ -9,8 +9,8 @@
     </div>
   </div>
   <div (click)="closePlayer()" class="video-controls-overlay" *ngIf="showOverlay">
-    <div>
-      <img height="100" width="100" src="/assets/back.svg">
+    <div style="color: white;">
+      <mat-icon>exit_to_app</mat-icon>
     </div>
   </div>
   <video *ngIf="playerOpened" crossorigin="use-credentials" [volume]="this.currentVolume" controls

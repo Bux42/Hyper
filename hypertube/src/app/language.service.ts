@@ -111,9 +111,9 @@ export class LanguageService {
         this.translated["Prefered Language"]["en"] = "Prefered Language";
         this.translated["Prefered Language"]["fr"] = "Language";
 
-        this.translated["You did see"] = {};
-        this.translated["You did see"]["en"] = "You did see";
-        this.translated["You did see"]["fr"] = "Votre historique";
+        this.translated["History"] = {};
+        this.translated["History"]["en"] = "History";
+        this.translated["History"]["fr"] = "Votre historique";
 
         this.translated["Logout"] = {};
         this.translated["Logout"]["en"] = "Logout";

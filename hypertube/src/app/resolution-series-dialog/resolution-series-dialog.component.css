@@ -1,0 +1,15 @@
+.close-button{
+    float: right;
+    top: -8px;
+    right: -15px;
+    display: flex;
+    position:absolute;
+}
+  
+.close-icon {
+transition: 1s ease-in-out;
+}
+
+.close-icon:hover {
+transform: rotate(180deg);
+}
