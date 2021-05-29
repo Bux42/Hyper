@@ -52,6 +52,12 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log(this.media, this.subtitlesSrc);
+        if (this.media.episode) {
+            this.episode_number = this.media.episode.toString();
+        }
+        if (this.media.season) {
+            this.season_number = this.media.season.toString();
+        }
         if (this.media.resume) {
             var resumeTime = this.mediaService.watchTimeToString(this.media.resume.watch_time);
             const dialogRef = this.dialog.open(ResumeDialogComponent, {

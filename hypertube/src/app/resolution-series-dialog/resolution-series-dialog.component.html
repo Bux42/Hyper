@@ -2,6 +2,7 @@
     <button mat-icon-button class="close-button" [mat-dialog-close]="true">
         <mat-icon class="close-icon" color="warn">close</mat-icon>
     </button>
+    <h2>({{media.title}}) {{languageService.getTranslation('Season')}} {{selectedSeason}} episode {{episodeNumber}}</h2>
     <h1>{{selectedEpisode.title}}</h1>
     <p>{{selectedEpisode.overview}}</p>
     <app-resolution-picker [media]="selectedEpisode" [show_imdb_id]="media.imdb_id" [episode_number]="episodeNumber" [season_number]="selectedSeason.season">

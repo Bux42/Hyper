@@ -85,6 +85,7 @@ export class UserService {
                 mediaResume.date = Date.now();
             }
             console.log("newWH:", this.user.WatchHistory);
+            this.updateWatchHistory();
         }
         const params = new HttpParams()
             .set('tvdb_id', tvdb_id)
@@ -112,6 +113,7 @@ export class UserService {
                 });
             }
             console.log("newWH:", this.user.WatchHistory);
+            this.updateWatchHistory();
         }
         const params = new HttpParams()
             .set('mediaId', media_id)

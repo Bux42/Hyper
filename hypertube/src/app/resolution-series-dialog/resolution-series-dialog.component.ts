@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { LanguageService } from '../language.service';
 
 export interface DialogData {
   selectedEpisode: any;
@@ -20,7 +21,7 @@ export class ResolutionSeriesDialogComponent {
   episodeNumber : any;
   selectedSeason : any;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog) { 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public languageService: LanguageService) { 
 
       console.log(data);
       this.selectedEpisode = data.selectedEpisode, 
