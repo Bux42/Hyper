@@ -37,7 +37,7 @@ export class MediaListComponent implements OnInit {
             this.mediaItems = data;
             this.loaded = true;
             if (data == null) {
-                this.tv_sh_error = "tv-v2.api-fetch.sh unreachable";
+                this.tv_sh_error = "API https://popcorn-ru.tk/ unreachable";
             }
         },
             error => {

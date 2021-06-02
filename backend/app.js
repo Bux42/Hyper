@@ -31,13 +31,6 @@ if (fs.existsSync(".env.json")) {
     exit();
 }
 
-if (!settings) {
-    console.log("settings is null, exit");
-    exit();
-} else {
-    console.log(settings);
-}
-
 const app = express();
 const port = 3000;
 
@@ -71,23 +64,66 @@ const mongoClient = new MongoClient(mongodbUrl, {
     useUnifiedTopology: true
 });
 
+function deleteOldMedia() {
+    var torrentDir = fs.readdirSync("F:\\torrent-stream");
 
-mongoClient.connect(function (err) {
-    assert.equal(null, err);
-    console.log('Connected successfully to server');
-    db = mongoClient.db(dbName);
-    um = new UserManager(db, settings);
-    mm = new MailManager(settings);
-    cm = new CommentManager();
+    torrentDir.forEach((el) => {
+        var torrentDir = fs.lstatSync("F:\\torrent-stream\\" + el);
+        var lastWatched = Date.parse(torrentDir.atime);
+        if (torrentDir.isDirectory()) {
+            if (el != "subtitles" && Date.now() - lastWatched > 2629800000) { //  > 1 mois
+                console.log("Deleting folder: " + el);
+                fs.rmdirSync("F:\\torrent-stream\\" + el, {
+                    recursive: true
+                });
+            }
+        } else if (Date.now() - lastWatched > 2629800000) {
+            console.log("Deleting file: " + el);
+            fs.unlinkSync("F:\\torrent-stream\\" + el);
+        }
+    });
+}
+
+function checkDb() {
+    console.log("Hypertube init, checking database")
+    return new Promise(resolve => {
+        mongoClient.connect(function (err) {
+            if (!err) {
+                assert.equal(null, err);
+                db = mongoClient.db(dbName);
+                um = new UserManager(db, settings);
+                mm = new MailManager(settings);
+                cm = new CommentManager();
+                resolve(null);
+            } else {
+                resolve(err);
+            }
+        });
+    });
+}
+
+checkDb().then(mongoError => {
+    if (mongoError) {
+        console.error("Database Error, check mongo service: ", mongoError);
+        exit();
+    } else {
+        console.log('Connected successfully to server');
+        app.listen(port, () => {
+            console.log(`Hypertube listening at http://localhost:${port}`)
+        });
+        setInterval(() => {
+            deleteOldMedia();
+        }, 3600000);
+    }
 });
 
 var clearDownloads = false;
 
 if (clearDownloads) {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
-
     torrentDir.forEach((el) => {
-        if (fs.lstatSync("F:\\torrent-stream\\" + el).isDirectory()) {
+        var torrentDir = fs.lstatSync("F:\\torrent-stream\\" + el);
+        if (torrentDir.isDirectory()) {
             if (el != "subtitles") {
                 console.log("Deleting folder: " + el);
                 fs.rmdirSync("F:\\torrent-stream\\" + el, {
@@ -101,19 +137,12 @@ if (clearDownloads) {
     });
 }
 
-app.listen(port, () => {
-    console.log(`Hypertube listening at http://localhost:${port}`)
-});
-
 app.get("/ping", (req, res, next) => {
     console.log("/ping req.session.user", req.session.user, req.sessionID);
-
     res.send({
         "userSession": req.session.user
     });
 });
-
-var missingImgs = [];
 
 app.get('/media-list', (req, res, next) => {
     mediaApi.getMedia(req.query).then(data => {

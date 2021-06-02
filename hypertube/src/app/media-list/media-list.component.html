@@ -37,4 +37,7 @@
   <div *ngIf="tv_sh_error.length > 0" class="tv-sh-error">
     {{tv_sh_error}}
   </div>
+  <button (click)="searchInputChanged()" mat-stroked-button *ngIf="tv_sh_error.length > 0">
+      Retry
+  </button>
 </div>
