@@ -153,6 +153,8 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                                 width: '70vh',
                                 height: '70vh',
                                 data: {
+                                    torrentUrl: this.torrentUrl,
+                                    torrentFile: this.torrentFile,
                                     media: this.media,
                                     selectedResolution: el.resolution,
                                     subtitles: this.subtitlesSrc,

@@ -162,7 +162,8 @@ app.get('/media-state', (req, res, next) => {
     }
     if (!torrent) {
         res.send({
-            "ok": false
+            "ok": false,
+            "Error": "Torrent not found"
         });
     } else {
         res.send({
@@ -231,9 +232,9 @@ app.get('/player-closed', (req, res, next) => {
         torrent.Idle = false;
     }
     if (userToReadStream[req.sessionID]) {
-        userToReadStream[req.sessionID].emit('end');
+        userToReadStream[req.sessionID].destroy();
         delete userToReadStream[req.sessionID];
-        console.log("userToReadStream[req.sessionID].emit('end');");
+        console.error("userToReadStream[req.sessionID].emit('end');");
     }
     req.session.torrentFile = undefined;
     res.send({
@@ -243,8 +244,7 @@ app.get('/player-closed', (req, res, next) => {
 
 app.get('/watch-media', (req, res, next) => {
     console.log("/watch-media", req.sessionID);
-    console.log(req.headers.range);
-    console.log("magnetUrl:", req.session.magnetUrl, "torrentFile", req.session.torrentFile);
+    console.log("torrentFile", req.session.torrentFile);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.session.magnetUrl);
     if (req.session.torrentFile != undefined) {
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.session.torrentFile);
@@ -280,10 +280,10 @@ app.get('/watch-media', (req, res, next) => {
                 console.log("stream.pipe(res) 2", torrent.EngineFile);
                 stream.pipe(res);
             }
-            
         } else {
-            console.log("EngineFile.createReadStream().pipe(res)");
-            torrent.EngineFile.createReadStream().pipe(res);
+            console.log(torrent.EngineFile, ".createReadStream().pipe(res)");
+            var stream = torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
+            stream.pipe(res);
         }
     } else {
         console.log(req.session.magnetUrl, " torrent not found?");

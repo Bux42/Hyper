@@ -18,6 +18,8 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
     @Input() subtitlesSrc: any;
     @Input() season_number: any;
     @Input() episode_number: any;
+    torrentUrl: any = null;
+    torrentFile: any = null;
 
     i: any = 0;
     showStats: any = false;
@@ -42,6 +44,9 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
         this.season_number = data.season_number;
         this.episode_number = data.episode_number;
         this.currentVolume = 0.5;
+        this.torrentUrl = data.torrentUrl;
+        this.torrentFile = data.torrentFile;
+        console.log("this.torrentUrl:", this.torrentUrl);
         if (this.userService.user) {
             this.currentVolume = this.userService.user.Account.volume;
         }

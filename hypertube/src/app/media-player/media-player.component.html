@@ -13,11 +13,11 @@
       <mat-icon>exit_to_app</mat-icon>
     </div>
   </div>
-  <video *ngIf="playerOpened" crossorigin="use-credentials" [volume]="this.currentVolume" controls
-    [attr.autoplay]="media.resume ? null : true" #videoTag (loaded)="loaded($event)" (loadeddata)="loadeddata($event)"
+  <video crossorigin="use-credentials" [volume]="this.currentVolume" controls
+     #videoTag (loaded)="loaded($event)" (loadeddata)="loadeddata($event)"
     (progress)="progress($event)" (timeupdate)="timeupdate($event)" (volumechange)="volumeChanged($event)"
     (mousemove)="videoMouseMove($event)">
-    <source src="http://localhost:3000/watch-media" type="video/mp4">
+    <source src="http://localhost:3000/watch-media?torrentUrl={{torrentUrl}}&torrentFile={{torrentFile}}" type="video/mp4">
     <track *ngIf="subtitlesSrc != null" [src]="'http://localhost:3000/get-vtt?path=' + subtitlesSrc" default>
   </video>
 </div>
