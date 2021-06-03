@@ -15,10 +15,9 @@ export class UsernameFormComponent implements OnInit {
     constructor(private userService: UserService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
-        console.log(this.user);
+        
     }
     usernameInputChanged() {
-        console.log(this.usernameInput);
         if (this.validUsername(this.usernameInput)) {
             this.usernameError = "";
         }
@@ -40,7 +39,6 @@ export class UsernameFormComponent implements OnInit {
         this.busy = true;
         this.userService.checkUsername(this.usernameInput).subscribe(checkUsernameResult => {
             this.busy = false;
-            console.log(checkUsernameResult);
             if (checkUsernameResult.Available) {
                 this.usernameError = "";
                 this.userService.setUsername(this.usernameInput).subscribe(usernameSet => {

@@ -16,22 +16,18 @@ export class CommentListComponent implements OnInit {
     constructor(public userService: UserService, public languageService: LanguageService) { }
 
     ngOnInit(): void {
-        console.log(this.imdb_id);
         this.userService.getComments(this.imdb_id).subscribe((result: any) => {
-            console.log(result);
             this.comments = result;
             this.loadingComments = false;
         });
     }
     postComment() {
-        console.log(this.comment);
         this.commentError = "";
         if (this.comment.length > 0) {
             if (this.comment.length > 500) {
                 this.commentError = "500 characters max";
             } else {
                 this.userService.postComment(this.comment, this.imdb_id).subscribe((result: any) => {
-                    console.log(result);
                     if (!result.Error) {
                         this.comment = "";
                         this.comments.unshift(result.Comment);

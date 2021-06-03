@@ -12,7 +12,6 @@ class Torrent {
         }
         this.Trackers = [];
         this.MagnetSplit = this.FullMagnet.split("&tr=");
-        console.log(this.MagnetLink);
         this.Downloaded = false;
         this.MediaPath = null;
         this.MediaSize = 0;
@@ -31,7 +30,6 @@ class Torrent {
         }
     }
     start(callback) {
-        console.log("Start", this.MagnetLink);
         this.Engine = torrentStream(this.MagnetLink, {
             tmp: this.TorrentFolder,
             tracker: this.Trackers.length > 0 ? true : false,
@@ -42,7 +40,7 @@ class Torrent {
         var that = this;
         this.Engine.on('ready', function () {
             that.RealSeeds = Object.keys(engine.swarm._peers).length;
-            console.log("engine ready", that.TorrentFile);
+            console.log("Engine ready", that.TorrentFile);
             that.TotalChunks = engine.torrent.pieces.length;
             engine.files.forEach(function (file) {
                 if (file.path.endsWith(".mp4") ||
@@ -71,14 +69,11 @@ class Torrent {
                 callback = null;
             }
         });
-        //Solar.Opposites.S01.COMPLETE.720p.HULU.WEBRip.x264-GalaxyTV[TGx]\Solar.Opposites.S01E01.720p.HULU.WEBRip.x264-GalaxyTV.mkv
-        //Solar.Opposites.S01.COMPLETE.720p.HULU.WEBRip.x264-GalaxyTV[TGx]/Solar.Opposites.S01E01.720p.HULU.WEBRip.x264-GalaxyTV.mkv
 
         this.Engine.on('download', (index) => {
             that.RealSeeds = Object.keys(engine.swarm._peers).length;
             that.DownloadedChunks++;
             console.log(`Engine downloading chunk: [${index}] ${that.DownloadedChunks} / ${that.TotalChunks}`);
-            //console.log('Engine swarm downloaded : ', engine.swarm.downloaded)
         });
         this.Engine.on('idle', () => {
             engine.files.forEach(function (file) {
@@ -96,7 +91,7 @@ class Torrent {
                     }
                 }
             });
-            console.log("engine idle", this.MediaPath, callback);
+            console.log("Engine idle", this.MediaPath, callback);
             that.DownloadedChunks = that.TotalChunks;
             that.Idle = true;
             engine.destroy();

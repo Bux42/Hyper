@@ -7,7 +7,6 @@ module.exports = class UserManager {
     constructor(settings) {
         this.GmailUsername = settings.GmailUsername;
         this.GmailPassword = settings.GmailPassword;
-        //this.sendPasswordRecovery("virgile.desvaux@gmail.com");
     }
     async sendPasswordRecovery(email, db) {
         var transporter = nodemailer.createTransport({

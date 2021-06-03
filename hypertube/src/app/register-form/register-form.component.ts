@@ -66,7 +66,6 @@ export class RegisterFormComponent implements OnInit {
             password1: this.password1,
             password2: this.password2,
         }).subscribe((result) => {
-            console.log(result);
             if (result.Error) {
                 if (result.Error.usernameError) {
                     this.usernameError = result.Error.usernameError;
@@ -107,7 +106,6 @@ export class RegisterFormComponent implements OnInit {
                     window.location.reload();
                 }, 500);
             }
-            console.log(result);
         })
     }
     firstNameInputChanged() {
@@ -205,12 +203,9 @@ export class RegisterFormComponent implements OnInit {
                 this.emailRecoverySuccess = true;
                 this.emailRecoveryError = "";
             }
-            console.log(result);
         });
-        console.log(this.emailRecovery);
     }
     checkRecoveryCode() {
-        console.log(this.recoveryCode);
         this.userService.checkRecoveryCode({
             "email": this.emailRecovery,
             "code": this.recoveryCode
@@ -225,7 +220,6 @@ export class RegisterFormComponent implements OnInit {
         });
     }
     newPasswordInputChanged() {
-        console.log(this.newPassword);
         var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,20}$/;
         if (this.newPassword.length < 8) {
             this.newPasswordError = "Password too short";
@@ -247,7 +241,6 @@ export class RegisterFormComponent implements OnInit {
             "email": this.emailRecovery,
             "password": this.newPassword
         }).subscribe(result => {
-            console.log(result);
             if (result.Error) {
                 this.changePasswordError = result.Error;
             } else {

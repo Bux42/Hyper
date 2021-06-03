@@ -22,8 +22,6 @@ export class ResolutionSeriesDialogComponent {
   selectedSeason : any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public languageService: LanguageService) { 
-
-      console.log(data);
       this.selectedEpisode = data.selectedEpisode, 
       this.media = data.media, 
       this.episodeNumber = data.episodeNumber, 
@@ -37,7 +35,6 @@ export class ResolutionSeriesDialogComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       this.episodeNumber = result;
     });
   }

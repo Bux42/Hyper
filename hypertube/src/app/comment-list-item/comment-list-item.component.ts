@@ -15,7 +15,6 @@ export class CommentListItemComponent implements OnInit {
     ngOnInit(): void {
         this.comment.dateStr = this.userService.getRelativeTime(this.comment.date);
         this.userService.getUserInfos(this.comment.user_id).subscribe(result => {
-            console.log("UserInfos:", result);
             this.userInfos = result;
         });
     }

@@ -86,7 +86,6 @@ export class MediaDetailsEpisodesComponent implements OnInit {
     }
     selectEpisode(episode: any) {
         this.selectedEpisode = this.selectedSeason.episodes.find((x: any) => x.title == episode);
-        console.log("selectedEpisode:", episode, this.selectedEpisode);
         this.episodeNumber = this.selectedEpisode.episode;
 
         const dialogRef = this.dialog.open(ResolutionSeriesDialogComponent, {
@@ -100,7 +99,6 @@ export class MediaDetailsEpisodesComponent implements OnInit {
             panelClass: 'custom-dialog-container'
         });
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
         });
     }
 }

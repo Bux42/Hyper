@@ -19,10 +19,8 @@ export class MediaDetailsComponent implements OnInit {
         this.media = this.data.media;
         this.mediaCategory = this.data.mediaCategory;
         this.mediaGenres = this.media.genres.join(" / ");
-        console.log(this.media, this.mediaCategory);
     }
     ngMouseMove(): void {
         this.count += 1;
-        console.log(this.count);
     }
 }

@@ -75,7 +75,6 @@ export class UserPanelComponent implements OnInit {
         });
     }
     updateProfile() {
-        console.log(this.newLastName, this.newFirstName, this.newUsername, this.newImg);
         this.busy = true;
         this.userService.updateProfile({
             newLastName: this.newLastName,
@@ -99,7 +98,6 @@ export class UserPanelComponent implements OnInit {
         })
     }
     updateEmail() {
-        console.log(this.changeMailPassword, this.newEmail);
         this.busy = true;
         this.userService.updateEmail({
             changeMailPassword: this.changeMailPassword,
@@ -117,14 +115,12 @@ export class UserPanelComponent implements OnInit {
         })
     }
     updatePassword() {
-        console.log(this.changePasswordPassword, this.newPassword, this.newPasswordConfirm);
         this.busy = true;
         this.userService.updatePassword({
             changePasswordPassword: this.changePasswordPassword,
             newPassword: this.newPassword,
             newPasswordConfirm: this.newPasswordConfirm
         }).subscribe(result => {
-            console.log(result);
             this.busy = false;
             this.updatedPasswordErrors = result.Errors;
             if (result.UpdatedProfile) {

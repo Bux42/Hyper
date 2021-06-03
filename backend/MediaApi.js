@@ -20,42 +20,28 @@ module.exports = class MediaApi {
         });
         this.OpenSubtitles.login()
             .then(res => {
-                //console.log(res.token);
-                //console.log(res.userinfo);
-                //tt0317219
             })
             .catch(err => {
                 console.log(err);
             });
         this.CachedMedia = {};
         this.CachedMediaEpisodes = {};
-        /*
-        this.OpenSubtitles.search({imdbid: "tt0317219"}).then(subs => {
-            console.log(subs);
-        });*/
     }
     async getMedia(query) {
-        // https://tv-v2.api-fetch.sh/movies/1?sort=trending&order=-1&genre=all&keywords=potter
+        // https://tv-v2.api-fetch.sh/movies/1?sort=trending&order=-1&genre=all
         var that = this;
-        var url = "https://popcorn-ru.tk/" + query.mediaCategory + "/" + query.page + "?sort=" + query.filter + "&order=-1&genre=" + query.genre;
+        var popcorn_ru_url = "https://popcorn-ru.tk/" + query.mediaCategory + "/" + query.page + "?sort=" + query.filter + "&order=-1&genre=" + query.genre;
         if (query.keywords.length) {
-            url += "&keywords=" + query.keywords;
+            popcorn_ru_url += "&keywords=" + query.keywords;
         }
-        //console.log(url);
         return await rp({
-                uri: url
+                uri: popcorn_ru_url
             })
             .then(function (response) {
                 that.CachedMedia[query.mediaCategory] = JSON.parse(response);
-                if (query.mediaCategory == "animes") {
-                    that.CachedMedia[query.mediaCategory].forEach(element => {
-                        element.images.banner = "https://media.kitsu.io/anime/poster_images/" + element._id + "/large.jpg";
-                    });
-                }
                 return (that.CachedMedia[query.mediaCategory]);
             })
             .catch(function (err) {
-
                 console.error(url, "request failed");
             });
     }
@@ -71,12 +57,6 @@ module.exports = class MediaApi {
                 })
                 .then(function (response) {
                     that.CachedMediaEpisodes[query.mediaCategory][query.mediaId] = JSON.parse(response);
-                    if (query.mediaCategory == "animes") {
-                        that.CachedMediaEpisodes[query.mediaCategory][query.mediaId].episodes.forEach(el => {
-                            el.episode = parseInt(el.episode);
-                            el.season = parseInt(el.season);
-                        });
-                    }
                     return (that.CachedMediaEpisodes[query.mediaCategory][query.mediaId]);
                 })
                 .catch(function (err) {
@@ -131,10 +111,8 @@ module.exports = class MediaApi {
             if (fs.existsSync(this.SubtitlesFolder + "/movies/" + query.imdb_id)) {
                 var vttPath = this.SubtitlesFolder + "/movies/" + query.imdb_id + "/" + query.lang + ".vtt";
                 if (fs.existsSync(vttPath)) {
-                    console.log("found subs at path: ", vttPath);
                     resolve("/movies/" + query.imdb_id + "/" + query.lang + ".vtt");
                 } else {
-                    console.log("Sub.vtt not found ", vttPath);
                     resolve(null);
                 }
             }
@@ -155,7 +133,6 @@ module.exports = class MediaApi {
                         that.OpenSubtitles.search({
                             imdbid: query.imdb_id
                         }).then(subs => {
-                            console.log(subs);
                             collection.insertOne({
                                 imdb_id: query.imdb_id,
                                 subs
@@ -179,7 +156,6 @@ module.exports = class MediaApi {
             fs.mkdirSync(this.SubtitlesFolder + "/movies/" + imdb_id);
         }
         Object.keys(subs).forEach(lang => {
-            console.log(subs[lang]);
             var that = this;
             rp({
                     uri: subs[lang].utf8
@@ -192,7 +168,7 @@ module.exports = class MediaApi {
                     });
                 })
                 .catch(function (err) {
-                    console.log(err);
+                    console.error(err);
                 });
         });
     }

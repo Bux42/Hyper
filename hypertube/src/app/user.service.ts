@@ -56,10 +56,8 @@ export class UserService {
         return (this.http.post<any>('http://localhost:3000/check-recovery-code', { form: form }, { withCredentials: true }));
     }
     setShowWatchTime(tvdb_id: any, show_imdb_id: any, watchTime: any, userVolume: any, episode_number: any, season_number: any) {
-        console.log("setShowWatchTime", this.user, this.user.WatchHistoryShows)
         if (this.user && this.user.WatchHistoryShows) {
             this.user.Account.volume = userVolume;
-            console.log("prevWH:", this.user.WatchHistoryShows);
             var mediaResume = this.user.WatchHistoryShows.find((x: any) => x.tvdb_id == tvdb_id);
             if (mediaResume) {
                 mediaResume.watch_time = watchTime;
@@ -84,7 +82,6 @@ export class UserService {
             } else {
                 mediaResume.date = Date.now();
             }
-            console.log("newWH:", this.user.WatchHistory);
             this.updateWatchHistory();
         }
         const params = new HttpParams()
@@ -97,10 +94,8 @@ export class UserService {
         return (this.http.get<any>('http://localhost:3000/set-show-watch-time', { params, withCredentials: true }));
     }
     setWatchTime(media_id: any, watchTime: any, userVolume: any) {
-        console.log("setWatchTime", this.user, this.user.WatchHistory)
         if (this.user && this.user.WatchHistory) {
             this.user.Account.volume = userVolume;
-            console.log("prevWH:", this.user.WatchHistory);
             var mediaResume = this.user.WatchHistory.find((x: any) => x.media_id == media_id);
             if (mediaResume) {
                 mediaResume.watch_time = watchTime;
@@ -112,7 +107,6 @@ export class UserService {
                     date: Date.now()
                 });
             }
-            console.log("newWH:", this.user.WatchHistory);
             this.updateWatchHistory();
         }
         const params = new HttpParams()

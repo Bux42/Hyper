@@ -46,7 +46,6 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
         this.currentVolume = 0.5;
         this.torrentUrl = data.torrentUrl;
         this.torrentFile = data.torrentFile;
-        console.log("this.torrentUrl:", this.torrentUrl);
         if (this.userService.user) {
             this.currentVolume = this.userService.user.Account.volume;
         }
@@ -56,7 +55,6 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        console.log(this.media, this.subtitlesSrc);
         if (this.media.episode) {
             this.episode_number = this.media.episode.toString();
         }
@@ -110,7 +108,6 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
 
         if (Date.now() - this.lastEvent > 5000 && parseInt(this.videoTag?.nativeElement.currentTime) > 10) {
             var resumingTime = parseInt(this.videoTag?.nativeElement.currentTime) - 5;
-            console.log("resumingTime:", resumingTime);
             this.lastEvent = Date.now();
             
             if (this.media._id) {
@@ -133,7 +130,6 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
                 } else {
                     this.media.resume.watch_time = resumingTime;
                 }
-                console.log("not a movie!", this.media.tvdb_id, this.media.show_imdb_id, resumingTime);
                 this.userService.setShowWatchTime(this.media.tvdb_id, this.media.show_imdb_id, resumingTime, this.currentVolume, this.episode_number, this.season_number).subscribe();
             }
         }

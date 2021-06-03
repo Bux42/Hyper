@@ -1,7 +1,6 @@
 module.exports = class CommentManager {
     getCommentsByImdbId(imdb_id, db) {
         return new Promise(resolve => {
-            console.log(imdb_id);
             const collection = db.collection('comments');
 
             var mysort = { date: -1 };
@@ -11,14 +10,12 @@ module.exports = class CommentManager {
             })
             .sort(mysort)
             .toArray(function (err, docs) {
-                console.log(docs);
                 resolve(docs);
             });
         });
     }
     postComment(comment, imdb_id, user_id, db) {
         return new Promise(resolve => {
-            console.log(comment, user_id);
             const collection = db.collection('comments');
             var newComment = {
                 date: Date.now(),

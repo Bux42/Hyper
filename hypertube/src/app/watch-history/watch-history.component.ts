@@ -22,12 +22,10 @@ export class WatchHistoryComponent implements OnInit {
         this.updateWatchHistory();
     }
     updateWatchHistory() {
-        console.log("WatchHistoryComponent: updateWatchHistory");
         this.history = [];
         this.fetchMovies().then(result => {
             this.fetchShows().then(result => {
                 this.history.sort((a,b) => (a.Details.date < b.Details.date) ? 1 : ((b.Details.date < a.Details.date) ? -1 : 0));
-                console.log(this.history);
                 this.loadHistory = false;
             });
         });
@@ -95,7 +93,6 @@ export class WatchHistoryComponent implements OnInit {
     }
 
     historyItemClicked(historyItem: any) {
-        console.log(historyItem);
         if (historyItem.Type == "movies") {
             const dialogRef = this.dialog.open(MediaDetailsComponent, {
                 width: '80vh',

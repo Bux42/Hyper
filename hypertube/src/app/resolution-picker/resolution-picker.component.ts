@@ -27,8 +27,8 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
     selectedSubtitles: string = "none";
     subtitlesSrc: any = null;
     torrents: any[] = [];
-    constructor(public languageService: LanguageService, public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) {}
-    
+    constructor(public languageService: LanguageService, public dialogRef: MatDialogRef<ResolutionPickerComponent>, public dialog: MatDialog, private mediaService: MediaService, private userService: UserService) { }
+
     inputChanged() {
         this.subtitlesList = [];
         this.torrents = [];
@@ -41,7 +41,6 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                 imdb_id: this.media.imdb_id,
                 media_category: this.mediaCategory
             }).subscribe(data => {
-                console.log(data);
                 Object.keys(data).forEach(el => {
                     this.subtitlesList.push(el);
                 });
@@ -51,8 +50,7 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
             this.media.show_imdb_id = this.show_imdb_id;
             if (this.userService.user && this.userService.user.WatchHistoryShows) {
                 this.media.resume = this.userService.user.WatchHistoryShows.find((x: any) => x.tvdb_id == this.media.tvdb_id);
-            console.log("ShowResume:", this.media.resume);            }
-            console.log(this.media.tvdb_id, this.media.show_imdb_id);
+            }
         }
         this.resolutions.forEach(res => {
             if (this.media.torrents.en && this.media.torrents.en[res]) {
@@ -64,7 +62,6 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                     "state": "Unknown"
                 });
             } else if (this.media.torrents[res]) {
-                console.log(this.media.torrents[res]);
                 this.torrents.push({
                     "resolution": res,
                     "size": this.media.torrents[res].filesize ? this.media.torrents[res].filesize : "?",
@@ -74,7 +71,6 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                 });
             }
         });
-        console.log(this.media, this.mediaCategory, this.season_number, this.episode_number);
     }
 
     ngOnChanges(changes: any) {
@@ -82,20 +78,18 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        
+
     }
     ngOnDestroy(): void {
         this.cancelWatch(null);
     }
     subtitleChanged(e: any) {
         if (e != "none") {
-            console.log(e);
             this.mediaService.fetchMediaSubtitlesSrc({
                 imdb_id: this.media.imdb_id,
                 media_category: this.mediaCategory,
                 lang: e
             }).subscribe(data => {
-                console.log("subtitlesSrc: ", data);
                 this.subtitlesSrc = data.subPath;
             })
         } else {
@@ -107,7 +101,7 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
         this.busy = false;
         this.busyElement = undefined;
         this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {
-            console.log(data);
+            
         });
     }
     watch(el: any) {
@@ -115,29 +109,23 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
         this.busyElement = el;
         el.state = "Check magnet";
         el.buff = "0";
-        
+
         if (this.media.tvdb_id) {
             this.media.show_imdb_id = this.show_imdb_id;
-            console.log(this.media.tvdb_id, this.media.show_imdb_id);
         }
-        console.log(this.media.show_imdb_id);
 
         this.torrentUrl = this.media.torrents.en ? this.media.torrents.en[el.resolution].url : this.media.torrents[el.resolution].url;
         this.torrentFile = this.media.torrents.en ? this.media.torrents.en[el.resolution].file : this.media.torrents[el.resolution].file;
         this.mediaService.selectMedia(this.torrentUrl, this.torrentFile, this.media._id).subscribe(data => {
-            console.log(data);
             this.mediaStateInterval = setInterval(() => {
                 this.mediaService.getMediaState(this.torrentUrl, this.torrentFile).subscribe(data => {
                     if (!this.busyElement) {
                         clearInterval(this.mediaStateInterval);
                         return;
                     }
-                    console.log(data);
-
                     if (data.ok) {
                         var buffer = data.progressPercent * 10;
                         if (this.mediaCategory != "movies") {
-                            console.log("not a movie");
                             buffer = data.progressPercent * 5;
                         }
                         if (buffer > 100) {
@@ -165,9 +153,8 @@ export class ResolutionPickerComponent implements OnInit, OnDestroy {
                             });
                             this.userService.setMediaPlayerDialogRef(dialogRef);
                             dialogRef.afterClosed().subscribe(result => {
-                                console.log(this.media);
                                 this.mediaService.playerClosed(this.torrentUrl).subscribe(data => {
-                                    console.log(data);
+                                    
                                 });
                             });
                         }

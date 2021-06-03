@@ -138,7 +138,6 @@ if (clearDownloads) {
 }
 
 app.get("/ping", (req, res, next) => {
-    console.log("/ping req.session.user", req.session.user, req.sessionID);
     res.send({
         "userSession": req.session.user
     });
@@ -207,26 +206,17 @@ app.get('/media-state', (req, res, next) => {
 });
 
 app.get('/select-media', (req, res, next) => {
-    console.log("/select-media", req.sessionID);
-
-    console.log(req.query);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
     if (req.query.torrentFile != "undefined") {
         req.session.torrentFile = req.query.torrentFile;
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.query.torrentFile);
-        console.log("Torrent file present");
     } else {
         req.session.torrentFile = undefined;
     }
-    console.log("req.query.magnetUrl:", req.query.magnetUrl, "req.query.torrentFile:", req.query.torrentFile);
     req.session.magnetUrl = req.query.magnetUrl;
-    console.log("torrent:", !torrent ? "null" : "exists");
-
     if (!torrent) {
-        console.log("add magnet: " + req.query.magnetUrl);
         var torrent = torrentManager.addTorrent(req.query.magnetUrl, req.query.torrentFile);
         torrent.start((mediaPath) => {
-            console.log("torrent.start callback recieved, mediapath", mediaPath, "exists:", fs.existsSync(mediaPath));
             var interval = setInterval(() => {
                 if (fs.existsSync(mediaPath)) {
                     res.send({
@@ -238,7 +228,6 @@ app.get('/select-media', (req, res, next) => {
 
         });
     } else {
-        console.log("magnet found");
         torrent.start((mediaPath) => {
             res.send({
                 "ok": true
@@ -248,8 +237,6 @@ app.get('/select-media', (req, res, next) => {
 });
 
 app.get('/player-closed', (req, res, next) => {
-    console.log("/player-closed", req.sessionID);
-
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.query.magnetUrl);
     if (req.session.torrentFile != undefined) {
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.session.torrentFile);
@@ -263,7 +250,6 @@ app.get('/player-closed', (req, res, next) => {
     if (userToReadStream[req.sessionID]) {
         userToReadStream[req.sessionID].destroy();
         delete userToReadStream[req.sessionID];
-        console.error("userToReadStream[req.sessionID].emit('end');");
     }
     req.session.torrentFile = undefined;
     res.send({
@@ -272,8 +258,6 @@ app.get('/player-closed', (req, res, next) => {
 });
 
 app.get('/watch-media', (req, res, next) => {
-    console.log("/watch-media", req.sessionID);
-    console.log("torrentFile", req.session.torrentFile);
     var torrent = torrentManager.Torrents.find(x => x.FullMagnet == req.session.magnetUrl);
     if (req.session.torrentFile != undefined) {
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.session.torrentFile);
@@ -285,12 +269,9 @@ app.get('/watch-media', (req, res, next) => {
         const range = req.headers.range;
         var len = torrent.EngineFile.length;
 
-        console.log("Find torrent, mediaPath: ", torrent.MediaPath, "idle;", torrent.Idle, "fileSize:", fileSize, "len:", len   );
-
         const ranges = parseRange(len, req.headers.range, {
             combine: true
         });
-        console.log("parseRanges", ranges);
         if (ranges.type === 'bytes' && ranges !== -1 && ranges !== -2) {
             const range = ranges[0];
             res.status(206);
@@ -302,15 +283,12 @@ app.get('/watch-media', (req, res, next) => {
             });
             if (torrent.Idle) {
                 var stream = fs.createReadStream(torrent.MediaPath, { start: range.start, end: range.end });
-                console.log("stream.pipe(res) 1", torrent.MediaPath);
                 stream.pipe(res);
             } else {
                 var stream = torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
-                console.log("stream.pipe(res) 2", torrent.EngineFile);
                 stream.pipe(res);
             }
         } else {
-            console.log(torrent.EngineFile, ".createReadStream().pipe(res)");
             var stream = torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
             stream.pipe(res);
         }
@@ -335,12 +313,10 @@ app.get('/get-subtitles-src', (req, res, next) => {
 });
 
 app.get('/get-vtt', (req, res, next) => {
-    console.log("/get-vtt", mediaApi.SubtitlesFolder + req.query.path);
     res.sendFile(mediaApi.SubtitlesFolder + req.query.path);
 });
 
 app.get('/set-show-watch-time', (req, res, next) => {
-    console.log("/set-show-watch-time", req.session.user.Account.id, req.query);
     if (req.session.user) {
         req.session.user.Account.volume = req.query.user_volume;
         um.setShowWatchTime(req).then((result) => {
@@ -353,7 +329,6 @@ app.get('/set-show-watch-time', (req, res, next) => {
                 watch_time: 0,
                 date: Date.now()
             };
-            console.log("add new wh", newWh);
             req.session.user.WatchHistory.push(newWh);
         }
         var whs = req.session.user.WatchHistoryShows.find(x => x.tvdb_id == req.query.tvdb_id);
@@ -377,7 +352,6 @@ app.get('/set-show-watch-time', (req, res, next) => {
 });
 
 app.get('/set-watch-time', (req, res, next) => {
-    console.log("/set-watch-time", req.query);
     if (req.session.user) {
         req.session.user.Account.volume = req.query.user_volume;
         um.setWatchTime(req).then((result) => {
@@ -436,10 +410,7 @@ app.get('/check-username', (req, res, next) => {
 });
 
 app.post('/set-username', (req, res, next) => {
-    console.log(req.body);
-
     um.setUsername(req.body.username, req.session.user.Account.id).then(result => {
-        console.log(result);
         if (result) {
             req.session.user.Account.username = req.body.username;
         }
@@ -465,18 +436,12 @@ app.post('/set-language', (req, res, next) => {
 });
 
 app.post('/authenticate', (req, res, next) => {
-    console.log("/authenticate", req.sessionID);
     delete req.session.user;
-    console.log(req.body);
     if (req.body.AccountType) {
         if (req.body.AccountType == "Google") {
             um.getGoogleAccount(req).then(googleAccount => {
                 um.createUserInfos("Google", googleAccount).then(acc => {
                     req.session.user = acc;
-                    console.log({
-                        "Error": null,
-                        "Account": acc
-                    });
                     res.send({
                         "Error": null,
                         "Account": acc
@@ -496,7 +461,6 @@ app.post('/register', (req, res, next) => {
 app.post('/login', (req, res, next) => {
     delete req.session.user;
     um.login(req.body).then(result => {
-        console.log("/login", result);
         if (!result.Error) {
             um.createUserInfos("Classic", result.Account).then(acc => {
                 req.session.user = acc;
@@ -547,14 +511,12 @@ app.get('/recover-password', (req, res, next) => {
 
 app.post('/check-recovery-code', (req, res, next) => {
     um.checkPasswordRecoveryHash(req.body.form.code, req.body.form.email, db).then(result => {
-        console.log(result);
         res.send(result);
     })
 });
 
 app.post('/change-password', (req, res, next) => {
     um.changePassword(req.body.form.email, req.body.form.password, db).then(result => {
-        console.log(result);
         res.send(result);
     })
 });
@@ -604,7 +566,6 @@ app.post('/post-comment', (req, res, next) => {
             req.session.user.lastComment = Date.now();
         }
     }
-    console.log(req.body);
 
 })
 
@@ -614,10 +575,6 @@ app.post('/school-login', (req, res, next) => {
         if (!result.Error) {
             um.createUserInfos("School", result.Account).then(acc => {
                 req.session.user = acc;
-                console.log({
-                    "Error": null,
-                    "Account": acc
-                });
                 res.send({
                     "Error": null,
                     "Account": acc

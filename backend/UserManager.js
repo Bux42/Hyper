@@ -28,13 +28,11 @@ module.exports = class UserManager {
     getGoogleAccount(req) {
         return new Promise(resolve => {
             const collection = this.Db.collection('users');
-            console.log("req.body.UserData.QR", req.body.UserData);
             collection.find({
                 id: req.body.UserData.NT
             }).toArray(function (err, docs) {
                 assert.equal(err, null);
                 if (!docs.length) {
-                    console.log("create account", req.body.UserData);
                     var account = {
                         type: "Google",
                         id: req.body.UserData.NT,
@@ -77,7 +75,6 @@ module.exports = class UserManager {
         });
     }
     setShowWatchTime(req) {
-        console.log("um.setShowWatchTime", req.query);
         return new Promise(resolve => {
             const userCol = this.Db.collection('users');
             userCol.updateOne({
