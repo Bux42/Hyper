@@ -29,6 +29,9 @@
 <div *ngIf="!loaded && mediaItems.length == 0" class="centered">
     <mat-spinner class="custom-mat-spinner"></mat-spinner>
 </div>
+<div *ngIf="loading" class="media-list-loading centered">
+    <mat-spinner class="custom-mat-spinner"></mat-spinner>
+</div>
 <div *ngIf="loaded" [ngClass]="{'loading': loading}" class="media-list-container" stickyHeaderDirective
   style="overflow: auto; max-height: 100%;" (appScrollToEnd)="scrollToEnd()" [attr.media-category]="mediaCategory">
 

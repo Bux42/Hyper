@@ -24,3 +24,13 @@
   align-items: center;
   height: calc(65vh - 20px);
 }
+
+.media-list-loading {
+    position: absolute;
+    z-index: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(65vh - 20px);
+    width: 100%;
+}
