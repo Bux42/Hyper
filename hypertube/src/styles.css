@@ -101,12 +101,19 @@ body {
 }
 
 .custom-mat-option {
-  background: #2e2e2e !important;
+  background: rgb(0, 0, 0)!important;
+  opacity: 0.8;
 }
 
 .custom-mat-option:hover {
-  background: #525252 !important;
+    background: rgb(50, 50, 50)!important;
+    opacity: 0.8;
 }
+
+.mat-select-panel {
+    background: rgba(100, 100, 100, 0.1);
+}
+
 
 .custom-dialog-container .mat-dialog-container {
   background-color: rgba(0, 0, 0, 0.9);

@@ -2,7 +2,7 @@
   <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select" >
     <mat-label>{{languageService.getTranslation('Genre')}}</mat-label>
     <mat-select (selectionChange)="genreChanged($event.value)" [(value)]="selectedCategory" [disabled]="!loggedIn" (click)="inputClicked()">
-      <mat-option *ngFor="let category of categories[mediaCategory]" [value]="category">
+      <mat-option *ngFor="let category of categories[mediaCategory]" [value]="category" class="custom-mat-option">
         {{category}}
       </mat-option>
     </mat-select>
@@ -10,7 +10,7 @@
   <mat-form-field appearance="fill" class="custom-mat-form-field media-filter-select">
     <mat-label>{{languageService.getTranslation('Sort by')}}</mat-label>
     <mat-select (selectionChange)="sortChanged($event.value)" [(value)]="selectedFilter" [disabled]="!loggedIn" (click)="inputClicked()">
-      <mat-option *ngFor="let sortBy of sortByList" [value]="sortBy">
+      <mat-option *ngFor="let sortBy of sortByList" [value]="sortBy" class="custom-mat-option">
         {{sortBy}}
       </mat-option>
     </mat-select>
