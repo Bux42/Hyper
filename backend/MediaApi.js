@@ -1,11 +1,13 @@
+require('dotenv').config()
+
 const rp = require('request-promise');
 const fs = require('fs');
 const OS = require('opensubtitles-api');
 const srt2vtt = require('srt-to-vtt');
 
 module.exports = class MediaApi {
-    constructor(torrentFolder) {
-        this.SubtitlesFolder = torrentFolder + "/torrent-stream/subtitles";
+    constructor() {
+        this.SubtitlesFolder = process.env.torrentFolder + "/torrent-stream/subtitles";
         if (!fs.existsSync(this.SubtitlesFolder)) {
             fs.mkdirSync(this.SubtitlesFolder);
         }

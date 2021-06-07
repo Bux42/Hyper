@@ -14,6 +14,7 @@ const CommentManager = require('./CommentManager');
 
 const authRoute = require('./routes/AuthRoute');
 const usersRoute = require('./routes/UsersRoute');
+const moviesRoute = require('./routes/MoviesRoute');
 
 var initMongo = require('./Database').initMongo;
 var getDb = require('./Database').getDb;
@@ -62,7 +63,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-const mediaApi = new MediaApi(process.env.TorrentFolder);
+const mediaApi = new MediaApi();
 const torrentManager = new TorrentManager(process.env.TorrentFolder);
 
 var userToReadStream = {};
@@ -578,3 +579,4 @@ app.post('/update-password', (req, res, next) => {
 
 app.use('/auth', authRoute);
 app.use('/users', usersRoute);
+app.use('/movies', moviesRoute);
