@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserService } from './user.service';
 
 @Injectable({
     providedIn: 'root'
@@ -67,7 +68,7 @@ export class GoogleOauthService {
                 });
         });
     }
-    async authenticate(): Promise<gapi.auth2.GoogleUser> {
+    async authenticate(userService: UserService): Promise<gapi.auth2.GoogleUser> {
         // Initialize gapi if not done yet
         if (!this.gapiSetup) {
             await this.initGoogleAuth();
@@ -78,11 +79,19 @@ export class GoogleOauthService {
             await this.authInstance.signIn().then(
                 user => {
                     this.user = user;
-                    window.location.reload();
+                    //window.location.reload();
                 },
                 error => {
                     this.error = error;
                 });
+            userService.oauth({
+                "AccountType": "Google",
+                "Data": this.user
+            }).subscribe(result => {
+                if (!result.Error) {
+                    window.location.reload();
+                }
+            });
         });
     }
     disconnect() {

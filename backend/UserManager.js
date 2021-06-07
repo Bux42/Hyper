@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const assert = require('assert');
 const request = require('request');
 const bcrypt = require('bcrypt');
@@ -11,6 +13,8 @@ const {
 
 const saltRounds = 10;
 
+var getDb = require('./Database').getDb;
+
 class Account {
     constructor(watchHistory, watchHistoryShows, accountType, account) {
         this.WatchHistory = watchHistory;
@@ -21,13 +25,9 @@ class Account {
 }
 
 module.exports = class UserManager {
-    constructor(db, settings) {
-        this.Db = db;
-        this.Settings = settings;
-    }
     getGoogleAccount(req) {
         return new Promise(resolve => {
-            const collection = this.Db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 id: req.body.UserData.NT
             }).toArray(function (err, docs) {
@@ -55,7 +55,7 @@ module.exports = class UserManager {
     getWatchHistoryShows(userId) {
         return new Promise(resolve => {
             var watchHistory = [];
-            const collection = this.Db.collection('watch_history_shows');
+            const collection = getDb().collection('watch_history_shows');
             collection.find({
                 user_id: userId
             }).toArray(function (err, docs) {
@@ -76,7 +76,7 @@ module.exports = class UserManager {
     }
     setShowWatchTime(req) {
         return new Promise(resolve => {
-            const userCol = this.Db.collection('users');
+            const userCol = getDb().collection('users');
             userCol.updateOne({
                 id: req.session.user.Account.id
             }, {
@@ -84,7 +84,7 @@ module.exports = class UserManager {
                     volume: req.query.user_volume
                 }
             });
-            const col = this.Db.collection('watch_history');
+            const col = getDb().collection('watch_history');
             col.find({
                 user_id: req.session.user.Account.id,
                 media_id: req.query.show_imdb_id
@@ -108,7 +108,7 @@ module.exports = class UserManager {
                     }, newvalues);
                 }
             });
-            const collection = this.Db.collection('watch_history_shows');
+            const collection = getDb().collection('watch_history_shows');
             collection.find({
                 user_id: req.session.user.Account.id,
                 tvdb_id: req.query.tvdb_id
@@ -141,7 +141,7 @@ module.exports = class UserManager {
     }
     setWatchTime(req) {
         return new Promise(resolve => {
-            const userCol = this.Db.collection('users');
+            const userCol = getDb().collection('users');
             userCol.updateOne({
                 id: req.session.user.Account.id
             }, {
@@ -149,7 +149,7 @@ module.exports = class UserManager {
                     volume: req.query.user_volume
                 }
             });
-            const collection = this.Db.collection('watch_history');
+            const collection = getDb().collection('watch_history');
             collection.find({
                 user_id: req.session.user.Account.id,
                 media_id: req.query.mediaId
@@ -181,7 +181,7 @@ module.exports = class UserManager {
     getWatchHistory(userId) {
         return new Promise(resolve => {
             var watchHistory = [];
-            const collection = this.Db.collection('watch_history');
+            const collection = getDb().collection('watch_history');
             collection.find({
                 user_id: userId
             }).toArray(function (err, docs) {
@@ -199,7 +199,7 @@ module.exports = class UserManager {
     }
     isEmailAvailable(email) {
         return new Promise(resolve => {
-            const collection = this.Db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 email: email
             }).toArray(function (err, docs) {
@@ -213,7 +213,7 @@ module.exports = class UserManager {
     }
     isUsernameAvailable(username) {
         return new Promise(resolve => {
-            const collection = this.Db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 username: username
             }).toArray(function (err, docs) {
@@ -227,7 +227,7 @@ module.exports = class UserManager {
     }
     canUpdateUsername(username, user_id) {
         return new Promise(resolve => {
-            const collection = this.Db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 username: username
             }).toArray(function (err, docs) {
@@ -245,7 +245,7 @@ module.exports = class UserManager {
     }
     setUsername(username, userId) {
         return new Promise(resolve => {
-            const collection = this.Db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 id: userId
             }).toArray(function (err, docs) {
@@ -263,7 +263,7 @@ module.exports = class UserManager {
     }
     login(form) {
         return new Promise(resolve => {
-            const collection = this.Db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 email: form.email
             }).toArray(function (err, docs) {
@@ -296,7 +296,7 @@ module.exports = class UserManager {
         return new Promise(resolve => {
             if (body.langCode != undefined) {
                 if (availableLanguages.includes(body.langCode)) {
-                    const collection = this.Db.collection('users');
+                    const collection = getDb().collection('users');
                     collection.find({
                         id: userId
                     }).toArray(function (err, docs) {
@@ -324,7 +324,7 @@ module.exports = class UserManager {
                 if (usernameAvailable) {
                     this.isEmailAvailable(form.emailInput).then(emailAvailable => {
                         if (emailAvailable) {
-                            const collection = this.Db.collection('users');
+                            const collection = getDb().collection('users');
                             var newId = "";
                             for (var i = 0; i < 21; ++i) {
                                 newId += Math.floor(Math.random() * 10);
@@ -435,14 +435,32 @@ module.exports = class UserManager {
             });
         });
     }
-    getUserInfos(user_id, db) {
+    getUser(user_id) {
         return new Promise(resolve => {
-            const collection = db.collection('users');
+            const collection = getDb().collection('users');
             collection.find({
                 id: user_id
             }).toArray(function (err, docs) {
                 if (docs.length > 0) {
-                    const commentCollection = db.collection('comments');
+                    resolve({
+                        username: docs[0].username,
+                        last_name: docs[0].email,
+                        profilePic: docs[0].img,
+                    });
+                } else {
+                    resolve({});
+                }
+            });
+        });
+    }
+    getUserInfos(user_id, db) {
+        return new Promise(resolve => {
+            const collection = getDb().collection('users');
+            collection.find({
+                id: user_id
+            }).toArray(function (err, docs) {
+                if (docs.length > 0) {
+                    const commentCollection = getDb().collection('comments');
                     commentCollection.find({
                         user_id: user_id
                     }).toArray(function(err, docs2) {
@@ -461,14 +479,14 @@ module.exports = class UserManager {
             });
         });
     }
-    checkSchoolLogin(code, db) {
+    checkSchoolLogin(code) {
         return new Promise(resolve => {
             var url = 'https://api.intra.42.fr/oauth/token';
             request.post(url, {
                 form: {
                     grant_type: 'authorization_code',
-                    client_id: this.Settings.school_client_id,
-                    client_secret: this.Settings.school_client_secret,
+                    client_id: process.env.school_client_id,
+                    client_secret: process.env.school_client_secret,
                     code: code,
                     redirect_uri: 'http://localhost:4200/school-oauth',
                 }
@@ -483,7 +501,7 @@ module.exports = class UserManager {
                     }, function callBack2(err2, httpResponse2, body2) {
                         var user42 = JSON.parse(body2);
 
-                        const collection = db.collection('users');
+                        const collection = getDb().collection('users');
                         collection.find({
                             email: user42.email
                         }).toArray(function (err, docs) {
@@ -669,6 +687,21 @@ module.exports = class UserManager {
                 }
             });
         }));
+    }
+    getUsers() {
+        return new Promise(resolve => {
+            const collection = getDb().collection('users');
+            collection.find().toArray(function (err, docs) {
+                var users = [];
+                docs.forEach(user => {
+                    users.push({
+                        "id": user.id,
+                        "username": user.username
+                    })
+                });
+                resolve(users);
+            });
+        });
     }
     validPassword(password) {
         var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,20}$/;

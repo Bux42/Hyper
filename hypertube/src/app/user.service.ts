@@ -16,8 +16,8 @@ export class UserService {
     mediaPlayerDialogRef: any;
     constructor(private http: HttpClient, private googleOauth: GoogleOauthService) { }
 
-    pingBackend() {
-        return (this.http.get<any>('http://localhost:3000/ping', { withCredentials: true }));
+    getSession() {
+        return (this.http.get<any>('http://localhost:3000/auth/session', { withCredentials: true }));
     }
     getUser() {
         return new Promise((resolve, reject) => {
@@ -34,7 +34,7 @@ export class UserService {
         });
     }
     setUser(user: any) {
-        return (this.http.post<any>('http://localhost:3000/authenticate', user, { withCredentials: true }));
+        return (this.http.post<any>('http://localhost:3000/get-user', user, { withCredentials: true }));
     }
     setUsername(username: any) {
         return (this.http.post<any>('http://localhost:3000/set-username', { username: username }, { withCredentials: true }));
@@ -241,5 +241,13 @@ export class UserService {
     }
     updateWatchHistory() {
         this.watchHistory?.updateWatchHistory();
+    }
+
+    // NEW ROUTES
+
+    oauth(form: any) {
+        return (this.http.post<any>('http://localhost:3000/auth/oauth', {
+            form: form
+        }, { withCredentials: true }));
     }
 }

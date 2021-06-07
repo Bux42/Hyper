@@ -12,6 +12,31 @@ const UserManager = require('./UserManager');
 const MailManager = require('./MailManager');
 const CommentManager = require('./CommentManager');
 
+const authRoute = require('./routes/AuthRoute');
+const usersRoute = require('./routes/UsersRoute');
+
+var initMongo = require('./Database').initMongo;
+var getDb = require('./Database').getDb;
+
+initMongo().then((mongoError) => {
+    if (mongoError) {
+        console.error("Database Error, check mongo service: ", mongoError);
+        exit();
+    } else {
+        console.log('Connected successfully to server');
+        db = getDb();
+        um = new UserManager(db);
+        mm = new MailManager();
+        cm = new CommentManager();
+        app.listen(port, () => {
+            console.log(`Hypertube listening at http://localhost:${port}`)
+        });
+        setInterval(() => {
+            deleteOldMedia();
+        }, 3600000);
+    }
+})
+
 const fs = require('fs');
 const {
     serialize
@@ -20,16 +45,6 @@ const {
     allowedNodeEnvironmentFlags,
     exit
 } = require('process');
-
-var settings = null;
-
-if (fs.existsSync(".env.json")) {
-    var data = fs.readFileSync(".env.json", 'utf8');
-    settings = JSON.parse(data);
-} else {
-    console.log(".env.json not found, exit");
-    exit();
-}
 
 const app = express();
 const port = 3000;
@@ -47,22 +62,17 @@ app.use(session({
     saveUninitialized: true
 }));
 
-const mediaApi = new MediaApi(settings.TorrentFolder);
-const torrentManager = new TorrentManager(settings.TorrentFolder);
+const mediaApi = new MediaApi(process.env.TorrentFolder);
+const torrentManager = new TorrentManager(process.env.TorrentFolder);
 
 var userToReadStream = {};
 
-const mongodbUrl = settings.MongoDbUrl;
-const dbName = 'hypertube';
 var db = null;
 
 var um = null;
 var mm = null;
 var cm = null;
 
-const mongoClient = new MongoClient(mongodbUrl, {
-    useUnifiedTopology: true
-});
 
 function deleteOldMedia() {
     var torrentDir = fs.readdirSync("F:\\torrent-stream");
@@ -84,39 +94,6 @@ function deleteOldMedia() {
     });
 }
 
-function checkDb() {
-    console.log("Hypertube init, checking database")
-    return new Promise(resolve => {
-        mongoClient.connect(function (err) {
-            if (!err) {
-                assert.equal(null, err);
-                db = mongoClient.db(dbName);
-                um = new UserManager(db, settings);
-                mm = new MailManager(settings);
-                cm = new CommentManager();
-                resolve(null);
-            } else {
-                resolve(err);
-            }
-        });
-    });
-}
-
-checkDb().then(mongoError => {
-    if (mongoError) {
-        console.error("Database Error, check mongo service: ", mongoError);
-        exit();
-    } else {
-        console.log('Connected successfully to server');
-        app.listen(port, () => {
-            console.log(`Hypertube listening at http://localhost:${port}`)
-        });
-        setInterval(() => {
-            deleteOldMedia();
-        }, 3600000);
-    }
-});
-
 var clearDownloads = false;
 
 if (clearDownloads) {
@@ -136,12 +113,6 @@ if (clearDownloads) {
         }
     });
 }
-
-app.get("/ping", (req, res, next) => {
-    res.send({
-        "userSession": req.session.user
-    });
-});
 
 app.get('/media-list', (req, res, next) => {
     mediaApi.getMedia(req.query).then(data => {
@@ -263,7 +234,7 @@ app.get('/watch-media', (req, res, next) => {
         torrent = torrentManager.Torrents.find(x => x.TorrentFile == req.session.torrentFile);
     }
     if (torrent) {
-        
+
         const stat = fs.statSync(torrent.MediaPath);
         const fileSize = stat.size;
         const range = req.headers.range;
@@ -282,14 +253,23 @@ app.get('/watch-media', (req, res, next) => {
                 'Content-Type': 'video/mp4'
             });
             if (torrent.Idle) {
-                var stream = fs.createReadStream(torrent.MediaPath, { start: range.start, end: range.end });
+                var stream = fs.createReadStream(torrent.MediaPath, {
+                    start: range.start,
+                    end: range.end
+                });
                 stream.pipe(res);
             } else {
-                var stream = torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
+                var stream = torrent.EngineFile.createReadStream({
+                    start: range.start,
+                    end: range.end
+                });
                 stream.pipe(res);
             }
         } else {
-            var stream = torrent.EngineFile.createReadStream({ start: range.start, end: range.end });
+            var stream = torrent.EngineFile.createReadStream({
+                start: range.start,
+                end: range.end
+            });
             stream.pipe(res);
         }
     } else {
@@ -435,7 +415,7 @@ app.post('/set-language', (req, res, next) => {
     });
 });
 
-app.post('/authenticate', (req, res, next) => {
+app.post('/get-user', (req, res, next) => {
     delete req.session.user;
     if (req.body.AccountType) {
         if (req.body.AccountType == "Google") {
@@ -569,23 +549,6 @@ app.post('/post-comment', (req, res, next) => {
 
 })
 
-app.post('/school-login', (req, res, next) => {
-    delete req.session.user;
-    um.checkSchoolLogin(req.body.code, db).then(result => {
-        if (!result.Error) {
-            um.createUserInfos("School", result.Account).then(acc => {
-                req.session.user = acc;
-                res.send({
-                    "Error": null,
-                    "Account": acc
-                });
-            });
-        } else {
-            res.send(result);
-        }
-    });
-});
-
 app.post('/update-profile', (req, res, next) => {
     um.updateProfile(req.body.form, db, req.session.user).then(result => {
         if (result.UpdatedProfile) {
@@ -612,3 +575,6 @@ app.post('/update-password', (req, res, next) => {
         res.send(result);
     })
 });
+
+app.use('/auth', authRoute);
+app.use('/users', usersRoute);

@@ -1,12 +1,14 @@
+require('dotenv').config()
+
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
 module.exports = class UserManager {
-    constructor(settings) {
-        this.GmailUsername = settings.GmailUsername;
-        this.GmailPassword = settings.GmailPassword;
+    constructor() {
+        this.GmailUsername = process.env.GmailUsername;
+        this.GmailPassword = process.env.GmailPassword;
     }
     async sendPasswordRecovery(email, db) {
         var transporter = nodemailer.createTransport({

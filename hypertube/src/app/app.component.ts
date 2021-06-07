@@ -17,7 +17,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        this.userService.pingBackend().subscribe(result => {
+        this.userService.getSession().subscribe(result => {
             if (result.userSession) {
                 this.userService.user = result.userSession;
                 this.languageService.setLanguage(this.userService.user.Account.language);
@@ -27,7 +27,10 @@ export class AppComponent {
             } else {
                 this._route.queryParams.subscribe(params => {
                     if (params.code) {
-                        this.userService.checkSchoolLogin(params.code).subscribe(result => {
+                        this.userService.oauth({
+                            "AccountType": "School",
+                            "Code": params.code
+                        }).subscribe(result => {
                             window.location.replace("/");
                         });
                     } else {
