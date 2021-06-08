@@ -1,0 +1,4 @@
+npm install -g @angular/cli
+.env file in /backend
+node v12.14.* or v14.15.*
+mongodb service running at mongodb://localhost:27017

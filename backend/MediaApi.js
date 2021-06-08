@@ -7,7 +7,7 @@ const srt2vtt = require('srt-to-vtt');
 
 module.exports = class MediaApi {
     constructor() {
-        this.SubtitlesFolder = process.env.torrentFolder + "/torrent-stream/subtitles";
+        this.SubtitlesFolder = process.env.TorrentFolder + "/torrent-stream/subtitles";
         if (!fs.existsSync(this.SubtitlesFolder)) {
             fs.mkdirSync(this.SubtitlesFolder);
         }
