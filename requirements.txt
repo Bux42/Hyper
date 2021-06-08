@@ -2,3 +2,9 @@ npm install -g @angular/cli
 .env file in /backend
 node v12.14.* or v14.15.*
 mongodb service running at mongodb://localhost:27017
+
+npm install in /backend folder
+npm install in /hypertube folder
+
+node app.js in /backend folder
+ng serve in /hypertube
