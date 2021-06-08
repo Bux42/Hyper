@@ -27,6 +27,10 @@ function checkEnv() {
     if (process.env.TorrentFolder) {
         if (fs.existsSync(process.env.TorrentFolder)) {
             console.log("TorrentFolder:", process.env.TorrentFolder);
+            if (!fs.existsSync(process.env.TorrentFolder + "/torrent-stream")) {
+                console.log("Creating download folder at " + process.env.TorrentFolder + "/torrent-stream");
+                fs.mkdirSync(process.env.TorrentFolder + "/torrent-stream");
+            }
         } else {
             console.error(process.env.TorrentFolder, "does not exist");
             exit();
