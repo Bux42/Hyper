@@ -1,3 +1,10 @@
+require('dotenv').config()
+
+const {
+    allowedNodeEnvironmentFlags,
+    exit
+} = require('process');
+const fs = require('fs');
 const express = require('express')
 const session = require('express-session');
 const cookieSession = require('cookie-session')
@@ -19,33 +26,74 @@ const moviesRoute = require('./routes/MoviesRoute');
 var initMongo = require('./Database').initMongo;
 var getDb = require('./Database').getDb;
 
-initMongo().then((mongoError) => {
-    if (mongoError) {
-        console.error("Database Error, check mongo service: ", mongoError);
+function checkEnv() {
+    var valid = true;
+    if (process.env.TorrentFolder) {
+        if (fs.existsSync(process.env.TorrentFolder)) {
+            console.log("TorrentFolder:", process.env.TorrentFolder);
+        } else {
+            console.error(process.env.TorrentFolder, "does not exist");
+            exit();
+        }
+    } else {
+        console.error("TorrentFolder not found in .env");
+        exit();
+    }
+    if (!process.env.GmailUsername) {
+        console.error("GmailUsername not found in .env");
         exit();
     } else {
-        console.log('Connected successfully to server');
-        db = getDb();
-        um = new UserManager(db);
-        mm = new MailManager();
-        cm = new CommentManager();
-        app.listen(port, () => {
-            console.log(`Hypertube listening at http://localhost:${port}`)
-        });
-        setInterval(() => {
-            deleteOldMedia();
-        }, 3600000);
+        console.log("GmailUsername:", process.env.GmailUsername);
     }
-})
+    if (!process.env.GmailPassword) {
+        console.error("GmailPassword not found in .env");
+        exit();
+    } else {
+        console.log("GmailPassword:", process.env.GmailPassword);
+    }
+    if (!process.env.school_client_id) {
+        console.error("school_client_id not found in .env");
+        exit();
+    } else {
+        console.log("school_client_id:", process.env.school_client_id);
+    }
+    if (!process.env.school_client_secret) {
+        console.error("school_client_secret not found in .env");
+        exit();
+    } else {
+        console.log("school_client_secret:", process.env.school_client_secret);
+    }
+    if (process.env.MongoDbUrl) {
+        initMongo().then((mongoError) => {
+            if (mongoError) {
+                console.error("Database Error, check mongo service: ", mongoError);
+                exit();
+            } else {
+                console.log('Connected successfully to server');
+                db = getDb();
+                um = new UserManager(db);
+                mm = new MailManager();
+                cm = new CommentManager();
+                app.listen(port, () => {
+                    console.log(`Hypertube listening at http://localhost:${port}`)
+                });
+                setInterval(() => {
+                    deleteOldMedia();
+                }, 3600000);
+            }
+        })
+    } else {
 
-const fs = require('fs');
+    }
+    return (valid);
+}
+
+checkEnv();
+
 const {
     serialize
 } = require('v8');
-const {
-    allowedNodeEnvironmentFlags,
-    exit
-} = require('process');
+
 
 const app = express();
 const port = 3000;
