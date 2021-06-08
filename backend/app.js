@@ -19,10 +19,6 @@ const UserManager = require('./UserManager');
 const MailManager = require('./MailManager');
 const CommentManager = require('./CommentManager');
 
-const authRoute = require('./routes/AuthRoute');
-const usersRoute = require('./routes/UsersRoute');
-const moviesRoute = require('./routes/MoviesRoute');
-
 var initMongo = require('./Database').initMongo;
 var getDb = require('./Database').getDb;
 
@@ -89,6 +85,10 @@ function checkEnv() {
 }
 
 checkEnv();
+
+const authRoute = require('./routes/AuthRoute');
+const usersRoute = require('./routes/UsersRoute');
+const moviesRoute = require('./routes/MoviesRoute');
 
 const {
     serialize
